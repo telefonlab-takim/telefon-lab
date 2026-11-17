@@ -9,7 +9,7 @@
 <body>
   <main>
     <h1>Sarkaç Deneyi</h1>
-    <p class="kucuk">Yapım aşaması — Adım 2: ölçüm kaydı ve örnekleme kalitesi.
+    <p class="kucuk">Yapım aşaması — Adım 3: ölçüm kaydı, örnekleme kalitesi ve sinyal grafiği.
       Periyot ve g hesabı sonraki adımlarda eklenecek.</p>
 
     <section>
@@ -46,6 +46,22 @@
 
       <h3>Uzun boşluklar</h3>
       <ul id="rBosluklar"></ul>
+    </section>
+
+    <!-- Kayıt bitince çizilir -->
+    <section id="grafikBolumu" hidden>
+      <h2>3. Sinyal grafiği</h2>
+      <p>
+        <label for="sinyalSecimi">Gösterilen sinyal:</label>
+        <select id="sinyalSecimi">
+          <option value="donme" selected>Dönme hızı (jiroskop)</option>
+          <option value="ivme">İvme (yer çekimi dahil)</option>
+        </select>
+      </p>
+      <canvas id="grafik" class="grafik"></canvas>
+      <p id="grafikAciklamasi" class="aciklama"></p>
+      <p class="kucuk">Sarkaç salınırken dönme hızı eksenlerinden biri düzgün bir dalga gibi
+        inip çıkmalı. İki tepe arasındaki süre sarkacın periyodudur.</p>
     </section>
   </main>
 

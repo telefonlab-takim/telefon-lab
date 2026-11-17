@@ -8,6 +8,10 @@
   --vurgu: #1565c0;
   --hata: #c62828;
   --cizgi: #d7dce2;
+  /* Grafik serilerinin renkleri */
+  --seri-1: #1565c0;
+  --seri-2: #e65100;
+  --seri-3: #2e7d32;
 }
 
 /* Telefon karanlık moddaysa renkleri değiştir */
@@ -19,6 +23,9 @@
     --vurgu: #64a8f0;
     --hata: #ef7070;
     --cizgi: #2c3138;
+    --seri-1: #64a8f0;
+    --seri-2: #ffa25c;
+    --seri-3: #6fcf7a;
   }
 }
 
@@ -54,6 +61,25 @@ button:disabled { opacity: 0.4; }
 
 select { font-size: 1rem; padding: 0.4rem; }
 h3 { font-size: 1rem; margin: 1.2rem 0 0.3rem; }
+
+/* Grafik */
+.grafik {
+  display: block;
+  width: 100%;
+  height: 240px;
+  border: 1px solid var(--cizgi);
+  border-radius: 8px;
+}
+.aciklama { margin: 0.4rem 0; font-size: 0.9rem; }
+.aciklama-etiketi { margin-right: 1rem; white-space: nowrap; }
+.aciklama-noktasi {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  margin-right: 0.3rem;
+  vertical-align: middle;
+}
 
 /* Test sayfası için */
 .basarili { color: #2e7d32; }

@@ -16,7 +16,7 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 |---|---|
 | `index.html` | Ana menü, deney seçimi |
 | `sensor-testi.html` | ✅ Hareket sensörü test sayfası (canlı ham değerler) |
-| `sarkac.html` | 🔶 Sarkaç deneyi sayfası (şimdilik: kayıt + örnekleme raporu) |
+| `sarkac.html` | 🔶 Sarkaç deneyi sayfası (şimdilik: kayıt + örnekleme raporu + sinyal grafiği) |
 | `css/stil.css` | ✅ Ortak stil (karanlık mod destekli) |
 | `js/sensor/hareket.js` | ✅ Ön kontroller, izin, `devicemotion` dinleme, boş olay filtresi |
 | `js/sensor/kayit.js` | ✅ Belirli süre kayıt; kayıt sırasında sayfa arka plana geçti mi? |
@@ -25,7 +25,8 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 | `js/analiz/periyot.js` | Sinyalden periyot bulma |
 | `js/analiz/sarkac-hesap.js` | g ve belirsizlik hesabı |
 | `js/arayuz/bicim.js` | ✅ Sayıları Türkçe biçimde yazma (1.067,5) |
-| `js/arayuz/grafik.js` | Canvas üzerine sinyal çizimi |
+| `js/arayuz/grafik.js` | ✅ Canvas üzerine çizgi grafiği (ızgara, eksen yazıları, renk açıklaması) |
+| `js/arayuz/olcek.js` | ✅ Eksenler için "güzel" çizgi değerleri (-20, 0, 20, 40 gibi) |
 | `js/sayfalar/sensor-testi-sayfa.js` | ✅ Sensör testi sayfasının akışı |
 | `js/sayfalar/sarkac-sayfa.js` | 🔶 Sarkaç sayfasının akışı |
 | `testler/index.html`, `testler/testler.js` | ✅ Analiz fonksiyonlarının testleri (tarayıcıda açılınca çalışır) |
@@ -46,6 +47,20 @@ Sarkaç periyodunu ölçümlerin zaman damgalarından hesaplayacağımız için 
   Her boşluğun kaydın kaçıncı saniyesinde olduğu listelenir.
 - **Uyarılar:** Saniyede 30'dan az ölçüm, uzun boşluk, kayıt sırasında sayfanın arka plana geçmesi,
   jiroskop verisinin hiç gelmemesi.
+
+## 2.0.1 Sinyal grafiği (`js/arayuz/grafik.js`)
+
+- Tarayıcının kendi çizim aracı **Canvas 2D** ile çiziliyor; grafik kütüphanesi yok.
+- Yatay eksen: kaydın başından itibaren geçen süre (s). Dikey eksen: seçilen sinyal
+  (dönme hızı °/s ya da ivme m/s²). Her sinyalin 3 ekseni ayrı renkte çizilir.
+- **Veri → piksel dönüşümü:** `x = sol kenar + (t − tMin) / (tMax − tMin) × alan genişliği`.
+  Canvas'ta y aşağı doğru arttığı için y ters çevrilir: `y = üst kenar + (yMax − v) / (yMax − yMin) × alan yüksekliği`.
+- **Keskinlik:** Telefon ekranlarında 1 CSS pikseli 2–3 gerçek piksel olduğundan tuval `devicePixelRatio` kadar büyütülür.
+- **Eksen çizgileri** (`js/arayuz/olcek.js`): Aralık 1, 2 veya 5 × 10ⁿ büyüklüğünde adımlara bölünür
+  (ör. −37…42 için −20, 0, 20, 40).
+- **Renkler** CSS değişkenlerinden (`--seri-1/2/3`) okunur, karanlık modda kendiliğinden değişir.
+  CSS okunamazsa yedek renk kullanılır (bkz. TEST_SONUCLARI, önbellek sorunu).
+- Değeri olmayan (null) ölçümlerde çizgi koparılır; olmayan veri uydurulmaz.
 
 ## 2.1 Hareket sensörü nasıl okunuyor? (`js/sensor/hareket.js`)
 

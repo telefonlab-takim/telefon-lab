@@ -1,14 +1,62 @@
 // js/sayfalar/sarkac-sayfa.js
 // Sarkaç sayfasının mantığı.
-// Şu anki hâli (Adım 2): kayıt yapar ve örneklemenin ne kadar düzenli olduğunu raporlar.
+// Şu anki hâli (Adım 3): kayıt yapar, örneklemenin ne kadar düzenli olduğunu raporlar
+// ve kaydedilen sinyali grafik olarak çizer.
 
 import { hareketSensorunuHazirla } from '../sensor/hareket.js';
 import { kayitYap } from '../sensor/kayit.js';
 import { orneklemeRaporu, BOSLUK_ESIGI_MS } from '../analiz/ornekleme.js';
 import { sayiYaz } from '../arayuz/bicim.js';
+import { grafikCiz, aciklamaYaz } from '../arayuz/grafik.js';
 
 const el = (id) => document.getElementById(id);
 const kayitButonu = el('kayitButonu');
+
+// Son kaydın örnekleri. Grafik yeniden çizilirken (sinyal değişimi, ekran döndürme) kullanılır.
+let sonOrnekler = [];
+
+// Grafikte gösterilebilecek sinyaller: her biri 3 eksenden oluşur.
+const SINYALLER = {
+  donme: {
+    birim: '°/s',
+    seriler: [
+      { ad: 'alfa (z ekseni)', alan: 'donmeAlfa', renkDegiskeni: '--seri-1' },
+      { ad: 'beta (x ekseni)', alan: 'donmeBeta', renkDegiskeni: '--seri-2' },
+      { ad: 'gama (y ekseni)', alan: 'donmeGama', renkDegiskeni: '--seri-3' },
+    ],
+  },
+  ivme: {
+    birim: 'm/s²',
+    seriler: [
+      { ad: 'x', alan: 'ax', renkDegiskeni: '--seri-1' },
+      { ad: 'y', alan: 'ay', renkDegiskeni: '--seri-2' },
+      { ad: 'z', alan: 'az', renkDegiskeni: '--seri-3' },
+    ],
+  },
+};
+
+function grafigiGuncelle() {
+  if (sonOrnekler.length === 0) return;
+  const sinyal = SINYALLER[el('sinyalSecimi').value];
+
+  // Zamanı kaydın başından itibaren saniye olarak göster (ilk ölçüm = 0 s)
+  const ilkZaman = sonOrnekler[0].zaman;
+  const zamanlarSn = sonOrnekler.map((o) => (o.zaman - ilkZaman) / 1000);
+
+  // Her eksen için değer listesini örneklerden çıkar
+  const seriler = sinyal.seriler.map((s) => ({
+    ad: s.ad,
+    renkDegiskeni: s.renkDegiskeni,
+    degerler: sonOrnekler.map((o) => o[s.alan]),
+  }));
+
+  grafikCiz(el('grafik'), { zamanlarSn, seriler, birim: sinyal.birim });
+  aciklamaYaz(el('grafikAciklamasi'), seriler);
+}
+
+el('sinyalSecimi').addEventListener('change', grafigiGuncelle);
+// Telefon yan çevrilince grafik genişliği değişir; yeniden çiz
+window.addEventListener('resize', grafigiGuncelle);
 
 function durumYaz(metin, hataMi = false) {
   const p = el('durumMesaji');
@@ -78,6 +126,7 @@ kayitButonu.addEventListener('click', async () => {
   const sureSn = Number(el('sureSecimi').value);
   kayitButonu.disabled = true;
   el('raporBolumu').hidden = true;
+  el('grafikBolumu').hidden = true;
 
   const { ornekler, kesildiMi } = await kayitYap(sureSn, (kalanSn) => {
     durumYaz(`Kayıt yapılıyor… ${kalanSn} saniye kaldı.`);
@@ -85,5 +134,11 @@ kayitButonu.addEventListener('click', async () => {
 
   durumYaz('Kayıt bitti.');
   raporuGoster(ornekler, kesildiMi);
+
+  sonOrnekler = ornekler;
+  if (ornekler.length >= 2) {
+    el('grafikBolumu').hidden = false; // önce görünür olmalı, yoksa tuvalin genişliği 0 olur
+    grafigiGuncelle();
+  }
   kayitButonu.disabled = false;
 });

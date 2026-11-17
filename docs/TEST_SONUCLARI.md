@@ -26,6 +26,8 @@ Bir ölçüm kötü çıktıysa onu da yazıyoruz; jüri için başarısız dene
 | 2026-11-17 | GitHub Pages yayını | https://telefonlab-takim.github.io/telefon-lab/sensor-testi.html | HTTPS, tüm dosyalar 200, konsolda hata yok | Beklendiği gibi | ✅ |
 | 2026-11-17 | `testler/index.html` analiz testleri (istatistik + örnekleme) | 14 test, bilinen sahte veriler | Hepsi geçer | 14/14 geçti | ✅ |
 | 2026-11-17 | Sarkaç sayfası kayıt + rapor | 10 s sahte veri, 3.–4. saniye arası bilerek veri gönderilmedi | 1 boşluk, ~3. saniyede, ~1000 ms | "2,98. saniyede 1.008,1 ms boşluk", ortanca 16,0 ms | ✅ |
+| 2026-11-17 | Eksen ölçeği testleri (`olcek.js`) | 7 test | Hepsi geçer | Toplam 21/21 geçti | ✅ |
+| 2026-11-17 | Sinyal grafiği | 10 s sahte sarkaç: beta = 45·cos(2πt/1,42 s), yavaş sönümlü + gürültü | ~7 düzgün dalga, renkli 3 seri, telefon genişliğinde (375 px) taşma yok, ivme seçeneği çalışıyor | Beklendiği gibi (masaüstünde) | ✅ |
 | 2026-11-17 | Durdur sonrası veri alınmıyor | Durdur'dan sonra olay gönderildi | Örnek sayısı artmaz | Artmadı | ✅ |
 
 > Not: Masaüstü testlerinde örnekleme hızı anlamlı değildir (sahte olaylar). Gerçek hız telefonda ölçülecek.
@@ -60,6 +62,7 @@ _(Deney seçildikten sonra tablo eklenecek.)_
 |---|---|---|---|
 | 2026-11-17 | Bilgisayarda "veri gelmedi" uyarısı çıkmıyordu | Chrome, sensör yokken de bütün değerleri boş tek bir olay gönderiyor; bu olay "veri geldi" sayılıyordu | `hareket.js` içinde boş olaylar yok sayılıyor |
 | 2026-11-17 | iPhone 14'te örnekler arası aralık 1,0 ms ile 1.067 ms arasında değişiyor (ortalama 60 Hz olmasına rağmen) | Henüz kesin değil. 1 ms: iOS olayları bazen arka arkaya, yığın hâlinde teslim ediyor olabilir. ~1 sn: tek seferlik bir duraklama olabilir (başlangıç, ekrana dokunma, uygulama değiştirme). En küçük/en büyük değer, durumun bir kez mi yoksa sürekli mi olduğunu göstermiyor. | Sarkaç sayfasının örnekleme raporuyla tekrar ölçüldü (20 sn, masada, dokunmadan): boşluk yok, aralıklar 12–21 ms. Yani normal kayıtta sorun yok; ilk testteki 1 sn'lik boşluk tek seferlikti (muhtemelen ekrana dokunma/kaydırma ya da başlangıç anı, kesin nedeni bilinmiyor). Kayıt sırasında ekrana dokunulmaması önerisi sayfada yazıyor. Aralıkların 12–21 ms arasında oynamasının etkisi için bkz. Bölüm 7. |
+| 2026-11-17 | Grafik çizgileri gri çıktı, grafik yüksekliği yanlıştı | Tarayıcı `stil.css` dosyasının eski hâlini önbellekten kullandı; yeni renk değişkenleri yoktu. GitHub Pages da dosyaları 10 dakikaya kadar önbellekte tutturur, aynı şey telefonda olabilir. | `grafik.js` renk bulamazsa yedek renk kullanıyor. Güncellemeden hemen sonra tuhaf görünüm olursa sayfa yenilenmeli. Kalıcı çözüm: PWA adımında Service Worker ile dosya sürümleri yönetilecek. |
 | 2026-11-17 | Sayfa `file://` ile açılınca çalışmıyor | Tarayıcılar güvenlik nedeniyle `file://` üzerinden ES modülü yüklemez | Sayfa yerel sunucu ya da HTTPS ile açılmalı |
 
 ## 7. Zamanlama titremesi sarkaç sonucunu ne kadar etkiler? (tahmin)

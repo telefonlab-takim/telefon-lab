@@ -5,6 +5,7 @@
 
 import { ortalama, ortanca } from '../js/analiz/istatistik.js';
 import { araliklariHesapla, orneklemeRaporu } from '../js/analiz/ornekleme.js';
+import { guzelAdim, eksenCizgileri } from '../js/arayuz/olcek.js';
 
 // ---- Küçük test aracı ----------------------------------------------------
 
@@ -91,6 +92,17 @@ test('rapor: tek ölçüm → yeterli veri yok', () => esitMi(orneklemeRaporu([5
 test('rapor: hiç ölçüm yok → yeterli veri yok', () => esitMi(orneklemeRaporu([]).yeterliVeriVar, false));
 test('rapor: bütün zamanlar aynı → yeterli veri yok', () =>
   esitMi(orneklemeRaporu([7, 7, 7]).yeterliVeriVar, false));
+
+// ---- olcek.js (grafik eksenleri) -------------------------------------------
+
+test('guzelAdim: aralık 79, 5 parça → 20', () => yakinMi(guzelAdim(79, 5), 20));
+test('guzelAdim: aralık 20, 5 parça → 5', () => yakinMi(guzelAdim(20, 5), 5));
+test('guzelAdim: aralık 0,9, 5 parça → 0,2', () => yakinMi(guzelAdim(0.9, 5), 0.2));
+test('eksenCizgileri: -37 ile 42 → [-20, 0, 20, 40]', () => esitMi(eksenCizgileri(-37, 42), [-20, 0, 20, 40]));
+test('eksenCizgileri: 0 ile 20 → [0, 5, 10, 15, 20]', () => esitMi(eksenCizgileri(0, 20), [0, 5, 10, 15, 20]));
+test('eksenCizgileri: ondalık kırıntısı yok (0 ile 1)', () =>
+  esitMi(eksenCizgileri(0, 1), [0, 0.2, 0.4, 0.6, 0.8, 1]));
+test('eksenCizgileri: min = max → tek değer', () => esitMi(eksenCizgileri(3, 3), [3]));
 
 // ---- Sonuçları ekrana yaz -------------------------------------------------
 
