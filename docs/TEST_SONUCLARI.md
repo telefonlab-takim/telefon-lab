@@ -214,7 +214,8 @@ L metreyle dönme noktasından telefonun ortasına doğrudan ölçülür.
 
 ## 5.9 Yedinci gerçek kayıt — kapı koluna asılı (2026-11-18, iPhone 14, sürüm 2026-11-18.5)
 
-- **Düzenek:** Dönme noktası artık **kapı kolu** (sabit). Kablo/ip türü ve telefonun nasıl bağlandığı henüz netleşmedi.
+- **Düzenek:** Dönme noktası artık **kapı kolu** (sabit). Kullanıcı doğruladı: hâlâ **şarj kablosu** kullanılıyor
+  (telefon şarj girişinden asılı). Sonraki adım: ip ile ve L'yi doğrudan ölçerek tekrar.
 - **L nasıl bulundu (kullanıcı):** Kapı kolunun yerden yüksekliği 94 cm, telefonun ortası için 6 cm çıkarıldı → **L = 88 cm**
   (yine yüksekliklerden hesap; doğrudan ölçüm değil).
 - **Uygulama:** T = **1,7429 ± 0,0018 s**, eksen alfa, 10 salınım, bölüm 1,8–19,2 s, periyot farkı **%1,8**, açı 4,3°,
