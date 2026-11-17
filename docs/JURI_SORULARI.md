@@ -65,7 +65,10 @@ Bir denemede ölçtüğümüz ip boyuyla (40,5 cm) g = 6,6 çıktı. Önce L'yi 
 yanlış olduğunu fark ettik: L'yi sonuca bakarak değiştirmek, deneyi bilinen cevabı geri yazmaya çevirir. Doğru yol,
 ölçtüğümüz değeri koruyup farkın **nedenini** aramaktı. Periyodun ≈ 60 cm'lik bir sarkaca uyduğunu gördük ve ipin
 masaya bağlanma biçiminin iki ayrı dönme noktası oluşturduğunu düşündük; düzeneği buna göre değiştirdik.
-_(Sonuç doğrulanınca güncellenecek.)_
+Sonra asıl nedeni bulduk: ilk düzeneğimizde telefonu **şarj kablosunun ucuna takıp kabloyu elimizle tutuyorduk.**
+Dönme noktası (el) sabit değildi, kablo sert ve ağırdı, telefon da şarj girişi etrafında ayrıca sallanıyordu.
+Uygulama periyodu düzenli ölçtü ama "sistematik hata olabilir" dedi — sorun yazılımda değil düzenekteydi.
+_(Düzgün düzenekle alınan sonuç eklenecek.)_
 
 ### Sonuç kabul edilen değerden farklı çıkarsa ne oluyor?
 Uygulama farkı belirsizliğe bölüyor. Fark belirsizliğin 2 katından küçükse sonuç "uyumlu" sayılıyor. Büyükse bunun rastgele

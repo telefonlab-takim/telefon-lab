@@ -189,6 +189,29 @@ Henüz otomatik periyot hesabı yok; aşağıdaki değerler ekran görüntüsün
   - Gama ekseninde düzenli ≈ 3,5 Hz'lik salınım: telefon ipin ucunda kendi bağlantı noktası etrafında hızlı
     sallanıyor olabilir (iki parçalı sarkaç). Ana salınımı etkilemiyor ama düzeneğin sağlam olmadığını gösteriyor.
 
+## 5.8 Düzenek nasıldı? — 3–6. kayıtlardaki tutarsızlığın büyük ihtimalle asıl nedeni
+
+Kullanıcının açıklaması: **Düzenek "ben + şarj kablosu + telefon".** Yani telefon şarj kablosunun ucuna
+(şarj girişinden) takılı, kablonun öbür ucu **elde tutuluyor**.
+
+Bu, 3–6. kayıtlarda gördüğümüz tuhaflıkların hepsini açıklayabilir:
+
+| Gözlem | Olası neden |
+|---|---|
+| Periyot, ölçülen L ile uyuşmuyor; kayıttan kayda değişiyor | **Dönme noktası el.** El sabit durmaz; sarkaçla birlikte kıpırdar ve etkin boyu değiştirir. |
+| İki farklı periyotla iki yönde salınım (5.5) | Elin iki yönde farklı "esnekliği"; kablonun iki yönde farklı bükülme sertliği. |
+| Kaydın başında hızlı titreşim (5.4), gamada ≈ 3,5 Hz düzenli salınım (5.7) | Telefon **şarj girişi etrafında** ayrıca sallanıyor (iki parçalı sarkaç). |
+| L'yi "masa yüksekliği + 7 cm" ile bulmak | Dönme noktası el olduğu için ölçülecek sabit bir nokta yok. |
+
+Ayrıca **şarj kablosu** basit sarkaç ipi değildir: serttir (bükülmeye direnir) ve kütlesi ihmal edilemez.
+
+**Sonuç:** Uygulamanın ölçümü (periyot) son kayıtlarda düzenli ve güvenilir; sorun **deney düzeneğinde.**
+Uygulama bu sorunu doğrudan bilemez, ama "sistematik hata olabilir" uyarısıyla doğru yere işaret etti.
+
+**Önerilen düzenek** (sarkac.html'deki "Düzenek" bölümüne de eklendi, sürüm 2026-11-18.5):
+sabit bir noktaya bağlı, esnemeyen ince ip; telefon şarj girişinden değil, sıkı bir kılıf/bantla bağlı;
+L metreyle dönme noktasından telefonun ortasına doğrudan ölçülür.
+
 ## 6. Sorunlar ve çözümler
 
 | Tarih | Sorun | Neden | Çözüm |

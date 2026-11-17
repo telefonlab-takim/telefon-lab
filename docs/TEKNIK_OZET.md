@@ -106,6 +106,12 @@ Sarkaç periyodunu ölçümlerin zaman damgalarından hesaplayacağımız için 
 ### 4.1 Sarkaç
 - **Fizik:** Küçük açılı basit sarkaçta `T = 2π·√(L/g)`  →  `g = 4π²·L / T²`
 - **Belirsizlik:** `Δg / g = √( (ΔL/L)² + (2·ΔT/T)² )`
+- **Deney düzeneği** (TEST_SONUCLARI 5.8'deki deneyimden):
+  - İp **sabit** bir noktaya bağlanır (kapı kolu, sopa, masaya bantlanmış taşan cetvel); **elle tutulmaz.**
+  - **Esnemeyen ince ip** (ayakkabı bağcığı, olta misinası); şarj kablosu değil (sert ve ağır).
+  - Telefon **şarj girişinden asılmaz** (giriş etrafında ayrı salınım, girişe zarar, düşme riski); sıkı kılıf ya da bantla bağlanır.
+  - Mümkünse iki iple V biçiminde asılır (telefonun burulmasını önler) ve iplerin düzlemine dik itilir.
+  - **L:** metre dönme noktasına dayanıp telefonun ortasına kadar **doğrudan** ölçülür; masa/yer yüksekliğinden hesaplanmaz.
 - **Ölçüm akışı:** "Başlat" → bırakma süresi (geri sayım; kullanıcı sarkacı asıp bırakır, el hareketi kayda girmez)
   → kayıt → sonuçlar.
 - **Periyot bulma yöntemi** (`js/analiz/periyot.js` → `sarkacPeriyoduBul`):
