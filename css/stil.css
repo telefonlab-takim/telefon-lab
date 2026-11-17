@@ -109,6 +109,8 @@ th, td { padding: 0.4rem; border-bottom: 1px solid var(--cizgi); text-align: lef
 /* Başlık satırı olan tablolarda (thead) ilk sütun sola, diğerleri sağa yaslı */
 thead th { text-align: right; font-size: 0.9rem; }
 thead th:first-child, tbody td:first-child { text-align: left; }
+/* Sayılar ve birimleri ("1,558 s") ikiye bölünmesin */
+tbody td:not(:first-child) { white-space: nowrap; }
 td {
   text-align: right;
   /* Sayılar değişirken genişlik oynamasın diye eşit genişlikli rakamlar */

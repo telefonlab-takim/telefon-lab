@@ -147,6 +147,23 @@ Henüz otomatik periyot hesabı yok; aşağıdaki değerler ekran görüntüsün
   → uygulamaya **L = 40,5 ± 0,5 cm** girilmesi önerildi (aralığın ortası ± yarısı).
 - **Deney için:** Telefonu yalnızca V'nin düzlemine dik yönde itmek.
 
+## 5.6 Beşinci gerçek kayıt — yeni kodla ilk ölçüm (2026-11-18, iPhone 14, sürüm 2026-11-18.3)
+
+- **Girilen:** L = 61,0 ± 0,5 cm. (Önceki kayıtta 40–41 cm ölçülmüştü; L'nin nasıl 61 cm olduğu kullanıcıya soruldu.)
+- **Uygulama:** T = 1,558 ± 0,004 s, eksen **alfa**, 12 salınım, bölüm 1,4–20,1 s, periyot farkı **%5,6**, açı 3,7°.
+  g = 9,92 ± 0,10 m/s² — **üstü çizili** (periyot farkı %5 sınırının üstünde). Uygulama doğru davrandı.
+- **Eksen tablosu:** ✓ alfa 1,558 s (%5,6, 12) · beta 1,191 s (%10,1, 6) · gama 0,273 s (%8,3, 8 — gürültü).
+- **Dikkat çeken tutarlılık:** Alfa ekseninin periyodu son üç kayıtta hep ≈ 1,50–1,56 s
+  (5.4: ≈1,50 s, 5.5: ≈1,55 s, 5.6: 1,558 s), girilen L ise 30, 40,5 ve 61 cm.
+  1,558 s'lik bir basit sarkaç ≈ 60 cm boyuna karşılık gelir; 5.5'teki beta (≈1,25–1,28 s) ise ≈ 40 cm'ye.
+- **Olası açıklama (doğrulanmadı):** İp masanın üstünde, kenardan biraz geride bağlıysa sarkacın **iki farklı dönme
+  noktası** olur: masaya dik yönde salınırken ip **masanın kenarı** etrafında döner (L ≈ kenardan telefona ≈ 40 cm),
+  kenara paralel salınırken ise **bağlama noktası** etrafında döner (L ≈ bağlama noktasından telefona ≈ 60 cm).
+  Bu, iki yönde iki ayrı periyodu (≈1,25 s ve ≈1,55 s) açıklar.
+- **Öneri:** İpin tek bir sabit noktadan sallanmasını sağlamak (ör. masa kenarından taşan bir çubuğa/kancaya bağlamak),
+  L'yi o noktadan telefonun ortasına cetvelle ölçmek ve sarkacı tek yönde itmek.
+- **Küçük düzeltme:** Eksen tablosunda "1,558 s" gibi değerler dar ekranda iki satıra bölünüyordu; artık bölünmüyor (sürüm 2026-11-18.4).
+
 ## 6. Sorunlar ve çözümler
 
 | Tarih | Sorun | Neden | Çözüm |
