@@ -41,7 +41,18 @@ Dönme hızının tepe değerinden bırakma açısını tahmin ediyoruz: θ₀ =
 g'nin yaklaşık ne kadar hatalı çıkacağını söylüyor (θ₀²/8). İlk gerçek denememizde açı ≈ 23° çıktı → g'de ≈ %2 hata.
 
 ### Belirsizliği nasıl hesaplıyorsunuz?
-_(Cevap yazılacak)_
+İki ölçümümüz var: sarkaç boyu L (cetvelle, ΔL'yi kullanıcı girer) ve periyot T (telefon, ΔT doğru uydurmadan gelir).
+g = 4π²L/T² olduğundan hata yayılımı kuralıyla Δg/g = √((ΔL/L)² + (2ΔT/T)²). T formülde karesiyle geçtiği için
+onun payı 2 ile çarpılır. Uygulama ayrıca belirsizliğin yüzde kaçının L'den, yüzde kaçının T'den geldiğini gösteriyor.
+
+### Sonuç kabul edilen değerden farklı çıkarsa ne oluyor?
+Uygulama farkı belirsizliğe bölüyor. Fark belirsizliğin 2 katından küçükse sonuç "uyumlu" sayılıyor. Büyükse bunun rastgele
+hatayla açıklanamayacağını, sistematik bir hata olabileceğini söylüyor ve olası nedenleri sıralıyor (L yanlış ölçülmüş,
+açı büyük, telefon dönmüş). Sonucu güzel göstermeye çalışmıyoruz.
+
+### Neden "9,81 ± 0,10" yazıyorsunuz da "9,80932 ± 0,10174" yazmıyorsunuz?
+Belirsizliğin ötesindeki basamaklar anlamsız; yazmak olduğundan hassas ölçmüşüz gibi gösterir. Belirsizliği 1 anlamlı
+basamağa (ilk rakamı 1 ise 2'ye) yuvarlıyoruz, sonucu da o basamağa kadar yazıyoruz.
 
 ### Sarkaçta küçük açı yaklaşımı ne demek, ihlal edilirse ne olur?
 _(Cevap yazılacak)_

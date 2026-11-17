@@ -9,11 +9,21 @@
 <body>
   <main>
     <h1>Sarkaç Deneyi</h1>
-    <p class="kucuk">Yapım aşaması — Adım 4: kayıt, periyot hesabı, grafik ve örnekleme kalitesi.
-      g hesabı bir sonraki adımda eklenecek.</p>
+    <p class="kucuk">Yapım aşaması — Adım 5: kayıt, periyot, g ± Δg ve açıklama.</p>
 
     <section>
-      <h2>1. Kayıt</h2>
+      <h2>1. Hazırlık ve kayıt</h2>
+      <p>
+        <label for="uzunlukGirisi">Sarkaç boyu L (cm):</label>
+        <input id="uzunlukGirisi" type="text" inputmode="decimal" placeholder="ör. 48,5" size="7">
+      </p>
+      <p>
+        <label for="uzunlukBelirsizligiGirisi">L'nin belirsizliği ΔL (cm):</label>
+        <input id="uzunlukBelirsizligiGirisi" type="text" inputmode="decimal" value="0,5" size="7">
+      </p>
+      <p class="kucuk">L: ipin asıldığı noktadan telefonun ortasına (ağırlık merkezine) kadar olan dikey uzaklık.
+        ΔL: bu ölçümden ne kadar emin olduğunuz. Telefonun ortasının tam yerini bilmediğimiz için 0,5–1 cm makuldür.
+        L'yi kayıttan sonra da girebilir veya değiştirebilirsiniz.</p>
       <p>
         <label for="hazirlikSecimi">Bırakma süresi:</label>
         <select id="hazirlikSecimi">
@@ -40,8 +50,21 @@
     </section>
 
     <!-- Kayıt bitince doldurulur -->
+    <section id="gBolumu" hidden>
+      <h2>2. Yer çekimi ivmesi</h2>
+      <p id="gSonuc" class="sonuc"></p>
+      <table>
+        <tr><th>Sarkaç boyu L</th><td id="gUzunluk"></td></tr>
+        <tr><th>Periyot T</th><td id="gPeriyot"></td></tr>
+        <tr><th>Belirsizliğin kaynağı</th><td id="gKaynak"></td></tr>
+        <tr><th>Kabul edilen değerle fark</th><td id="gFark"></td></tr>
+      </table>
+      <h3>Bu sonuç ne anlatıyor?</h3>
+      <ul id="gAciklama"></ul>
+    </section>
+
     <section id="periyotBolumu" hidden>
-      <h2>2. Periyot</h2>
+      <h2>3. Periyot</h2>
       <p id="pSonuc" class="sonuc"></p>
       <table>
         <tr><th>Kullanılan eksen</th><td id="pEksen"></td></tr>
@@ -61,7 +84,7 @@
     </section>
 
     <section id="grafikBolumu" hidden>
-      <h2>3. Sinyal grafiği</h2>
+      <h2>4. Sinyal grafiği</h2>
       <p>
         <label for="sinyalSecimi">Gösterilen sinyal:</label>
         <select id="sinyalSecimi">
@@ -76,7 +99,7 @@
     </section>
 
     <section id="raporBolumu" hidden>
-      <h2>4. Örnekleme raporu</h2>
+      <h2>5. Örnekleme raporu</h2>
       <table>
         <tr><th>Ölçüm sayısı</th><td id="rOrnekSayisi"></td></tr>
         <tr><th>Kayıt süresi</th><td id="rSure"></td></tr>

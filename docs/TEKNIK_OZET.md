@@ -16,19 +16,19 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 |---|---|
 | `index.html` | Ana menü, deney seçimi |
 | `sensor-testi.html` | ✅ Hareket sensörü test sayfası (canlı ham değerler) |
-| `sarkac.html` | 🔶 Sarkaç deneyi sayfası (şimdilik: geri sayım + kayıt + periyot + grafik + örnekleme raporu; g hesabı yok) |
+| `sarkac.html` | ✅ Sarkaç deneyi sayfası: L girişi, geri sayım, kayıt, g ± Δg ve açıklama, periyot, grafik, örnekleme raporu |
 | `css/stil.css` | ✅ Ortak stil (karanlık mod destekli) |
 | `js/sensor/hareket.js` | ✅ Ön kontroller, izin, `devicemotion` dinleme, boş olay filtresi |
 | `js/sensor/kayit.js` | ✅ Belirli süre kayıt; kayıt sırasında sayfa arka plana geçti mi? |
 | `js/analiz/istatistik.js` | ✅ Ortalama, ortanca, standart sapma, doğru uydurma (en küçük kareler) |
 | `js/analiz/ornekleme.js` | ✅ Örnekleme raporu: hız, ortanca aralık, uzun boşluklar, uyarılar |
 | `js/analiz/periyot.js` | ✅ Eksen seçimi, yukarı sıfır geçişleri, periyot ± belirsizlik |
-| `js/analiz/sarkac-hesap.js` | 🔶 Bırakma açısı tahmini, büyük açı etkisi (g hesabı sonraki adımda) |
-| `js/arayuz/bicim.js` | ✅ Sayıları Türkçe biçimde yazma (1.067,5), belirsizlikle yazma (1,400 ± 0,002) |
+| `js/analiz/sarkac-hesap.js` | ✅ g ± Δg, belirsizlik payları, kabul edilen değerle karşılaştırma, bırakma açısı, büyük açı etkisi |
+| `js/arayuz/bicim.js` | ✅ Türkçe sayı yazma (1.067,5), virgüllü sayı okuma ("48,7"), belirsizlikle yazma (9,81 ± 0,10) |
 | `js/arayuz/grafik.js` | ✅ Canvas üzerine çizgi grafiği (ızgara, eksen yazıları, renk açıklaması) |
 | `js/arayuz/olcek.js` | ✅ Eksenler için "güzel" çizgi değerleri (-20, 0, 20, 40 gibi) |
 | `js/sayfalar/sensor-testi-sayfa.js` | ✅ Sensör testi sayfasının akışı |
-| `js/sayfalar/sarkac-sayfa.js` | 🔶 Sarkaç sayfasının akışı |
+| `js/sayfalar/sarkac-sayfa.js` | ✅ Sarkaç sayfasının akışı ve sonuç açıklamaları |
 | `testler/index.html`, `testler/testler.js` | ✅ Analiz fonksiyonlarının testleri (tarayıcıda açılınca çalışır) |
 | `manifest.webmanifest`, `sw.js` | PWA ve çevrimdışı çalışma (sonraki aşama) |
 
@@ -122,6 +122,18 @@ Sarkaç periyodunu ölçümlerin zaman damgalarından hesaplayacağımız için 
 - **Büyük açı etkisi:** `T ≈ T₀·(1 + θ₀²/16)` → g yaklaşık `θ₀²/8` oranında küçük çıkar (23° → %2,1).
 - **Bilinen hata kaynakları:** ip boyunun (L) ölçümü — özellikle telefonun ağırlık merkezinin tam yeri (baskın);
   büyük bırakma açısı; telefonun ip ucunda burulması; zaman damgası titremesi (ihmal edilebilir, bkz. TEST_SONUCLARI 7).
+- **g hesabı** (`sarkac-hesap.js` → `gHesapla`): Kullanıcı L ve ΔL'yi cm olarak girer (virgül ya da nokta kabul edilir);
+  kayıttan önce ya da sonra girilebilir, değiştikçe g yeniden hesaplanır. Son girilen değerler yalnızca o telefonun
+  tarayıcısında hatırlanır (`localStorage`).
+- **Belirsizlik payları:** Toplam (göreli) belirsizliğin karesi, L'den ve T'den gelen kısımlara bölünür:
+  `L payı = (ΔL/L)² / (Δg/g)²`, `T payı = (2ΔT/T)² / (Δg/g)²`. Öğrenciye "neyi daha dikkatli ölçmeli" sorusunun cevabını verir.
+- **Kabul edilen değerle karşılaştırma:** `fark katı = |g − 9,80| / Δg`. 2 veya altı → "uyumlu";
+  2'den büyük → "rastgele hatayla açıklanamaz, sistematik hata olabilir" ve olası nedenler listelenir.
+  (2 sınırı: rastgele hatalarda ölçümlerin yaklaşık %95'i ±2 belirsizlik içine düşer.)
+- **Büyük açı etkisi belirsizliğe dahil değildir;** ayrı bir cümleyle açıklanır. (Açı tahmini, telefon burulduğunda
+  güvenilir olmadığı için otomatik düzeltme yapılmıyor.)
+- **Sonucu yazma kuralı** (`bicim.js` → `belirsizlikleYaz`): Belirsizlik 1 anlamlı basamağa yuvarlanır (ilk rakamı 1 ise 2);
+  ölçüm aynı ondalık basamağa kadar yazılır. Ör. 9,8093 ± 0,1017 → **9,81 ± 0,10**.
 
 ### 4.2 Ses frekansı
 _(doldurulacak)_

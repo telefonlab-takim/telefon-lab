@@ -30,6 +30,8 @@ Bir ölçüm kötü çıktıysa onu da yazıyoruz; jüri için başarısız dene
 | 2026-11-17 | Sinyal grafiği | 10 s sahte sarkaç: beta = 45·cos(2πt/1,42 s), yavaş sönümlü + gürültü | ~7 düzgün dalga, renkli 3 seri, telefon genişliğinde (375 px) taşma yok, ivme seçeneği çalışıyor | Beklendiği gibi (masaüstünde) | ✅ |
 | 2026-11-17 | Periyot, doğru uydurma, belirsizlikle yazma, açı tahmini testleri | 19 yeni test (sahte sarkaç: gürültü ±3 °/s, kayma +2 °/s, zaman titremesi ±5 ms dahil) | Hepsi geçer | Toplam 40/40 geçti. İlk çalıştırmada 1 test başarısızdı: testteki **elle hesap** yanlıştı (eğim 1,90 yazılmış, doğrusu 1,91); kod doğruydu, test düzeltildi. | ✅ |
 | 2026-11-17 | Sarkaç sayfası uçtan uca (masaüstü) | 3 s bırakma (bilerek karışık sinyal) + 10 s kayıt; gama ekseninde 105·cos(2πt/1,40 s) | T ≈ 1,400 s, eksen gama, ~23° uyarısı, karışık başlangıç kayda girmez | T = 1,4000 ± 0,0004 s, eksen gama, 6 salınım, açı 23°, "%2,1" uyarısı | ✅ |
+| 2026-11-17 | g hesabı, karşılaştırma, sayı okuma, belirsizlik yazma testleri | 14 yeni test (ör. L = 0,487 ± 0,005 m, T = 1,400 ± 0,001 s → elle hesaplanan g = 9,809, Δg ≈ 0,102) | Hepsi geçer | Toplam 54/54 geçti | ✅ |
+| 2026-11-17 | Sarkaç sayfası g bölümü (masaüstü) | L = 48,7 ± 0,5 cm, sahte sarkaç T = 1,40 s, ~7° | g ≈ 9,81 ± 0,10, uyumlu, belirsizlik çoğunlukla L'den | g = 9,82 ± 0,10 m/s², L %99,0 · T %1,0, fark 0,2 kat. L = 40 cm girilince g = 8,1 ve "sistematik hata" açıklaması; "abc" girilince "L'yi girin" mesajı | ✅ |
 | 2026-11-17 | Durdur sonrası veri alınmıyor | Durdur'dan sonra olay gönderildi | Örnek sayısı artmaz | Artmadı | ✅ |
 
 > Not: Masaüstü testlerinde örnekleme hızı anlamlı değildir (sahte olaylar). Gerçek hız telefonda ölçülecek.

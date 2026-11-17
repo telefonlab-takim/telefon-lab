@@ -1,13 +1,20 @@
 // js/sayfalar/sarkac-sayfa.js
 // Sarkaç sayfasının mantığı.
-// Şu anki hâli (Adım 4): geri sayım → kayıt → periyot hesabı → grafik → örnekleme raporu.
+// Şu anki hâli (Adım 5): geri sayım → kayıt → periyot → g ± Δg ve açıklama → grafik → örnekleme raporu.
 
 import { hareketSensorunuHazirla } from '../sensor/hareket.js';
 import { kayitYap } from '../sensor/kayit.js';
 import { orneklemeRaporu, BOSLUK_ESIGI_MS } from '../analiz/ornekleme.js';
 import { periyotBul, enCokSalinanSeri } from '../analiz/periyot.js';
-import { genlikAcisiTahmini, buyukAciGHatasi, KUCUK_ACI_SINIRI_DERECE } from '../analiz/sarkac-hesap.js';
-import { sayiYaz, belirsizlikleYaz } from '../arayuz/bicim.js';
+import {
+  genlikAcisiTahmini,
+  buyukAciGHatasi,
+  gHesapla,
+  kabulEdilenleKarsilastir,
+  KUCUK_ACI_SINIRI_DERECE,
+  KABUL_EDILEN_G,
+} from '../analiz/sarkac-hesap.js';
+import { sayiYaz, sayiOku, belirsizlikleYaz } from '../arayuz/bicim.js';
 import { grafikCiz, aciklamaYaz } from '../arayuz/grafik.js';
 
 const el = (id) => document.getElementById(id);
@@ -17,6 +24,8 @@ const kayitButonu = el('kayitButonu');
 // (sinyal değişimi, ekran döndürme) kullanılır.
 let sonOrnekler = [];
 let sonGecisler = [];
+// Son periyot sonucu ve açı tahmini. L değiştirilince g yeniden hesaplanırken kullanılır.
+let sonPeriyot = null; // { periyotSn, periyotBelirsizligiSn, aciDerece } ya da null
 
 // Grafikte gösterilebilecek sinyaller: her biri 3 eksenden oluşur.
 const SINYALLER = {
@@ -89,9 +98,10 @@ function geriSay(sureSn, ilerleme) {
   });
 }
 
-// ---- 2. Periyot ---------------------------------------------------------------
+// ---- 3. Periyot ---------------------------------------------------------------
 
 function periyoduHesaplaVeGoster(ornekler) {
+  sonPeriyot = null; // geçerli periyot bulunursa aşağıda doldurulur
   const zamanlarSn = goreliZamanlarSn(ornekler);
   const seriler = serileriCikar(ornekler, SINYALLER.donme);
 
@@ -117,6 +127,11 @@ function periyoduHesaplaVeGoster(ornekler) {
     el('pYayilim').textContent = '%' + sayiYaz(sonuc.yayilimOrani * 100, 1);
 
     const aci = genlikAcisiTahmini(sonuc.tepeDegeri, sonuc.periyotSn);
+    sonPeriyot = {
+      periyotSn: sonuc.periyotSn,
+      periyotBelirsizligiSn: sonuc.periyotBelirsizligiSn,
+      aciDerece: aci,
+    };
     // Bir ondalıkla gösteriyoruz: 10,3° yuvarlanıp "10°" yazılırsa "10°'den az olmalı" uyarısıyla çelişir.
     el('pAci').textContent = sayiYaz(aci, 1) + '°';
     if (aci > KUCUK_ACI_SINIRI_DERECE) {
@@ -135,7 +150,110 @@ function periyoduHesaplaVeGoster(ornekler) {
   el('periyotBolumu').hidden = false;
 }
 
-// ---- 3. Grafik ------------------------------------------------------------------
+// ---- 2. Yer çekimi ivmesi (g) ----------------------------------------------------
+
+// Kullanıcının yazdığı L ve ΔL'yi okur (cm → m). Hatalıysa { hata: 'mesaj' } döner.
+function uzunluguOku() {
+  const uzunlukCm = sayiOku(el('uzunlukGirisi').value);
+  const belirsizlikCm = sayiOku(el('uzunlukBelirsizligiGirisi').value);
+  if (Number.isNaN(uzunlukCm)) return { hata: "g'yi hesaplamak için yukarıya sarkaç boyunu (L, cm) girin." };
+  if (uzunlukCm <= 0) return { hata: "Sarkaç boyu 0'dan büyük olmalı." };
+  if (Number.isNaN(belirsizlikCm) || belirsizlikCm < 0) return { hata: 'ΔL için geçerli bir sayı girin (ör. 0,5).' };
+  return { uzunlukM: uzunlukCm / 100, uzunlukBelirsizligiM: belirsizlikCm / 100 };
+}
+
+// Sonucu öğrenciye açıklayan cümleleri hazırlar.
+function gAciklamalari(sonuc, karsilastirma, girdi, aciDerece) {
+  const cumleler = [];
+
+  cumleler.push(`g = 4π²·L / T² formülüyle hesaplandı (T = 2π·√(L/g) formülünden g çekilerek).`);
+
+  // Hangi ölçüm belirsizliğe daha çok katkı yapıyor?
+  if (girdi.uzunlukBelirsizligiM === 0) {
+    cumleler.push('ΔL = 0 girdiniz. Hiçbir ölçüm kusursuz değildir; belirsizlik olduğundan küçük görünüyor.');
+  } else if (sonuc.uzunlukPayi >= sonuc.periyotPayi) {
+    cumleler.push(
+      `Belirsizliğin %${sayiYaz(sonuc.uzunlukPayi * 100, 0)}'i sarkaç boyunun (L) ölçümünden geliyor. ` +
+        'Sonucu iyileştirmenin yolu L\'yi daha dikkatli ölçmek; telefonun saati (periyot) zaten çok hassas.'
+    );
+  } else {
+    cumleler.push(
+      `Belirsizliğin %${sayiYaz(sonuc.periyotPayi * 100, 0)}'i periyot ölçümünden geliyor. ` +
+        'Daha uzun kayıt yapın ve telefonun dönmeden, tek düzlemde salınmasını sağlayın.'
+    );
+  }
+
+  // Kabul edilen değerle karşılaştırma
+  const kat = sayiYaz(karsilastirma.farkKati, 1);
+  if (karsilastirma.uyumluMu) {
+    cumleler.push(
+      `Kabul edilen değer (≈ ${sayiYaz(KABUL_EDILEN_G, 2)} m/s²) ile fark, belirsizliğin ${kat} katı. ` +
+        'Bu, ölçümün kabul edilen değerle uyumlu olduğu anlamına gelir.'
+    );
+  } else {
+    cumleler.push(
+      `Kabul edilen değer (≈ ${sayiYaz(KABUL_EDILEN_G, 2)} m/s²) ile fark, belirsizliğin ${kat} katı. ` +
+        'Bu kadar büyük fark rastgele hatayla açıklanamaz; sistematik bir hata olabilir: ' +
+        'L telefonun ortasına kadar mı ölçüldü? Sarkaç büyük açıyla mı bırakıldı? Telefon ipin ucunda döndü mü?'
+    );
+  }
+
+  // Büyük açı etkisi
+  if (aciDerece > KUCUK_ACI_SINIRI_DERECE) {
+    cumleler.push(
+      `Sarkaç yaklaşık ${sayiYaz(aciDerece, 1)}° ile salındı; bu yüzden g yaklaşık ` +
+        `%${sayiYaz(buyukAciGHatasi(aciDerece) * 100, 1)} küçük çıkmış olabilir (bu etki belirsizliğe dahil değildir).`
+    );
+  }
+
+  return cumleler;
+}
+
+// L değiştiğinde ya da yeni kayıt bittiğinde g bölümünü yeniden hesaplar.
+function gHesabiniGuncelle() {
+  if (sonOrnekler.length === 0) return; // henüz kayıt yok
+
+  const girdi = uzunluguOku();
+  const satirIdleri = ['gUzunluk', 'gPeriyot', 'gKaynak', 'gFark'];
+
+  if (!sonPeriyot || girdi.hata) {
+    el('gSonuc').textContent = 'g = ?';
+    for (const id of satirIdleri) el(id).textContent = '–';
+    const mesaj = !sonPeriyot ? 'Periyot bulunamadığı için g hesaplanamadı.' : girdi.hata;
+    listeyiDoldur(el('gAciklama'), [mesaj], '');
+    el('gBolumu').hidden = false;
+    return;
+  }
+
+  const sonuc = gHesapla({ ...girdi, ...sonPeriyot });
+  const karsilastirma = kabulEdilenleKarsilastir(sonuc.g, sonuc.gBelirsizligi);
+
+  el('gSonuc').textContent = 'g = ' + belirsizlikleYaz(sonuc.g, sonuc.gBelirsizligi, 'm/s²');
+  el('gUzunluk').textContent = belirsizlikleYaz(girdi.uzunlukM * 100, girdi.uzunlukBelirsizligiM * 100, 'cm');
+  el('gPeriyot').textContent = belirsizlikleYaz(sonPeriyot.periyotSn, sonPeriyot.periyotBelirsizligiSn, 's');
+  el('gKaynak').textContent =
+    `L: %${sayiYaz(sonuc.uzunlukPayi * 100, 1)} · T: %${sayiYaz(sonuc.periyotPayi * 100, 1)}`;
+  el('gFark').textContent =
+    `${sayiYaz(karsilastirma.fark, 2)} m/s² (belirsizliğin ${sayiYaz(karsilastirma.farkKati, 1)} katı)`;
+  listeyiDoldur(el('gAciklama'), gAciklamalari(sonuc, karsilastirma, girdi, sonPeriyot.aciDerece), '');
+  el('gBolumu').hidden = false;
+}
+
+// L ve ΔL yazıldıkça g'yi güncelle, ve son girilen değerleri telefonda hatırla
+// (yalnızca bu tarayıcıda saklanır, hiçbir yere gönderilmez).
+for (const id of ['uzunlukGirisi', 'uzunlukBelirsizligiGirisi']) {
+  try {
+    const kayitli = localStorage.getItem('sarkac.' + id);
+    if (kayitli !== null) el(id).value = kayitli;
+  } catch (e) { /* tarayıcı depolamaya izin vermiyorsa hatırlamadan devam et */ }
+
+  el(id).addEventListener('input', () => {
+    try { localStorage.setItem('sarkac.' + id, el(id).value); } catch (e) { /* önemli değil */ }
+    gHesabiniGuncelle();
+  });
+}
+
+// ---- 4. Grafik ------------------------------------------------------------------
 
 function grafigiGuncelle() {
   if (sonOrnekler.length < 2) return;
@@ -154,7 +272,7 @@ el('sinyalSecimi').addEventListener('change', grafigiGuncelle);
 // Telefon yan çevrilince grafik genişliği değişir; yeniden çiz
 window.addEventListener('resize', grafigiGuncelle);
 
-// ---- 4. Örnekleme raporu ------------------------------------------------------
+// ---- 5. Örnekleme raporu ------------------------------------------------------
 
 // Kayıttaki örneklerin kaçında jiroskop (dönme hızı) değeri var?
 function jiroskopluOrnekSayisi(ornekler) {
@@ -210,7 +328,7 @@ kayitButonu.addEventListener('click', async () => {
   const hazirlikSn = Number(el('hazirlikSecimi').value);
   const sureSn = Number(el('sureSecimi').value);
   kayitButonu.disabled = true;
-  for (const id of ['periyotBolumu', 'grafikBolumu', 'raporBolumu']) el(id).hidden = true;
+  for (const id of ['gBolumu', 'periyotBolumu', 'grafikBolumu', 'raporBolumu']) el(id).hidden = true;
 
   // 1) Bırakma süresi: kullanıcı sarkacı bu sürede asıp bırakır
   await geriSay(hazirlikSn, (kalanSn) => {
@@ -228,6 +346,7 @@ kayitButonu.addEventListener('click', async () => {
   // 3) Sonuçlar
   if (ornekler.length >= 2) {
     periyoduHesaplaVeGoster(ornekler);
+    gHesabiniGuncelle();
     el('grafikBolumu').hidden = false; // önce görünür olmalı, yoksa tuvalin genişliği 0 olur
     grafigiGuncelle();
   }

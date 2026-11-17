@@ -8,8 +8,8 @@ import { araliklariHesapla, orneklemeRaporu } from '../js/analiz/ornekleme.js';
 import { guzelAdim, eksenCizgileri } from '../js/arayuz/olcek.js';
 import { standartSapma, dogruUydur } from '../js/analiz/istatistik.js';
 import { periyotBul, enCokSalinanSeri, yukariSifirGecisleri } from '../js/analiz/periyot.js';
-import { genlikAcisiTahmini, buyukAciGHatasi } from '../js/analiz/sarkac-hesap.js';
-import { belirsizlikleYaz } from '../js/arayuz/bicim.js';
+import { genlikAcisiTahmini, buyukAciGHatasi, gHesapla, kabulEdilenleKarsilastir } from '../js/analiz/sarkac-hesap.js';
+import { belirsizlikleYaz, sayiOku } from '../js/arayuz/bicim.js';
 
 // ---- Küçük test aracı ----------------------------------------------------
 
@@ -246,12 +246,63 @@ test('periyotBul + genlik: genliği 50 °/s olan sinüsün tepe değeri ≈ 50',
   yakinMi(periyotBul(zamanlarSn, degerler).tepeDegeri, 50, 0.5);
 });
 
+// ---- sarkac-hesap.js: g hesabı ------------------------------------------------
+
+test('gHesapla: L = 1 m, T = 2π/√9,81 s → g = 9,81 m/s² (formülün tersi)', () => {
+  const T = (2 * Math.PI) / Math.sqrt(9.81);
+  yakinMi(gHesapla({ uzunlukM: 1, uzunlukBelirsizligiM: 0, periyotSn: T, periyotBelirsizligiSn: 0 }).g, 9.81, 1e-12);
+});
+
+test('gHesapla: L = 0,487 ± 0,005 m, T = 1,400 ± 0,001 s → elle hesap ile aynı', () => {
+  // Elle:  g = 4π² × 0,487 / 1,4² = 9,8093...
+  //        ΔL/L = 0,005/0,487 = 0,01027      2ΔT/T = 0,002/1,4 = 0,00143
+  //        Δg/g = √(0,01027² + 0,00143²) = 0,01037   →   Δg ≈ 0,1017
+  const r = gHesapla({ uzunlukM: 0.487, uzunlukBelirsizligiM: 0.005, periyotSn: 1.4, periyotBelirsizligiSn: 0.001 });
+  yakinMi(r.g, (4 * Math.PI ** 2 * 0.487) / 1.96, 1e-12);
+  yakinMi(r.gBelirsizligi, 0.1017, 2e-4);
+  // Belirsizliğin neredeyse tamamı L'den geliyor: 0,01027² / 0,01037² ≈ %98
+  yakinMi(r.uzunlukPayi, 0.98, 0.01);
+  yakinMi(r.uzunlukPayi + r.periyotPayi, 1, 1e-12);
+});
+
+test('gHesapla: periyot iki katına çıkınca g dörtte birine iner', () => {
+  const a = gHesapla({ uzunlukM: 1, uzunlukBelirsizligiM: 0, periyotSn: 1, periyotBelirsizligiSn: 0 }).g;
+  const b = gHesapla({ uzunlukM: 1, uzunlukBelirsizligiM: 0, periyotSn: 2, periyotBelirsizligiSn: 0 }).g;
+  yakinMi(a / b, 4, 1e-12);
+});
+
+test('kabulEdilenleKarsilastir: 9,75 ± 0,10 → fark 0,5 kat, uyumlu', () => {
+  const r = kabulEdilenleKarsilastir(9.75, 0.1, 9.8);
+  yakinMi(r.farkKati, 0.5, 1e-9);
+  esitMi(r.uyumluMu, true);
+});
+test('kabulEdilenleKarsilastir: 9,40 ± 0,10 → fark 4 kat, uyumsuz', () => {
+  const r = kabulEdilenleKarsilastir(9.4, 0.1, 9.8);
+  yakinMi(r.farkKati, 4, 1e-9);
+  esitMi(r.uyumluMu, false);
+});
+
+// ---- bicim.js: kullanıcı girdisini okuma ----------------------------------------
+
+test('sayiOku: "48,7" → 48,7 (virgül)', () => yakinMi(sayiOku('48,7'), 48.7));
+test('sayiOku: "48.7" → 48,7 (nokta)', () => yakinMi(sayiOku('48.7'), 48.7));
+test('sayiOku: " 50 " → 50 (boşluklar)', () => yakinMi(sayiOku(' 50 '), 50));
+test('sayiOku: "" → NaN', () => esitMi(Number.isNaN(sayiOku('')), true));
+test('sayiOku: "abc" → NaN', () => esitMi(Number.isNaN(sayiOku('abc')), true));
+test('sayiOku: "4,8,7" → NaN', () => esitMi(Number.isNaN(sayiOku('4,8,7')), true));
+
 // ---- bicim.js: belirsizlikle yazma -----------------------------------------
 
 test('belirsizlikleYaz: 1,40023 ± 0,0023 s → "1,400 ± 0,002 s"', () =>
   esitMi(belirsizlikleYaz(1.40023, 0.0023, 's'), '1,400 ± 0,002 s'));
-test('belirsizlikleYaz: 9,8123 ± 0,15 → "9,8 ± 0,2"', () =>
-  esitMi(belirsizlikleYaz(9.8123, 0.15), '9,8 ± 0,2'));
+test('belirsizlikleYaz: ilk rakam 1 ise 2 basamak: 9,8123 ± 0,15 → "9,81 ± 0,15"', () =>
+  esitMi(belirsizlikleYaz(9.8123, 0.15), '9,81 ± 0,15'));
+test('belirsizlikleYaz: 9,8093 ± 0,1017 → "9,81 ± 0,10"', () =>
+  esitMi(belirsizlikleYaz(9.8093, 0.1017), '9,81 ± 0,10'));
+test('belirsizlikleYaz: ilk rakam 1 değilse 1 basamak: 9,8123 ± 0,25 → "9,8 ± 0,3"', () =>
+  esitMi(belirsizlikleYaz(9.8123, 0.25), '9,8 ± 0,3'));
+test('belirsizlikleYaz: 48,7 ± 0,5 cm → "48,7 ± 0,5 cm"', () =>
+  esitMi(belirsizlikleYaz(48.7, 0.5, 'cm'), '48,7 ± 0,5 cm'));
 test('belirsizlikleYaz: belirsizlik bilinmiyor → "± ?"', () =>
   esitMi(belirsizlikleYaz(1.4, NaN, 's'), '1,400 ± ? s'));
 
