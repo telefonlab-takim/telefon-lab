@@ -14,22 +14,38 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 
 | Dosya / klasör | Görevi |
 |---|---|
-| `sensor-testi.html` | ✅ Hareket sensörü test sayfası (ham değerler + örnekleme hızı) |
-| `js/sayfalar/sensor-testi-sayfa.js` | ✅ Sensör testi sayfasının butonları ve ekran güncellemesi |
 | `index.html` | Ana menü, deney seçimi |
-| `sarkac.html` | Sarkaç deneyi sayfası |
-| `css/stil.css` | Tüm sayfaların ortak stili |
-| `js/sensor/hareket.js` | ✅ Hareket sensörü izni ve veri toplama |
+| `sensor-testi.html` | ✅ Hareket sensörü test sayfası (canlı ham değerler) |
+| `sarkac.html` | 🔶 Sarkaç deneyi sayfası (şimdilik: kayıt + örnekleme raporu) |
 | `css/stil.css` | ✅ Ortak stil (karanlık mod destekli) |
-| `js/analiz/istatistik.js` | Ortalama, standart sapma, standart hata |
+| `js/sensor/hareket.js` | ✅ Ön kontroller, izin, `devicemotion` dinleme, boş olay filtresi |
+| `js/sensor/kayit.js` | ✅ Belirli süre kayıt; kayıt sırasında sayfa arka plana geçti mi? |
+| `js/analiz/istatistik.js` | 🔶 Ortalama, ortanca (standart sapma sonra eklenecek) |
+| `js/analiz/ornekleme.js` | ✅ Örnekleme raporu: hız, ortanca aralık, uzun boşluklar, uyarılar |
 | `js/analiz/periyot.js` | Sinyalden periyot bulma |
 | `js/analiz/sarkac-hesap.js` | g ve belirsizlik hesabı |
+| `js/arayuz/bicim.js` | ✅ Sayıları Türkçe biçimde yazma (1.067,5) |
 | `js/arayuz/grafik.js` | Canvas üzerine sinyal çizimi |
-| `js/sayfalar/sarkac-sayfa.js` | Sarkaç sayfasının düğmeleri ve akışı |
-| `testler/index.html` | Analiz fonksiyonlarının testleri |
+| `js/sayfalar/sensor-testi-sayfa.js` | ✅ Sensör testi sayfasının akışı |
+| `js/sayfalar/sarkac-sayfa.js` | 🔶 Sarkaç sayfasının akışı |
+| `testler/index.html`, `testler/testler.js` | ✅ Analiz fonksiyonlarının testleri (tarayıcıda açılınca çalışır) |
 | `manifest.webmanifest`, `sw.js` | PWA ve çevrimdışı çalışma (sonraki aşama) |
 
-✅ = yazıldı. Diğerleri plandaki sonraki adımlar.
+✅ = yazıldı, 🔶 = kısmen yazıldı. Diğerleri plandaki sonraki adımlar.
+
+## 2.0 Örnekleme raporu (`js/analiz/ornekleme.js`)
+
+Sarkaç periyodunu ölçümlerin zaman damgalarından hesaplayacağımız için önce ölçümlerin
+**düzenli** gelip gelmediğini kontrol ediyoruz.
+
+- **Aralık:** Art arda iki ölçüm arasındaki süre (ms). 60 Hz'de ideal değer 1000 / 60 ≈ 16,7 ms.
+- **Ortalama hız:** `(ölçüm sayısı − 1) / kayıt süresi`. 5 ölçüm arasında 4 aralık olduğu için 1 çıkarılır.
+- **Ortanca aralık:** Aralıklar sıralanınca ortadaki değer. Tek bir uzun boşluk ortalamayı bozar ama ortancayı
+  bozmaz; "normalde" kaç ms'de bir ölçüm geldiğini ortanca gösterir.
+- **Uzun boşluk:** 50 ms'den uzun aralık (60 Hz'de en az 2 ölçümün kaybolduğu anlamına gelir).
+  Her boşluğun kaydın kaçıncı saniyesinde olduğu listelenir.
+- **Uyarılar:** Saniyede 30'dan az ölçüm, uzun boşluk, kayıt sırasında sayfanın arka plana geçmesi,
+  jiroskop verisinin hiç gelmemesi.
 
 ## 2.1 Hareket sensörü nasıl okunuyor? (`js/sensor/hareket.js`)
 

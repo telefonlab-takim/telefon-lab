@@ -19,6 +19,15 @@ _(Cevap yazılacak — ipucu: belirsizlik hesabı ve açıklaması, kurulum gere
 ### Telefonun sensörüne neden güvenelim? Ne kadar doğru?
 _(Cevap yazılacak — TEST_SONUCLARI.md'deki gerçek verilere dayanmalı)_
 
+### Telefon saniyede kaç ölçüm alıyor? Ölçümler düzenli mi geliyor?
+iPhone 14'te saniyede yaklaşık 60 ölçüm geliyor. Ölçümler her zaman eşit aralıkla gelmiyor; bu yüzden
+her kayıttan sonra uygulama bir "örnekleme raporu" gösteriyor: normal aralık (ortanca), uzun boşluklar
+ve nerede oldukları. Boşluk varsa kullanıcı uyarılıyor. _(Android sonuçları eklenecek.)_
+
+### Neden ortalama yerine ortanca kullandınız?
+_(Cevap yazılacak — ipucu: tek bir 1 saniyelik boşluk ortalamayı çok değiştirir, ortancayı değiştirmez.
+`testler/index.html` içinde bunu gösteren bir test var.)_
+
 ### Belirsizliği nasıl hesaplıyorsunuz?
 _(Cevap yazılacak)_
 

@@ -52,6 +52,13 @@ button {
 }
 button:disabled { opacity: 0.4; }
 
+select { font-size: 1rem; padding: 0.4rem; }
+h3 { font-size: 1rem; margin: 1.2rem 0 0.3rem; }
+
+/* Test sayfası için */
+.basarili { color: #2e7d32; }
+.basarisiz { color: var(--hata); font-weight: 600; }
+
 .durum { font-weight: 600; }
 .durum.hata { color: var(--hata); }
 

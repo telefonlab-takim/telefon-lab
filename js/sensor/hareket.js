@@ -34,6 +34,28 @@ export async function izinIste() {
   }
 }
 
+// Ön kontrolleri ve izin isteğini tek yerde toplar. Her sayfa bunu bir buton tıklamasında çağırır.
+// Dönen değer: { tamam: true }  ya da  { tamam: false, mesaj: 'kullanıcıya gösterilecek açıklama' }
+export async function hareketSensorunuHazirla() {
+  if (!guvenliBaglamMi()) {
+    return { tamam: false, mesaj: 'Sayfa güvenli bağlantıyla (https) açılmamış. Sensörler bu durumda çalışmaz.' };
+  }
+  if (!hareketDestegiVarMi()) {
+    return { tamam: false, mesaj: 'Bu tarayıcı hareket sensörlerini desteklemiyor.' };
+  }
+  const izin = await izinIste();
+  if (izin === 'reddedildi') {
+    return {
+      tamam: false,
+      mesaj: 'Hareket izni reddedildi. Sekmeyi kapatıp sayfayı yeniden açın veya tarayıcı ayarlarından bu site için hareket iznini verin.',
+    };
+  }
+  if (izin === 'hata') {
+    return { tamam: false, mesaj: 'İzin istenirken bir hata oluştu. Sayfayı yenileyip tekrar deneyin.' };
+  }
+  return { tamam: true };
+}
+
 // Şu anda dinlemede olan fonksiyon (aynı anda tek dinleyici olsun diye saklıyoruz).
 let aktifDinleyici = null;
 

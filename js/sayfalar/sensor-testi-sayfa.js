@@ -2,13 +2,8 @@
 // Sensör testi sayfasının mantığı: butonlar, gelen verinin ekrana yazılması,
 // örnekleme hızının hesaplanması.
 
-import {
-  hareketDestegiVarMi,
-  guvenliBaglamMi,
-  izinIste,
-  dinlemeyiBaslat,
-  dinlemeyiDurdur,
-} from '../sensor/hareket.js';
+import { hareketSensorunuHazirla, dinlemeyiBaslat, dinlemeyiDurdur } from '../sensor/hareket.js';
+import { sayiYaz } from '../arayuz/bicim.js';
 
 // Sayfadaki elemanları kısa bir yardımcıyla buluyoruz.
 const el = (id) => document.getElementById(id);
@@ -32,15 +27,6 @@ function durumYaz(metin, hataMi = false) {
   const p = el('durumMesaji');
   p.textContent = metin;
   p.classList.toggle('hata', hataMi);
-}
-
-// Sayıyı virgüllü Türkçe biçimde, sabit basamakla yazar. null ise "yok" yazar.
-function sayiYaz(deger, basamak = 2) {
-  if (deger === null || deger === undefined) return 'yok';
-  return deger.toLocaleString('tr-TR', {
-    minimumFractionDigits: basamak,
-    maximumFractionDigits: basamak,
-  });
 }
 
 // Sensörden her örnek geldiğinde çalışır (saniyede onlarca kez).
@@ -96,30 +82,14 @@ function sayaclariSifirla() {
 }
 
 baslatButonu.addEventListener('click', async () => {
-  // 1) Ön kontroller
-  if (!guvenliBaglamMi()) {
-    durumYaz('Sayfa güvenli bağlantıyla (https) açılmamış. Sensörler bu durumda çalışmaz.', true);
-    return;
-  }
-  if (!hareketDestegiVarMi()) {
-    durumYaz('Bu tarayıcı hareket sensörlerini desteklemiyor.', true);
+  // 1) Ön kontroller ve izin (izin penceresi yalnızca iPhone'da açılır)
+  const hazirlik = await hareketSensorunuHazirla();
+  if (!hazirlik.tamam) {
+    durumYaz(hazirlik.mesaj, true);
     return;
   }
 
-  // 2) İzin (yalnızca iPhone'da pencere açılır)
-  const izin = await izinIste();
-  if (izin === 'reddedildi') {
-    // iPhone'da: Ayarlar > Safari > Gelişmiş > Web Sitesi Verileri yerine, en kolayı sekmeyi kapatıp
-    // sayfayı yeniden açmaktır; izin penceresi tekrar gelir.
-    durumYaz('Hareket izni reddedildi. Sekmeyi kapatıp sayfayı yeniden açın veya tarayıcı ayarlarından bu site için hareket iznini verin.', true);
-    return;
-  }
-  if (izin === 'hata') {
-    durumYaz('İzin istenirken bir hata oluştu. Sayfayı yenileyip tekrar deneyin.', true);
-    return;
-  }
-
-  // 3) Dinlemeye başla
+  // 2) Dinlemeye başla
   sayaclariSifirla();
   dinlemeyiBaslat(ornekGeldi);
   ekranGuncellemeNo = requestAnimationFrame(ekraniGuncelle);
@@ -127,7 +97,7 @@ baslatButonu.addEventListener('click', async () => {
   durdurButonu.disabled = false;
   durumYaz('Dinleniyor… Telefonu hafifçe hareket ettirin.');
 
-  // 4) 2 saniye içinde hiç veri gelmezse kullanıcıyı uyar
+  // 3) 2 saniye içinde hiç veri gelmezse kullanıcıyı uyar
   olayKontrolZamanlayici = setTimeout(() => {
     if (ornekSayisi === 0) {
       durumYaz('2 saniyedir hiç sensör verisi gelmedi. Bu cihazda hareket sensörü olmayabilir (ör. bilgisayar).', true);

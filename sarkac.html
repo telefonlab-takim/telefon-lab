@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sarkaç Deneyi — Telefon Laboratuvarı</title>
+  <link rel="stylesheet" href="css/stil.css">
+</head>
+<body>
+  <main>
+    <h1>Sarkaç Deneyi</h1>
+    <p class="kucuk">Yapım aşaması — Adım 2: ölçüm kaydı ve örnekleme kalitesi.
+      Periyot ve g hesabı sonraki adımlarda eklenecek.</p>
+
+    <section>
+      <h2>1. Kayıt</h2>
+      <p>
+        <label for="sureSecimi">Kayıt süresi:</label>
+        <select id="sureSecimi">
+          <option value="10">10 saniye</option>
+          <option value="20" selected>20 saniye</option>
+          <option value="30">30 saniye</option>
+        </select>
+      </p>
+      <button id="kayitButonu" type="button">Kaydı başlat</button>
+      <p id="durumMesaji" class="durum">Hazır.</p>
+      <p class="kucuk">Kayıt sırasında ekranı kilitlemeyin ve başka uygulamaya geçmeyin;
+        telefon arka plandayken tarayıcı sensör verisi göndermez.</p>
+    </section>
+
+    <!-- Kayıt bitince doldurulur -->
+    <section id="raporBolumu" hidden>
+      <h2>2. Örnekleme raporu</h2>
+      <table>
+        <tr><th>Ölçüm sayısı</th><td id="rOrnekSayisi"></td></tr>
+        <tr><th>Kayıt süresi</th><td id="rSure"></td></tr>
+        <tr><th>Ortalama hız</th><td id="rHiz"></td></tr>
+        <tr><th>Ortanca aralık</th><td id="rOrtanca"></td></tr>
+        <tr><th>En kısa / en uzun aralık</th><td id="rEnKisaUzun"></td></tr>
+        <tr><th>Uzun boşluk sayısı</th><td id="rBoslukSayisi"></td></tr>
+        <tr><th>Jiroskop verisi</th><td id="rJiroskop"></td></tr>
+      </table>
+
+      <h3>Uyarılar</h3>
+      <ul id="rUyarilar"></ul>
+
+      <h3>Uzun boşluklar</h3>
+      <ul id="rBosluklar"></ul>
+    </section>
+  </main>
+
+  <script type="module" src="js/sayfalar/sarkac-sayfa.js"></script>
+</body>
+</html>
