@@ -149,7 +149,12 @@ Henüz otomatik periyot hesabı yok; aşağıdaki değerler ekran görüntüsün
 
 ## 5.6 Beşinci gerçek kayıt — yeni kodla ilk ölçüm (2026-11-18, iPhone 14, sürüm 2026-11-18.3)
 
-- **Girilen:** L = 61,0 ± 0,5 cm. (Önceki kayıtta 40–41 cm ölçülmüştü; L'nin nasıl 61 cm olduğu kullanıcıya soruldu.)
+- **Girilen:** L = 61,0 ± 0,5 cm. **Kullanıcının açıklaması:** Düzenek aynıydı, cetvelle ölçülen L = 40,5 cm.
+  40,5 girilince g ≈ 6,5 çıktı; L 61 yapılınca g = 9,92 oldu. Yani **61 cm ölçülmedi, sonuca bakılarak seçildi.**
+  Bu nedenle bu kaydın g değeri **geçersizdir** (aşağıdaki "Doğru değerlendirme"ye bakın).
+- **Doğru değerlendirme (ölçülen L ile):** L = 40,5 ± 0,5 cm, T = 1,558 ± 0,004 s → **g = 6,59 ± 0,09 m/s²**;
+  kabul edilen değerden belirsizliğin ≈ 36 katı uzak → **sistematik hata.** Ölçülen periyot 40,5 cm'lik basit
+  sarkaca uymuyor; 1,558 s, ≈ 60 cm'lik bir sarkacın periyodu. Bu, aşağıdaki "iki dönme noktası" açıklamasıyla uyumlu.
 - **Uygulama:** T = 1,558 ± 0,004 s, eksen **alfa**, 12 salınım, bölüm 1,4–20,1 s, periyot farkı **%5,6**, açı 3,7°.
   g = 9,92 ± 0,10 m/s² — **üstü çizili** (periyot farkı %5 sınırının üstünde). Uygulama doğru davrandı.
 - **Eksen tablosu:** ✓ alfa 1,558 s (%5,6, 12) · beta 1,191 s (%10,1, 6) · gama 0,273 s (%8,3, 8 — gürültü).
@@ -160,6 +165,8 @@ Henüz otomatik periyot hesabı yok; aşağıdaki değerler ekran görüntüsün
   noktası** olur: masaya dik yönde salınırken ip **masanın kenarı** etrafında döner (L ≈ kenardan telefona ≈ 40 cm),
   kenara paralel salınırken ise **bağlama noktası** etrafında döner (L ≈ bağlama noktasından telefona ≈ 60 cm).
   Bu, iki yönde iki ayrı periyodu (≈1,25 s ve ≈1,55 s) açıklar.
+- **Bu açıklamayı sınamanın dürüst yolu:** İpin masaya **bağlandığı noktadan** telefonun ortasına olan uzaklığı
+  cetvelle ölçmek (uygulamaya bakmadan). ≈ 60 cm çıkarsa açıklama doğrulanır.
 - **Öneri:** İpin tek bir sabit noktadan sallanmasını sağlamak (ör. masa kenarından taşan bir çubuğa/kancaya bağlamak),
   L'yi o noktadan telefonun ortasına cetvelle ölçmek ve sarkacı tek yönde itmek.
 - **Küçük düzeltme:** Eksen tablosunda "1,558 s" gibi değerler dar ekranda iki satıra bölünüyordu; artık bölünmüyor (sürüm 2026-11-18.4).

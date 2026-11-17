@@ -60,6 +60,13 @@ periyodun yanlış hesaplandığını gördük: telefon bırakıldıktan sonra i
 Düzelttik: sinyali yumuşatıyoruz, düzensiz bölümleri atıyoruz ve periyot şüpheliyse g sonucunun üstünü çizip
 "güvenmeyin" diyoruz. Ayrıntı: TEST_SONUCLARI 5.4, KARAR_GUNLUGU K-008.
 
+### Sonuç 9,8 çıkmayınca ne yaptınız?
+Bir denemede ölçtüğümüz ip boyuyla (40,5 cm) g = 6,6 çıktı. Önce L'yi 61 cm yapınca 9,9 çıktığını gördük, ama bunun
+yanlış olduğunu fark ettik: L'yi sonuca bakarak değiştirmek, deneyi bilinen cevabı geri yazmaya çevirir. Doğru yol,
+ölçtüğümüz değeri koruyup farkın **nedenini** aramaktı. Periyodun ≈ 60 cm'lik bir sarkaca uyduğunu gördük ve ipin
+masaya bağlanma biçiminin iki ayrı dönme noktası oluşturduğunu düşündük; düzeneği buna göre değiştirdik.
+_(Sonuç doğrulanınca güncellenecek.)_
+
 ### Sonuç kabul edilen değerden farklı çıkarsa ne oluyor?
 Uygulama farkı belirsizliğe bölüyor. Fark belirsizliğin 2 katından küçükse sonuç "uyumlu" sayılıyor. Büyükse bunun rastgele
 hatayla açıklanamayacağını, sistematik bir hata olabileceğini söylüyor ve olası nedenleri sıralıyor (L yanlış ölçülmüş,
