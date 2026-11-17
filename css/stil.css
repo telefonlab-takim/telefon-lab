@@ -12,6 +12,12 @@
   --seri-1: #1565c0;
   --seri-2: #e65100;
   --seri-3: #2e7d32;
+  /* Ana menü kartları */
+  --sayfa-zemini: #f3f5f8;   /* kartların arkasındaki hafif gri zemin */
+  --kart: #ffffff;
+  --golge: 0 1px 2px rgba(16, 24, 40, 0.06), 0 2px 8px rgba(16, 24, 40, 0.06);
+  --basari: #2e7d32;
+  --basari-zemin: #e7f4e8;
 }
 
 /* Telefon karanlık moddaysa renkleri değiştir */
@@ -26,6 +32,11 @@
     --seri-1: #64a8f0;
     --seri-2: #ffa25c;
     --seri-3: #6fcf7a;
+    --sayfa-zemini: #0d0f12;
+    --kart: #1a1d22;
+    --golge: none;
+    --basari: #7fd38a;
+    --basari-zemin: #1d3322;
   }
 }
 
@@ -97,15 +108,185 @@ h3 { font-size: 1rem; margin: 1.2rem 0 0.3rem; }
   vertical-align: middle;
 }
 
-/* Ana menü listesi */
-.menu { list-style: none; padding: 0; margin: 0; }
-.menu li {
-  padding: 0.8rem 0;
-  border-bottom: 1px solid var(--cizgi);
+/* ===================== Ana menü (index.html) ===================== */
+
+body.ana-sayfa { background: var(--sayfa-zemini); }
+
+/* Üst bölüm: mavi geçişli şerit. iPhone'un çentiği için üstte güvenli boşluk bırakılır. */
+.kahraman {
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+  color: #fff;
+  padding: calc(env(safe-area-inset-top, 0px) + 28px) 16px 28px;
 }
-.menu li a { font-size: 1.15rem; font-weight: 600; color: var(--vurgu); }
-.menu li .kucuk { display: block; }
-.menu li.pasif { color: var(--soluk-yazi); font-size: 1.15rem; }
+.kahraman-ic {
+  max-width: 40rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.kahraman-ikon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+.kahraman h1 { margin: 0; font-size: 1.5rem; line-height: 1.2; }
+.kahraman p { margin: 2px 0 0; opacity: 0.85; }
+
+/* Özellik "hapları" */
+.ozellikler {
+  max-width: 40rem;
+  margin: 18px auto 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ozellikler li {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+}
+
+.bolum-basligi {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--soluk-yazi);
+  margin: 1.6rem 0 0.6rem;
+}
+
+/* Deney kartları: telefonda alt alta, geniş ekranda iki sütun */
+.kartlar { display: grid; gap: 12px; }
+@media (min-width: 600px) {
+  .kartlar { grid-template-columns: 1fr 1fr; }
+}
+
+.kart {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  background: var(--kart);
+  border: 1px solid var(--cizgi);
+  border-radius: 16px;
+  box-shadow: var(--golge);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.1s ease;
+}
+a.kart:active, a.liste-satiri:active { transform: scale(0.98); }
+.kart-pasif { opacity: 0.6; }
+
+/* Kartın solundaki renkli simge kutusu */
+.kart-ikon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.kart-ikon svg, .liste-ikon svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.kart-ikon svg .dolu, .liste-ikon svg .dolu { fill: currentColor; }
+.ikon-mavi { background: #e3eefc; color: #1565c0; }
+.ikon-mor { background: #efe7fb; color: #6a3fc0; }
+.ikon-turuncu { background: #fdeee2; color: #d35400; }
+@media (prefers-color-scheme: dark) {
+  .ikon-mavi { background: #16304f; color: #8cc0f5; }
+  .ikon-mor { background: #2c2240; color: #c3a6f2; }
+  .ikon-turuncu { background: #3b2618; color: #f5b07a; }
+}
+
+.kart-metin { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.kart-baslik {
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.kart-aciklama { font-size: 0.9rem; color: var(--soluk-yazi); }
+.kart-sensor {
+  align-self: flex-start;
+  font-size: 0.75rem;
+  color: var(--soluk-yazi);
+  border: 1px solid var(--cizgi);
+  border-radius: 6px;
+  padding: 1px 8px;
+}
+.kart-ok { font-size: 1.6rem; color: var(--soluk-yazi); align-self: center; line-height: 1; }
+
+/* Durum rozeti: "Hazır" yeşil, diğerleri gri */
+.rozet {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--cizgi);
+  color: var(--soluk-yazi);
+}
+.rozet-hazir { background: var(--basari-zemin); color: var(--basari); }
+
+/* Araçlar: tek kutu içinde satırlar */
+.liste-kutusu {
+  background: var(--kart);
+  border: 1px solid var(--cizgi);
+  border-radius: 16px;
+  box-shadow: var(--golge);
+  overflow: hidden;
+}
+.liste-satiri {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  color: inherit;
+  text-decoration: none;
+}
+.liste-satiri + .liste-satiri { border-top: 1px solid var(--cizgi); }
+.liste-ikon { color: var(--vurgu); display: grid; place-items: center; flex-shrink: 0; }
+.liste-ikon svg { width: 24px; height: 24px; }
+.liste-baslik { font-weight: 600; }
+
+/* Ana ekrana ekleme kutusu */
+.bilgi-kutusu {
+  background: var(--kart);
+  border: 1px solid var(--cizgi);
+  border-radius: 16px;
+  box-shadow: var(--golge);
+  padding: 4px 16px 16px;
+  font-size: 0.9rem;
+}
+.adimlar { padding-left: 1.2rem; margin: 12px 0; }
+.adimlar li { margin-bottom: 8px; }
+.durum-hapi {
+  display: inline-block;
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--basari-zemin);
+  color: var(--basari);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.durum-hapi:empty { display: none; }
+.surum { text-align: center; margin-top: 1.5rem; }
 
 /* Sayfaların üstündeki "Ana menü" bağlantısı */
 .geri { display: inline-block; margin-top: 0.5rem; color: var(--vurgu); }

@@ -23,6 +23,6 @@ export function cevrimdisiDurumunuGoster(elemanId) {
   }
   eleman.textContent = 'İnternetsiz kullanım hazırlanıyor…';
   navigator.serviceWorker.ready.then(() => {
-    eleman.textContent = '✓ İnternetsiz kullanıma hazır. Uygulamayı bir kez açtıktan sonra internet olmadan da kullanabilirsiniz.';
+    eleman.textContent = '✓ İnternetsiz kullanıma hazır';
   });
 }

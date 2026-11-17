@@ -14,7 +14,7 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 
 | Dosya / klasör | Görevi |
 |---|---|
-| `index.html` | ✅ Ana menü: deneyler, araçlar, ana ekrana ekleme, internetsiz kullanım durumu |
+| `index.html` | ✅ Ana menü: mavi üst şerit, deney kartları (simge, durum rozeti, kullandığı sensör), araçlar, ana ekrana ekleme adımları, internetsiz kullanım durumu. Simgeler sayfanın içinde SVG olarak çizili (ek dosya, dış simge kütüphanesi ya da yazı tipi yok → internetsiz de aynı görünür). Açık/karanlık mod destekli. |
 | `sensor-testi.html` | ✅ Hareket sensörü test sayfası (canlı ham değerler) |
 | `sarkac.html` | ✅ Sarkaç deneyi sayfası: L girişi, geri sayım, kayıt, g ± Δg ve açıklama, periyot, grafik, örnekleme raporu |
 | `css/stil.css` | ✅ Ortak stil (karanlık mod destekli) |

@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Telefon Laboratuvarı</title>
   <!-- Uygulama (PWA) bilgileri: ana ekrana ekleme, simge, renk -->
   <link rel="manifest" href="manifest.webmanifest">
@@ -13,49 +13,103 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="stylesheet" href="css/stil.css">
 </head>
-<body>
+<body class="ana-sayfa">
+  <!-- Üst bölüm: uygulama simgesi, adı ve kısa tanıtım -->
+  <header class="kahraman">
+    <div class="kahraman-ic">
+      <img class="kahraman-ikon" src="ikonlar/ikon-192.png" alt="" width="56" height="56">
+      <div>
+        <h1>Telefon Laboratuvarı</h1>
+        <p>Telefonunun sensörleriyle gerçek fizik deneyleri</p>
+      </div>
+    </div>
+    <ul class="ozellikler" aria-label="Uygulamanın özellikleri">
+      <li>📏 Gerçek ölçüm</li>
+      <li>± Belirsizlik hesabı</li>
+      <li>🔒 Veri telefonda kalır</li>
+    </ul>
+  </header>
+
   <main>
-    <h1>Telefon Laboratuvarı</h1>
-    <p>Telefonunun sensörleriyle fizik deneylerini gerçek ölçümle yap. Uygulama sonucu, ölçüm belirsizliğini
-      ve sonucun ne anlattığını gösterir.</p>
-    <p class="kucuk">🔒 Ölçüm verilerin telefondan çıkmaz; hiçbir sunucuya gönderilmez.</p>
+    <h2 class="bolum-basligi">Deneyler</h2>
+    <div class="kartlar">
+      <!-- Hazır deney: kartın tamamı bağlantı -->
+      <a class="kart" href="sarkac.html">
+        <span class="kart-ikon ikon-mavi" aria-hidden="true">
+          <!-- Sarkaç simgesi -->
+          <svg viewBox="0 0 24 24"><path d="M6 3h12" /><path d="M12 3l3 11" /><circle cx="15.5" cy="16.5" r="3.5" class="dolu" /></svg>
+        </span>
+        <span class="kart-metin">
+          <span class="kart-baslik">Sarkaç <span class="rozet rozet-hazir">Hazır</span></span>
+          <span class="kart-aciklama">Periyodu ölç, yer çekimi ivmesini (g) belirsizliğiyle hesapla.</span>
+          <span class="kart-sensor">Jiroskop</span>
+        </span>
+        <span class="kart-ok" aria-hidden="true">›</span>
+      </a>
 
-    <h2>Deneyler</h2>
-    <ul class="menu">
-      <li>
-        <a href="sarkac.html">Sarkaç — yer çekimi ivmesi (g)</a>
-        <span class="kucuk">Jiroskop ile periyot ölçümü, g ± Δg</span>
-      </li>
-      <li class="pasif">
-        Ses frekansı
-        <span class="kucuk">Yakında — mikrofon ile frekans ölçümü</span>
-      </li>
-      <li class="pasif">
-        Serbest düşme / eğik düzlem
-        <span class="kucuk">Yakında</span>
-      </li>
-    </ul>
+      <!-- Henüz hazır olmayan deneyler: bağlantı değil -->
+      <div class="kart kart-pasif" aria-disabled="true">
+        <span class="kart-ikon ikon-mor" aria-hidden="true">
+          <!-- Ses dalgası simgesi -->
+          <svg viewBox="0 0 24 24"><path d="M2 12c2-6 4-6 6 0s4 6 6 0 4-6 6 0" /><path d="M21 9v6" /></svg>
+        </span>
+        <span class="kart-metin">
+          <span class="kart-baslik">Ses frekansı <span class="rozet">Yakında</span></span>
+          <span class="kart-aciklama">Bir sesin frekansını mikrofonla ölç, bilinen değerle karşılaştır.</span>
+          <span class="kart-sensor">Mikrofon</span>
+        </span>
+      </div>
 
-    <h2>Araçlar</h2>
-    <ul class="menu">
-      <li>
-        <a href="sensor-testi.html">Sensör testi</a>
-        <span class="kucuk">Hareket sensörü çalışıyor mu, saniyede kaç ölçüm geliyor?</span>
-      </li>
-      <li>
-        <a href="testler/index.html">Hesap testleri</a>
-        <span class="kucuk">Uygulamanın hesaplarını sonucu bilinen verilerle sınar</span>
-      </li>
-    </ul>
+      <div class="kart kart-pasif" aria-disabled="true">
+        <span class="kart-ikon ikon-turuncu" aria-hidden="true">
+          <!-- Düşen top simgesi -->
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" class="dolu" /><path d="M12 15v6" /><path d="M9 18l3 3 3-3" /></svg>
+        </span>
+        <span class="kart-metin">
+          <span class="kart-baslik">Serbest düşme / eğik düzlem <span class="rozet">Yakında</span></span>
+          <span class="kart-aciklama">Hareketi ölç, ivmeyi hesapla.</span>
+          <span class="kart-sensor">İvmeölçer</span>
+        </span>
+      </div>
+    </div>
 
-    <h2>Telefona uygulama gibi ekle</h2>
-    <p class="kucuk">iPhone (Safari): Paylaş düğmesi → "Ana Ekrana Ekle". Android (Chrome): ⋮ menüsü → "Ana ekrana ekle".</p>
-    <p class="kucuk"><strong>Önemli:</strong> Ekledikten sonra uygulamayı ana ekrandaki simgeden <strong>internet varken bir kez açın</strong>
-      ve aşağıda "✓ İnternetsiz kullanıma hazır" yazısını bekleyin. iPhone, ana ekrana eklenen uygulamanın dosyalarını
-      Safari'den ayrı saklar; bu ilk açılışta kendi kopyasını indirir.</p>
-    <p id="cevrimdisiDurum" class="kucuk"></p>
+    <h2 class="bolum-basligi">Araçlar</h2>
+    <div class="liste-kutusu">
+      <a class="liste-satiri" href="sensor-testi.html">
+        <span class="liste-ikon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2" /><path d="M11 18h2" /></svg>
+        </span>
+        <span class="kart-metin">
+          <span class="liste-baslik">Sensör testi</span>
+          <span class="kart-aciklama">Hareket sensörü çalışıyor mu, saniyede kaç ölçüm geliyor?</span>
+        </span>
+        <span class="kart-ok" aria-hidden="true">›</span>
+      </a>
+      <a class="liste-satiri" href="testler/index.html">
+        <span class="liste-ikon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6" /></svg>
+        </span>
+        <span class="kart-metin">
+          <span class="liste-baslik">Hesap testleri</span>
+          <span class="kart-aciklama">Uygulamanın hesaplarını sonucu bilinen verilerle sınar.</span>
+        </span>
+        <span class="kart-ok" aria-hidden="true">›</span>
+      </a>
+    </div>
 
-    <p id="surum" class="kucuk">Sayfa: 2026-11-18.7</p>
+    <h2 class="bolum-basligi">Telefona uygulama gibi ekle</h2>
+    <div class="bilgi-kutusu">
+      <ol class="adimlar">
+        <li><strong>iPhone (Safari):</strong> Paylaş düğmesi → "Ana Ekrana Ekle".
+          <strong>Android (Chrome):</strong> ⋮ menüsü → "Ana ekrana ekle".</li>
+        <li>Uygulamayı ana ekrandaki simgeden <strong>internet varken bir kez açın.</strong>
+          iPhone, ana ekran uygulamasının dosyalarını Safari'den ayrı saklar; bu ilk açılışta kendi kopyasını indirir.</li>
+        <li>Aşağıda "İnternetsiz kullanıma hazır" yazısını görünce uygulama internet olmadan da açılır.</li>
+      </ol>
+      <p id="cevrimdisiDurum" class="durum-hapi"></p>
+    </div>
+
+    <p id="surum" class="kucuk surum">Sayfa: 2026-11-18.8</p>
   </main>
 
   <script type="module" src="js/sayfalar/ana-sayfa.js"></script>
