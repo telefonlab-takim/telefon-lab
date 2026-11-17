@@ -60,6 +60,15 @@ Her kayıt şu şablonu izler:
   VS Code Live Server eklentisi (çalışır ama komut satırından başlatılamaz).
 - **Sonuçları / bedeli:** Yok denecek kadar az; iki ücretsiz program.
 
+## K-005: Yayın için GitHub Pages
+- **Tarih:** 2026-11-17
+- **Durum:** Kabul edildi
+- **Karar:** Uygulama https://telefonlab-takim.github.io/telefon-lab/ adresinde, public bir GitHub deposundan yayınlanıyor.
+- **Neden:** Telefon sensörleri yalnızca HTTPS ile çalışır; GitHub Pages ücretsiz ve HTTPS'i kendisi sağlar.
+  Yalnızca dosya sunar, sunucu tarafında kod çalıştırmaz; bu yüzden ölçüm verisi hiçbir zaman sunucuya gitmez.
+- **Değerlendirilen alternatifler:** Netlify / Cloudflare Pages (benzer, ama ek hesap gerekir),
+  bilgisayardan yerel ağda yayın (telefon için HTTPS sertifikası kurmak gerekir, karmaşık).
+- **Sonuçları / bedeli:** Ücretsiz planda depo public olmalı; kod herkese açıktır (gizli bilgi içermediği için sorun değil).
+
 ## Açık kararlar (henüz verilmedi)
 - Üçüncü deney: serbest düşme mi, eğik düzlem mi?
-- Uygulama telefona nasıl HTTPS ile ulaşacak? (Öneri: GitHub Pages — ücretsiz, HTTPS hazır, sadece statik dosya sunar.)

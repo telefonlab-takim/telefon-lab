@@ -57,7 +57,9 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
   "veri gelmedi" uyarısı verir; bu beklenen davranıştır.
 - **Telefonda:** Sayfa HTTPS ile açılmalı. Planlanan yöntem: GitHub Pages
   (depo → Settings → Pages → "Deploy from a branch" → `main` / kök klasör).
-  Adres `https://<kullanici-adi>.github.io/<depo-adi>/sensor-testi.html` olur.
+  Yayın adresi: **https://telefonlab-takim.github.io/telefon-lab/sensor-testi.html**
+  (Ana sayfa `index.html` henüz olmadığı için yalnızca `.../telefon-lab/` adresi 404 verir.)
+  Kod değişince GitHub Desktop'ta **Push origin**'e basılır; site 1–2 dakikada güncellenir.
 
 ## 3. Kullanılan tarayıcı API'leri
 
