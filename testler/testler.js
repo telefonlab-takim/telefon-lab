@@ -7,7 +7,14 @@ import { ortalama, ortanca } from '../js/analiz/istatistik.js';
 import { araliklariHesapla, orneklemeRaporu } from '../js/analiz/ornekleme.js';
 import { guzelAdim, eksenCizgileri } from '../js/arayuz/olcek.js';
 import { standartSapma, dogruUydur } from '../js/analiz/istatistik.js';
-import { periyotBul, enCokSalinanSeri, yukariSifirGecisleri } from '../js/analiz/periyot.js';
+import {
+  periyotBul,
+  enCokSalinanSeri,
+  yukariSifirGecisleri,
+  enUzunTutarliBolum,
+  hareketliOrtalama,
+  sarkacPeriyoduBul,
+} from '../js/analiz/periyot.js';
 import { genlikAcisiTahmini, buyukAciGHatasi, gHesapla, kabulEdilenleKarsilastir } from '../js/analiz/sarkac-hesap.js';
 import { belirsizlikleYaz, sayiOku } from '../js/arayuz/bicim.js';
 
@@ -228,6 +235,82 @@ test('enCokSalinanSeri: en büyük salınımlı ekseni seçer', () => {
     { ad: 'c', degerler: [3, 3, 3, 3] },
   ]);
   esitMi(seri.ad, 'b');
+});
+
+// ---- periyot.js: düzensiz kısımları ayıklama ve yumuşatma ---------------------
+
+test('enUzunTutarliBolum: bozuk periyotlar arasından en uzun düzenli bölümü seçer', () => {
+  //              0    1    2    3     4     5     6    7    8
+  const p = [0.3, 0.2, 1.5, 1.5, 1.49, 1.51, 0.4, 1.5, 1.5];
+  // ortanca = 1,5 ; düzenli bölümler: 2–5 (4 tane) ve 7–8 (2 tane) → 2'den başlayan 4'lü bölüm
+  const b = enUzunTutarliBolum(p);
+  esitMi([b.baslangic, b.adet], [2, 4]);
+  yakinMi(b.ortancaSn, 1.5);
+});
+
+test('hareketliOrtalama: sabit sinyal değişmez', () => {
+  const t = [0, 0.02, 0.04, 0.06, 0.08, 0.1];
+  esitMi(hareketliOrtalama(t, [3, 3, 3, 3, 3, 3]), [3, 3, 3, 3, 3, 3]);
+});
+
+test('hareketliOrtalama: 6,67 Hz titreşimi bastırır, 0,7 Hz salınımı korur', () => {
+  const t = [];
+  const hizli = [];
+  const yavas = [];
+  for (let i = 0; i <= 600; i++) {
+    t.push(i / 60);
+    hizli.push(50 * Math.sin(2 * Math.PI * 6.667 * i / 60));
+    yavas.push(50 * Math.sin(2 * Math.PI * 0.7 * i / 60));
+  }
+  const tepe = (dizi) => Math.max(...dizi.slice(30, -30).map(Math.abs)); // kenarlar hariç
+  const hizliSonra = tepe(hareketliOrtalama(t, hizli));
+  const yavasSonra = tepe(hareketliOrtalama(t, yavas));
+  if (!(hizliSonra < 10)) throw new Error(`hızlı titreşim tepe ${hizliSonra} (50'den 10'un altına inmeliydi)`);
+  if (!(yavasSonra > 48)) throw new Error(`yavaş salınım tepe ${yavasSonra} (50'ye yakın kalmalıydı)`);
+});
+
+// Gerçek kayıttaki (TEST_SONUCLARI 5.4) duruma benzeyen sahte veri:
+// ilk ~3 saniye telefon ip ucunda hızlı titreşiyor (≈5,5 Hz, sönümlü), sarkacın kendisi T = 1,50 s ile salınıyor.
+function baslangiciTitresenSarkac(tohum) {
+  const rastgele = tohumluRastgele(tohum);
+  const zamanlarSn = [];
+  const alfa = [];
+  const beta = [];
+  const gama = [];
+  for (let i = 0; i <= 20 * 60; i++) {
+    const t = i / 60;
+    const titresim = Math.exp(-t / 1.2);
+    zamanlarSn.push(t + (rastgele() - 0.5) * 0.006);
+    alfa.push(40 * Math.cos((2 * Math.PI * t) / 1.5) + 60 * titresim * Math.sin(2 * Math.PI * 5.5 * t) + (rastgele() - 0.5) * 8);
+    beta.push(10 * Math.sin((2 * Math.PI * t) / 1.5) + (rastgele() - 0.5) * 6);
+    gama.push(110 * titresim * Math.sin(2 * Math.PI * 5.5 * t + 1) + (rastgele() - 0.5) * 6);
+  }
+  return {
+    zamanlarSn,
+    seriler: [
+      { ad: 'alfa', degerler: alfa },
+      { ad: 'beta', degerler: beta },
+      { ad: 'gama', degerler: gama },
+    ],
+  };
+}
+
+test('sarkacPeriyoduBul: başı titreşen kayıt → T = 1,50 s (±0,01), eksen alfa, titreşimli baş atılır', () => {
+  const { zamanlarSn, seriler } = baslangiciTitresenSarkac(11);
+  const r = sarkacPeriyoduBul(zamanlarSn, seriler);
+  esitMi(r.secilenEksen, 'alfa');
+  yakinMi(r.periyotSn, 1.5, 0.01);
+  if (!(r.salinimSayisi >= 10)) throw new Error(`yalnızca ${r.salinimSayisi} salınım kullanıldı`);
+});
+
+test('Eski yöntem (yumuşatma ve ayıklama yok) aynı kayıtta yanılıyordu: sahte geçişler sayılıyor', () => {
+  // Bu test, düzeltmenin neden gerektiğini belgeler: ham sinyalde düzensiz baştaki sahte geçişler
+  // tüm periyotlara katılırsa ortalama periyot 1,50 s'den belirgin biçimde küçük çıkar.
+  const { zamanlarSn, seriler } = baslangiciTitresenSarkac(11);
+  const ham = seriler[0].degerler.map((v) => v - ortalama(seriler[0].degerler));
+  const gecisler = yukariSifirGecisleri(zamanlarSn, ham, 0.3 * standartSapma(ham));
+  const hamOrtalamaPeriyot = (gecisler[gecisler.length - 1] - gecisler[0]) / (gecisler.length - 1);
+  if (!(hamOrtalamaPeriyot < 1.4)) throw new Error(`ham ortalama periyot ${hamOrtalamaPeriyot}; sahte geçiş beklenirdi`);
 });
 
 // ---- sarkac-hesap.js ------------------------------------------------------

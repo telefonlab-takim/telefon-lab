@@ -100,6 +100,29 @@ Her kayıt şu şablonu izler:
 - **Sonuçları / bedeli:** Tek tek periyotların yayılımı (%) ayrıca gösteriliyor; öğrenci salınımın ne kadar düzenli
   olduğunu yine görebiliyor.
 
+## K-008: Periyot öncesi yumuşatma, düzensiz bölümleri atma, güvenilmez sonucu işaretleme
+- **Tarih:** 2026-11-18
+- **Durum:** Kabul edildi
+- **Karar:**
+  1. Dönme hızı sinyali, sıfır geçişleri aranmadan önce 0,15 s'lik **hareketli ortalama** ile yumuşatılır.
+  2. Tek tek periyotlardan, ortancadan en fazla %20 farklı olanların oluşturduğu **en uzun kesintisiz bölüm**
+     kullanılır; diğerleri atılır ve ekranda kaç tanesinin atıldığı ve hangi zaman aralığının kullanıldığı gösterilir.
+  3. Periyot hesabında herhangi bir uyarı varsa g sonucu **üstü çizili** gösterilir, açıklamanın başında
+     "güvenmeyin" yazar ve kabul edilen değerle karşılaştırma "anlamlı değil" olarak verilir.
+- **Neden:** Üçüncü gerçek kayıtta (TEST_SONUCLARI 5.4) telefonun ilk saniyelerdeki hızlı titreşimi sahte geçişler
+  üretti; periyot 1,50 s yerine 1,09 s hesaplandı ve yanlış L ile birleşince g tesadüfen "uyumlu" göründü.
+  Periyot bölümü uyarı veriyordu ama g bölümü bunu bilmiyordu.
+- **Neden bu yöntemler:**
+  - Hareketli ortalama: lise düzeyinde açıklanabilir ("her noktayı çevresindeki 0,15 s'nin ortalamasıyla değiştir").
+    Pencere iki yana eşit uzandığı için yavaş salınımın sıfır geçişlerini kaydırmaz; ≈6–7 Hz titreşimi siler.
+  - En uzun düzenli bölüm: gerçek bir sarkaçta ardışık periyotlar %1–2 bile farklı olmaz; %20 sınırı yalnızca
+    gerçekten bozuk periyotları ayıklar.
+- **Değerlendirilen alternatifler:** Kaydın ilk N saniyesini her zaman atmak (titreşim ne kadar sürer bilinmiyor);
+  Fourier dönüşümü / öz-ilinti ile baskın frekansı bulmak (daha sağlam ama açıklaması zor);
+  kullanıcıya grafikte bölüm seçtirmek (lise öğrencisi için ek yük).
+- **Sonuçları / bedeli:** Düzenli bölüm kısa kalırsa (kaydın yarısından az) uyarı verilir. Yumuşatma, çok kısa
+  sarkaçlarda (T < 0,6 s) salınımı da biraz küçültür; ders sarkaçları bundan uzundur.
+
 ## Açık kararlar (henüz verilmedi)
 - Üçüncü deney: serbest düşme mi, eğik düzlem mi?
 - Sarkaç: Telefon burulup hareket düzlemsel olmadığında (TEST_SONUCLARI 5.3) tek eksen yerine 3 eksenin en çok

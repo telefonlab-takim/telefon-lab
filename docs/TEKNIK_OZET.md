@@ -108,16 +108,21 @@ Sarkaç periyodunu ölçümlerin zaman damgalarından hesaplayacağımız için 
 - **Belirsizlik:** `Δg / g = √( (ΔL/L)² + (2·ΔT/T)² )`
 - **Ölçüm akışı:** "Başlat" → bırakma süresi (geri sayım; kullanıcı sarkacı asıp bırakır, el hareketi kayda girmez)
   → kayıt → sonuçlar.
-- **Periyot bulma yöntemi** (`js/analiz/periyot.js`):
+- **Periyot bulma yöntemi** (`js/analiz/periyot.js` → `sarkacPeriyoduBul`):
+  0. Her eksen 0,15 s'lik **hareketli ortalama** ile yumuşatılır (telefonun ip ucundaki hızlı titreşimini bastırır; K-008).
   1. 3 dönme ekseninden **standart sapması en büyük** olan seçilir (telefon nasıl asılırsa asılsın salınımı en iyi gören eksen).
   2. Sinyalin ortalaması çıkarılır (jiroskobun küçük sabit kayması da gider).
   3. **Yukarı sıfır geçişleri** bulunur. Gürültünün sahte geçiş üretmemesi için eşik bandı (histerezis) kullanılır:
      sinyal önce −0,3·s'nin altına inmeli, sonra +0,3·s'nin üstüne çıkmalı (s = standart sapma).
      Geçiş anı, sıfırın iki yanındaki ölçümler arasında **doğrusal ara değer** ile bulunur; böylece ≈17 ms'lik
      ölçüm aralığından çok daha hassas olur.
-  4. Geçiş anları sıra numarasına karşı bir doğru oluşturur: `tₖ = t₀ + k·T`. **En küçük kareler** ile en uygun doğru
+  4. **Düzensiz kısımlar atılır:** ortanca periyottan %20'den fazla farklı periyotlar "düzensiz" sayılır; düzenli
+     periyotların **en uzun kesintisiz bölümü** kullanılır (K-008). Ekranda kullanılan zaman aralığı ve atılan periyot sayısı görünür.
+  5. Geçiş anları sıra numarasına karşı bir doğru oluşturur: `tₖ = t₀ + k·T`. **En küçük kareler** ile en uygun doğru
      bulunur; **eğim = T**, eğimin belirsizliği = **ΔT** (bkz. K-007).
-- **Kalite kontrolleri:** en az 5 salınım; tek tek periyotlar arası fark %5'ten az; bırakma açısı 10°'den az.
+- **Kalite kontrolleri:** en az 5 düzenli salınım; tek tek periyotlar arası fark %5'ten az; düzenli bölüm kaydın en az
+  yarısı; bırakma açısı 10°'den az. İlk üçünden biri sağlanmazsa periyot "güvenilir değil" sayılır ve g sonucu
+  üstü çizili gösterilir.
 - **Bırakma açısı tahmini** (`sarkac-hesap.js`): `θ₀ = ω_max · T / (2π)`, `ω_max = √2 · s` (sinüs için tepe = √2 × standart sapma).
 - **Büyük açı etkisi:** `T ≈ T₀·(1 + θ₀²/16)` → g yaklaşık `θ₀²/8` oranında küçük çıkar (23° → %2,1).
 - **Bilinen hata kaynakları:** ip boyunun (L) ölçümü — özellikle telefonun ağırlık merkezinin tam yeri (baskın);

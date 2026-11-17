@@ -45,6 +45,13 @@ g'nin yaklaşık ne kadar hatalı çıkacağını söylüyor (θ₀²/8). İlk g
 g = 4π²L/T² olduğundan hata yayılımı kuralıyla Δg/g = √((ΔL/L)² + (2ΔT/T)²). T formülde karesiyle geçtiği için
 onun payı 2 ile çarpılır. Uygulama ayrıca belirsizliğin yüzde kaçının L'den, yüzde kaçının T'den geldiğini gösteriyor.
 
+### Uygulamanız hiç yanlış sonuç verdi mi?
+Evet. Üçüncü gerçek denememizde ekranda "g = 9,9 ± 1,2, kabul edilen değerle uyumlu" yazdı ama grafiğe bakınca
+periyodun yanlış hesaplandığını gördük: telefon bırakıldıktan sonra ilk saniyelerde hızlı titreşmiş, bu da sahte
+"sıfır geçişleri" üretmişti. Yanlış periyot ile yanlış ölçülmüş ip boyu birbirini tesadüfen götürmüştü.
+Düzelttik: sinyali yumuşatıyoruz, düzensiz bölümleri atıyoruz ve periyot şüpheliyse g sonucunun üstünü çizip
+"güvenmeyin" diyoruz. Ayrıntı: TEST_SONUCLARI 5.4, KARAR_GUNLUGU K-008.
+
 ### Sonuç kabul edilen değerden farklı çıkarsa ne oluyor?
 Uygulama farkı belirsizliğe bölüyor. Fark belirsizliğin 2 katından küçükse sonuç "uyumlu" sayılıyor. Büyükse bunun rastgele
 hatayla açıklanamayacağını, sistematik bir hata olabileceğini söylüyor ve olası nedenleri sıralıyor (L yanlış ölçülmüş,

@@ -32,6 +32,9 @@ Bir ölçüm kötü çıktıysa onu da yazıyoruz; jüri için başarısız dene
 | 2026-11-17 | Sarkaç sayfası uçtan uca (masaüstü) | 3 s bırakma (bilerek karışık sinyal) + 10 s kayıt; gama ekseninde 105·cos(2πt/1,40 s) | T ≈ 1,400 s, eksen gama, ~23° uyarısı, karışık başlangıç kayda girmez | T = 1,4000 ± 0,0004 s, eksen gama, 6 salınım, açı 23°, "%2,1" uyarısı | ✅ |
 | 2026-11-17 | g hesabı, karşılaştırma, sayı okuma, belirsizlik yazma testleri | 14 yeni test (ör. L = 0,487 ± 0,005 m, T = 1,400 ± 0,001 s → elle hesaplanan g = 9,809, Δg ≈ 0,102) | Hepsi geçer | Toplam 54/54 geçti | ✅ |
 | 2026-11-17 | Sarkaç sayfası g bölümü (masaüstü) | L = 48,7 ± 0,5 cm, sahte sarkaç T = 1,40 s, ~7° | g ≈ 9,81 ± 0,10, uyumlu, belirsizlik çoğunlukla L'den | g = 9,82 ± 0,10 m/s², L %99,0 · T %1,0, fark 0,2 kat. L = 40 cm girilince g = 8,1 ve "sistematik hata" açıklaması; "abc" girilince "L'yi girin" mesajı | ✅ |
+| 2026-11-18 | Yumuşatma, düzenli bölüm seçimi, başı titreşen sarkaç | 5 yeni test; biri eski yöntemin aynı veride yanıldığını belgeliyor (ham ortalama periyot < 1,4 s) | Hepsi geçer | Toplam 59/59 geçti | ✅ |
+| 2026-11-18 | Sarkaç sayfası, gerçek kayda benzeyen veri (masaüstü) | L = 30 cm, ilk 3 s ≈5,5 Hz titreşim, T = 1,50 s | T ≈ 1,50 s, g ≈ 5,3 ve "sistematik hata" açıklaması | T = 1,5002 ± 0,0005 s, g = 5,26 ± 0,09, fark 51,7 kat, sistematik hata açıklaması | ✅ |
+| 2026-11-18 | Sarkaç sayfası, periyodu düzensiz salınım (masaüstü) | Periyodu ±%15 oynayan salınım, L = 48,7 cm | Periyot uyarıları, g üstü çizili, "güvenmeyin", karşılaştırma "anlamlı değil" | Beklendiği gibi (3 periyot uyarısı, g = 9,3 ± 1,5 üstü çizili) | ✅ |
 | 2026-11-17 | Durdur sonrası veri alınmıyor | Durdur'dan sonra olay gönderildi | Örnek sayısı artmaz | Artmadı | ✅ |
 
 > Not: Masaüstü testlerinde örnekleme hızı anlamlı değildir (sahte olaylar). Gerçek hız telefonda ölçülecek.
@@ -97,12 +100,32 @@ Henüz otomatik periyot hesabı yok; aşağıdaki değerler ekran görüntüsün
 - **Düzeltilen küçük hata:** Açı "10°" diye yuvarlanıp yanında "10°'den az olmalı" uyarısı çıkıyordu (gerçek değer 10'un
   biraz üstündeydi). Açı artık bir ondalıkla gösteriliyor.
 
+## 5.4 Üçüncü gerçek kayıt — ilk g ölçümü ve bulunan hata (2026-11-18, iPhone 14)
+
+- **Uygulamanın gösterdiği (eski kod):** L = 30,0 ± 0,5 cm girildi. T = 1,09 ± 0,07 s, eksen alfa, "19 salınım",
+  tek tek periyot farkı **%53,9** (uyarı verildi), açı 8,0°. **g = 9,9 ± 1,2 m/s², "kabul edilen değerle uyumlu".**
+- **Grafikten görülen gerçek durum:** Kaydın ilk ~3,5 saniyesinde telefon ip ucunda hızlı (≈5 Hz) titreşiyor.
+  Bu titreşim, sıfır geçişi sayımına çok sayıda **sahte geçiş** ekledi (grafikte başta sık sık dizilmiş kesikli çizgiler).
+  Sonrasında salınım düzenli ve kesikli çizgiler arası ≈ 53,5 piksel ≈ **1,50 s** (grafikten elle tahmin).
+- **Sonuç:** Gösterilen T = 1,09 s yanlıştı; doğru periyot ≈ 1,50 s. "Uyumlu" sonucu **tesadüftü**:
+  yanlış T ile hatalı L birbirini neredeyse götürdü. Gerçek T ile L = 30 cm, g ≈ 5,3 m/s² verir;
+  bu da **L'nin doğru ölçülmediğini** gösterir (T = 1,50 s, L ≈ 56 cm'lik bir sarkaca karşılık gelir).
+- **Kodda iki eksik vardı:**
+  1. Periyot hesabı, kaydın düzensiz bölümlerini ayıklamıyordu.
+  2. Periyot uyarısı (%53,9) g bölümüne taşınmıyordu; g bölümü bozuk periyotla "uyumlu" diyebiliyordu.
+     Bu, "ölçüm dürüstlüğü" kuralımıza aykırıydı.
+- **Düzeltme:** bkz. KARAR_GUNLUGU K-008 ve aşağıdaki testler. Aynı duruma benzeyen sahte veriyle yeni kod
+  T = 1,5002 ± 0,0005 s buluyor ve L = 30 cm ile "belirsizliğin 51,7 katı fark, sistematik hata olabilir" diyor.
+- **Açık soru:** L nasıl ölçüldü? Askı düzeni (tek ip / V) neydi? Bir sonraki ölçümde L'nin askı noktasından
+  telefonun ortasına kadar **dikey** ölçülmesi gerekiyor.
+
 ## 6. Sorunlar ve çözümler
 
 | Tarih | Sorun | Neden | Çözüm |
 |---|---|---|---|
 | 2026-11-17 | Bilgisayarda "veri gelmedi" uyarısı çıkmıyordu | Chrome, sensör yokken de bütün değerleri boş tek bir olay gönderiyor; bu olay "veri geldi" sayılıyordu | `hareket.js` içinde boş olaylar yok sayılıyor |
 | 2026-11-17 | iPhone 14'te örnekler arası aralık 1,0 ms ile 1.067 ms arasında değişiyor (ortalama 60 Hz olmasına rağmen) | Henüz kesin değil. 1 ms: iOS olayları bazen arka arkaya, yığın hâlinde teslim ediyor olabilir. ~1 sn: tek seferlik bir duraklama olabilir (başlangıç, ekrana dokunma, uygulama değiştirme). En küçük/en büyük değer, durumun bir kez mi yoksa sürekli mi olduğunu göstermiyor. | Sarkaç sayfasının örnekleme raporuyla tekrar ölçüldü (20 sn, masada, dokunmadan): boşluk yok, aralıklar 12–21 ms. Yani normal kayıtta sorun yok; ilk testteki 1 sn'lik boşluk tek seferlikti (muhtemelen ekrana dokunma/kaydırma ya da başlangıç anı, kesin nedeni bilinmiyor). Kayıt sırasında ekrana dokunulmaması önerisi sayfada yazıyor. Aralıkların 12–21 ms arasında oynamasının etkisi için bkz. Bölüm 7. |
+| 2026-11-18 | Gerçek kayıtta uygulama yanlış periyotla (1,09 s yerine ≈1,50 s) "g uyumlu" dedi | Kaydın başındaki hızlı titreşim sahte sıfır geçişleri üretti; periyot uyarısı g bölümüne taşınmıyordu | Sinyal yumuşatılıyor, yalnızca düzenli en uzun bölüm kullanılıyor; periyot güvenilir değilse g üstü çizili gösterilip "güvenmeyin" deniyor (K-008, Bölüm 5.4) |
 | 2026-11-17 | Grafik çizgileri gri çıktı, grafik yüksekliği yanlıştı | Tarayıcı `stil.css` dosyasının eski hâlini önbellekten kullandı; yeni renk değişkenleri yoktu. GitHub Pages da dosyaları 10 dakikaya kadar önbellekte tutturur, aynı şey telefonda olabilir. | `grafik.js` renk bulamazsa yedek renk kullanıyor. Güncellemeden hemen sonra tuhaf görünüm olursa sayfa yenilenmeli. Kalıcı çözüm: PWA adımında Service Worker ile dosya sürümleri yönetilecek. |
 | 2026-11-17 | Sayfa `file://` ile açılınca çalışmıyor | Tarayıcılar güvenlik nedeniyle `file://` üzerinden ES modülü yüklemez | Sayfa yerel sunucu ya da HTTPS ile açılmalı |
 

@@ -5,7 +5,7 @@
 import { hareketSensorunuHazirla } from '../sensor/hareket.js';
 import { kayitYap } from '../sensor/kayit.js';
 import { orneklemeRaporu, BOSLUK_ESIGI_MS } from '../analiz/ornekleme.js';
-import { periyotBul, enCokSalinanSeri } from '../analiz/periyot.js';
+import { sarkacPeriyoduBul } from '../analiz/periyot.js';
 import {
   genlikAcisiTahmini,
   buyukAciGHatasi,
@@ -105,25 +105,27 @@ function periyoduHesaplaVeGoster(ornekler) {
   const zamanlarSn = goreliZamanlarSn(ornekler);
   const seriler = serileriCikar(ornekler, SINYALLER.donme);
 
-  // En çok salınan dönme eksenini seç (bkz. KARAR_GUNLUGU K-006)
-  const secilen = enCokSalinanSeri(seriler);
-  if (!secilen) {
+  // Yumuşat → en çok salınan dönme eksenini seç → periyodu bul (bkz. KARAR_GUNLUGU K-006, K-008)
+  const sonuc = sarkacPeriyoduBul(zamanlarSn, seriler);
+  if (!sonuc) {
     // Hiçbir eksende yeterli jiroskop verisi yok
     el('pSonuc').textContent = 'Periyot bulunamadı';
-    for (const id of ['pEksen', 'pSalinim', 'pYayilim', 'pAci']) el(id).textContent = '–';
+    for (const id of ['pEksen', 'pSalinim', 'pBolum', 'pYayilim', 'pAci']) el(id).textContent = '–';
     listeyiDoldur(el('pUyarilar'), ['Jiroskop verisi gelmedi; periyot hesaplanamadı.'], '');
     el('periyotBolumu').hidden = false;
     return;
   }
-  const sonuc = periyotBul(zamanlarSn, secilen.degerler);
   const uyarilar = [...sonuc.uyarilar];
 
-  el('pEksen').textContent = secilen.ad;
+  el('pEksen').textContent = sonuc.secilenEksen;
   sonGecisler = sonuc.gecisler || [];
 
   if (sonuc.gecerliMi) {
     el('pSonuc').textContent = 'T = ' + belirsizlikleYaz(sonuc.periyotSn, sonuc.periyotBelirsizligiSn, 's');
-    el('pSalinim').textContent = sonuc.salinimSayisi;
+    el('pSalinim').textContent =
+      sonuc.salinimSayisi + (sonuc.atilanPeriyotSayisi > 0 ? ` (düzensiz ${sonuc.atilanPeriyotSayisi} tanesi atıldı)` : '');
+    el('pBolum').textContent =
+      `${sayiYaz(sonuc.kullanilanBaslangicSn, 1)} – ${sayiYaz(sonuc.kullanilanBitisSn, 1)} s`;
     el('pYayilim').textContent = '%' + sayiYaz(sonuc.yayilimOrani * 100, 1);
 
     const aci = genlikAcisiTahmini(sonuc.tepeDegeri, sonuc.periyotSn);
@@ -131,6 +133,7 @@ function periyoduHesaplaVeGoster(ornekler) {
       periyotSn: sonuc.periyotSn,
       periyotBelirsizligiSn: sonuc.periyotBelirsizligiSn,
       aciDerece: aci,
+      guvenilirMi: sonuc.guvenilirMi,
     };
     // Bir ondalıkla gösteriyoruz: 10,3° yuvarlanıp "10°" yazılırsa "10°'den az olmalı" uyarısıyla çelişir.
     el('pAci').textContent = sayiYaz(aci, 1) + '°';
@@ -143,7 +146,7 @@ function periyoduHesaplaVeGoster(ornekler) {
     }
   } else {
     el('pSonuc').textContent = 'Periyot bulunamadı';
-    for (const id of ['pSalinim', 'pYayilim', 'pAci']) el(id).textContent = '–';
+    for (const id of ['pSalinim', 'pBolum', 'pYayilim', 'pAci']) el(id).textContent = '–';
   }
 
   listeyiDoldur(el('pUyarilar'), uyarilar, 'Uyarı yok.');
@@ -163,8 +166,17 @@ function uzunluguOku() {
 }
 
 // Sonucu öğrenciye açıklayan cümleleri hazırlar.
-function gAciklamalari(sonuc, karsilastirma, girdi, aciDerece) {
+function gAciklamalari(sonuc, karsilastirma, girdi, periyotBilgisi) {
+  const { aciDerece, guvenilirMi } = periyotBilgisi;
   const cumleler = [];
+
+  // Periyot ölçümünde uyarı varsa bunu en başta söyle: kötü veriden çıkan sonucu "güzel" göstermiyoruz.
+  if (!guvenilirMi) {
+    cumleler.push(
+      '⚠ Periyot ölçümü güvenilir değil (bkz. "3. Periyot" bölümündeki uyarılar). ' +
+        'Bu g değerine güvenmeyin; düzeneği düzeltip kaydı tekrarlayın.'
+    );
+  }
 
   cumleler.push(`g = 4π²·L / T² formülüyle hesaplandı (T = 2π·√(L/g) formülünden g çekilerek).`);
 
@@ -173,19 +185,24 @@ function gAciklamalari(sonuc, karsilastirma, girdi, aciDerece) {
     cumleler.push('ΔL = 0 girdiniz. Hiçbir ölçüm kusursuz değildir; belirsizlik olduğundan küçük görünüyor.');
   } else if (sonuc.uzunlukPayi >= sonuc.periyotPayi) {
     cumleler.push(
-      `Belirsizliğin %${sayiYaz(sonuc.uzunlukPayi * 100, 0)}'i sarkaç boyunun (L) ölçümünden geliyor. ` +
+      `Belirsizliğin yaklaşık %${sayiYaz(sonuc.uzunlukPayi * 100, 0)} kadarı sarkaç boyunun (L) ölçümünden geliyor. ` +
         'Sonucu iyileştirmenin yolu L\'yi daha dikkatli ölçmek; telefonun saati (periyot) zaten çok hassas.'
     );
   } else {
     cumleler.push(
-      `Belirsizliğin %${sayiYaz(sonuc.periyotPayi * 100, 0)}'i periyot ölçümünden geliyor. ` +
+      `Belirsizliğin yaklaşık %${sayiYaz(sonuc.periyotPayi * 100, 0)} kadarı periyot ölçümünden geliyor. ` +
         'Daha uzun kayıt yapın ve telefonun dönmeden, tek düzlemde salınmasını sağlayın.'
     );
   }
 
   // Kabul edilen değerle karşılaştırma
   const kat = sayiYaz(karsilastirma.farkKati, 1);
-  if (karsilastirma.uyumluMu) {
+  if (!guvenilirMi) {
+    cumleler.push(
+      `Kabul edilen değer (≈ ${sayiYaz(KABUL_EDILEN_G, 2)} m/s²) ile karşılaştırma bu ölçümde anlamlı değil: ` +
+        'periyot güvenilir olmadığı için değerler tesadüfen yakın ya da uzak çıkabilir.'
+    );
+  } else if (karsilastirma.uyumluMu) {
     cumleler.push(
       `Kabul edilen değer (≈ ${sayiYaz(KABUL_EDILEN_G, 2)} m/s²) ile fark, belirsizliğin ${kat} katı. ` +
         'Bu, ölçümün kabul edilen değerle uyumlu olduğu anlamına gelir.'
@@ -218,6 +235,7 @@ function gHesabiniGuncelle() {
 
   if (!sonPeriyot || girdi.hata) {
     el('gSonuc').textContent = 'g = ?';
+    el('gSonuc').classList.remove('guvenilmez');
     for (const id of satirIdleri) el(id).textContent = '–';
     const mesaj = !sonPeriyot ? 'Periyot bulunamadığı için g hesaplanamadı.' : girdi.hata;
     listeyiDoldur(el('gAciklama'), [mesaj], '');
@@ -235,7 +253,9 @@ function gHesabiniGuncelle() {
     `L: %${sayiYaz(sonuc.uzunlukPayi * 100, 1)} · T: %${sayiYaz(sonuc.periyotPayi * 100, 1)}`;
   el('gFark').textContent =
     `${sayiYaz(karsilastirma.fark, 2)} m/s² (belirsizliğin ${sayiYaz(karsilastirma.farkKati, 1)} katı)`;
-  listeyiDoldur(el('gAciklama'), gAciklamalari(sonuc, karsilastirma, girdi, sonPeriyot.aciDerece), '');
+  listeyiDoldur(el('gAciklama'), gAciklamalari(sonuc, karsilastirma, girdi, sonPeriyot), '');
+  // Güvenilmez sonucu görsel olarak da soluk göster
+  el('gSonuc').classList.toggle('guvenilmez', !sonPeriyot.guvenilirMi);
   el('gBolumu').hidden = false;
 }
 

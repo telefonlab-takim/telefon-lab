@@ -72,6 +72,12 @@ h3 { font-size: 1rem; margin: 1.2rem 0 0.3rem; }
   margin: 0.5rem 0;
 }
 
+/* Güvenilir olmayan sonuç: üstü çizili ve soluk */
+.sonuc.guvenilmez {
+  color: var(--soluk-yazi);
+  text-decoration: line-through;
+}
+
 /* Grafik */
 .grafik {
   display: block;

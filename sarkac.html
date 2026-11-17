@@ -69,6 +69,7 @@
       <table>
         <tr><th>Kullanılan eksen</th><td id="pEksen"></td></tr>
         <tr><th>Sayılan salınım</th><td id="pSalinim"></td></tr>
+        <tr><th>Hesaba katılan bölüm</th><td id="pBolum"></td></tr>
         <tr><th>Tek tek periyotların farkı</th><td id="pYayilim"></td></tr>
         <tr><th>Tahmini bırakma açısı</th><td id="pAci"></td></tr>
       </table>
@@ -76,8 +77,10 @@
       <ul id="pUyarilar"></ul>
       <details class="kucuk">
         <summary>Periyot nasıl hesaplandı?</summary>
-        <p>Uygulama, en çok salınan dönme eksenini seçer. Bu sinyalin aşağıdan yukarı sıfırı geçtiği anları bulur
-          (grafikteki kesikli çizgiler); her periyotta bir geçiş olur. Geçiş anları sıra numarasına (0, 1, 2, …)
+        <p>Uygulama önce hızlı titreşimleri bastırmak için sinyali yumuşatır (her noktayı çevresindeki 0,15 saniyenin
+          ortalamasıyla değiştirir) ve en çok salınan dönme eksenini seçer. Bu sinyalin aşağıdan yukarı sıfırı geçtiği
+          anları bulur (grafikteki kesikli çizgiler); her periyotta bir geçiş olur. Diğerlerinden çok farklı (%20'den fazla)
+          periyotlar düzensiz sayılır; yalnızca düzenli salınımın en uzun kesintisiz bölümü kullanılır. Geçiş anları sıra numarasına (0, 1, 2, …)
           karşı bir doğru oluşturur: tₖ = t₀ + k·T. Bu noktalara en uygun doğru çizilir; doğrunun eğimi periyottur.
           Noktalar doğrudan ne kadar saparsa periyodun belirsizliği o kadar büyük çıkar.</p>
       </details>
