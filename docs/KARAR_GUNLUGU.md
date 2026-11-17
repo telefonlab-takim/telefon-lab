@@ -102,3 +102,6 @@ Her kayıt şu şablonu izler:
 
 ## Açık kararlar (henüz verilmedi)
 - Üçüncü deney: serbest düşme mi, eğik düzlem mi?
+- Sarkaç: Telefon burulup hareket düzlemsel olmadığında (TEST_SONUCLARI 5.3) tek eksen yerine 3 eksenin en çok
+  salınan **bileşik yönü** (temel bileşen analizi) kullanılmalı mı? Önce V biçiminde (iki ipli) asmanın sorunu
+  çözüp çözmediği denenecek; çözerse kod basit kalır.

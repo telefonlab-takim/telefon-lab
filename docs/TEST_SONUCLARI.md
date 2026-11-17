@@ -77,6 +77,24 @@ Henüz otomatik periyot hesabı yok; aşağıdaki değerler ekran görüntüsün
   ya da uygulama bu düzeltmeyi yapmalı.
 - **Sönüm:** 16 saniyede genlik gözle görülür biçimde azalmıyor; sarkaç düzgün.
 
+## 5.3 İkinci gerçek sarkaç kaydı — ilk otomatik periyot (2026-11-17, iPhone 14)
+
+- **Sonuç (uygulama):** T = 1,614 ± 0,007 s, eksen gama, 12 salınım, tek tek periyot farkı %4,8, açı ≈ 10°.
+- **Kablo boyu:** ölçülmedi / bildirilmedi. T = 1,614 s, `L = g·T²/(4π²)` ile ≈ 0,65 m'ye karşılık gelir
+  (ilk kayıtta T ≈ 1,40 s → ≈ 0,49 m idi; kablo boyu değişmiş olmalı).
+- **Örnekleme:** 1211 ölçüm, 60,0 Hz, aralık 15–20 ms, boşluk yok.
+- **Gözlem — hareket düzlemsel değil:** İlk kayıtta salınım tek eksendeydi (gama). Bu kayıtta üç eksen de
+  büyük salınıyor: beta (turuncu) ilk 5 sn büyük, sonra küçülüp 13–16. sn'de yeniden büyüyor (enerji iki salınım
+  arasında gidip geliyor), alfa (mavi) gürültülü ve büyük — telefon ip ucunda **burulmuş/sallanma yönü değişmiş**.
+  Tek bir eksen hareketin yalnızca bir kısmını gördüğü için:
+  - geçiş anları kayıyor → tek tek periyot farkı %4,8 (ilk kayıtta çok daha düzgündü), belirsizlik büyüdü (±0,007 s);
+  - açı tahmini de muhtemelen olduğundan küçük çıktı.
+- **Sonuç:** Kod beklendiği gibi çalıştı ve bozulmayı belirsizliğe ve "periyot farkı" satırına doğru yansıttı.
+  Asıl çözüm **deney düzeneğinde**: telefon iki iple V biçiminde asılırsa (iki asma noktası) yalnızca tek düzlemde
+  salınır ve burulamaz.
+- **Düzeltilen küçük hata:** Açı "10°" diye yuvarlanıp yanında "10°'den az olmalı" uyarısı çıkıyordu (gerçek değer 10'un
+  biraz üstündeydi). Açı artık bir ondalıkla gösteriliyor.
+
 ## 6. Sorunlar ve çözümler
 
 | Tarih | Sorun | Neden | Çözüm |

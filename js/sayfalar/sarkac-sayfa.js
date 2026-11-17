@@ -117,11 +117,12 @@ function periyoduHesaplaVeGoster(ornekler) {
     el('pYayilim').textContent = '%' + sayiYaz(sonuc.yayilimOrani * 100, 1);
 
     const aci = genlikAcisiTahmini(sonuc.tepeDegeri, sonuc.periyotSn);
-    el('pAci').textContent = sayiYaz(aci, 0) + '°';
+    // Bir ondalıkla gösteriyoruz: 10,3° yuvarlanıp "10°" yazılırsa "10°'den az olmalı" uyarısıyla çelişir.
+    el('pAci').textContent = sayiYaz(aci, 1) + '°';
     if (aci > KUCUK_ACI_SINIRI_DERECE) {
       const hataYuzde = buyukAciGHatasi(aci) * 100;
       uyarilar.push(
-        `Sarkaç yaklaşık ${sayiYaz(aci, 0)}° ile salınmış. Sarkaç formülü küçük açılar (${KUCUK_ACI_SINIRI_DERECE}°'den az) için geçerlidir; ` +
+        `Sarkaç yaklaşık ${sayiYaz(aci, 1)}° ile salınmış. Sarkaç formülü küçük açılar (${KUCUK_ACI_SINIRI_DERECE}°'den az) için geçerlidir; ` +
           `bu açıda g yaklaşık %${sayiYaz(hataYuzde, 1)} küçük hesaplanır. Daha küçük açıyla tekrar deneyin.`
       );
     }
