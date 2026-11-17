@@ -14,7 +14,7 @@
 // ÖNEMLİ: Yeni bir dosya eklendiğinde DOSYALAR listesine de eklenmeli; sürüm her yayında değiştirilmeli
 // (CLAUDE.md kural 8). Sürüm değişince tarayıcı bu dosyanın değiştiğini anlar ve listeyi yeniden indirir.
 
-const SURUM = '2026-11-18.6';
+const SURUM = '2026-11-18.7';
 const ONBELLEK_ADI = 'telefon-lab-' + SURUM;
 
 // İlk açılışta hepsi indirilip saklanır; böylece hiç açılmamış bir sayfa da internetsiz çalışır.
@@ -94,6 +94,12 @@ async function onceAgSonraOnbellek(istek) {
     // İnternet yok ya da çok yavaş: kayıtlı kopyayı ver
     const kayitli = await onbellek.match(istek.url, { ignoreSearch: true });
     if (kayitli) return kayitli;
+    // Bir SAYFA isteniyor ama kayıtlı kopyası yoksa (ör. adres farklı yazıldı): tarayıcının hata sayfası yerine
+    // ana menüyü göster; kullanıcı oradan istediği deneye geçebilir.
+    if (istek.mode === 'navigate') {
+      const anaMenu = await onbellek.match('index.html');
+      if (anaMenu) return anaMenu;
+    }
     throw hata; // kayıtlı kopya da yoksa yapacak bir şey yok
   }
 }

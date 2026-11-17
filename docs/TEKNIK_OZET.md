@@ -177,6 +177,15 @@ Kullanıcı "Ana Ekrana Ekle" deyince Telefon Lab, tarayıcı çubuğu olmadan b
    (`cache: 'no-cache'` → sunucuya "değişti mi?" diye sorulur) ve kopyası güncellenir. İnternet yoksa
    ya da 4 saniyede cevap gelmezse kayıtlı kopya kullanılır. (Neden bu strateji: KARAR_GUNLUGU K-010.)
 
+**iPhone'a özgü durumlar (önemli):**
+- iPhone, **ana ekrana eklenen** uygulamanın kayıtlı dosyalarını **Safari'den ayrı** saklar. Safari'de "hazır" olması,
+  ana ekrandaki uygulamanın da hazır olduğu anlamına gelmez. Uygulama ana ekrana eklendikten sonra **internet varken
+  simgeden bir kez açılmalı** ve "✓ İnternetsiz kullanıma hazır" yazısı beklenmeli. (Ana menüde de yazıyor.)
+- Servis çalışanı yalnızca `.../telefon-lab/` **altındaki** adresleri yönetir. Adres sondaki eğik çizgi olmadan
+  (`.../telefon-lab`) yazılırsa bu adres onun alanının **dışında** kalır ve internetsiz açılmaz. Doğru adres:
+  `https://telefonlab-takim.github.io/telefon-lab/`
+- Alanın içindeki ama kayıtlı olmayan bir adres internetsiz açılırsa hata sayfası yerine ana menü gösterilir.
+
 **Güncelleme:** `sw.js` içindeki `SURUM` değişince tarayıcı yeni servis çalışanını kurar ve dosyaları yeniden indirir.
 Sürüm etiketi kuralı için CLAUDE.md kural 8, yeni dosya kuralı için kural 9.
 
