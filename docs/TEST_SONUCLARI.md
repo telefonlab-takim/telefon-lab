@@ -55,6 +55,25 @@ _(Deney seçildikten sonra tablo eklenecek.)_
 | Tarih | Cihaz | Koşul | Süre (s) | Ölçüm | Hız (Hz) | Ortanca (ms) | En kısa / en uzun (ms) | Uzun boşluk | Jiroskop |
 |---|---|---|---|---|---|---|---|---|---|
 | 2026-11-17 | C1 iPhone 14, Safari | Masada, ekrana dokunmadan | 20,2 | 1210 | 60,0 | 17,0 | 12,0 / 21,0 | 0 | 1210/1210 |
+| 2026-11-17 | C1 iPhone 14, Safari | İpe asılı, salınırken (ilk gerçek sarkaç) | 20,1 | 1204 | 60,0 | 17,0 | 15,0 / 18,0 | 0 | 1204/1204 |
+
+## 5.2 İlk gerçek sarkaç kaydı — grafikten gözlemler (2026-11-17, iPhone 14)
+
+Henüz otomatik periyot hesabı yok; aşağıdaki değerler ekran görüntüsündeki grafikten piksel ölçerek
+**elle tahmin** edilmiştir, kesin ölçüm değildir.
+
+- **Hangi eksen?** Salınım net biçimde tek bir dönme ekseninde (grafikte yeşil, "gama") görülüyor; diğer iki eksende
+  aynı frekansta küçük salınımlar ve gürültü var (telefonun hafifçe dönmesi/burulması).
+  Baskın eksen telefonun ipe nasıl asıldığına bağlı; bu yüzden periyot kodu ekseni **kendisi seçmeli**.
+- **Başlangıç karmaşası:** İlk ~4 saniye düzensiz (telefon elle bırakılırken), sonrası temiz.
+  Analiz bu kısmı dışarıda bırakmalı.
+- **Periyot (elle tahmin):** 11 periyot ≈ 547 piksel, 5 s ≈ 178 piksel → **T ≈ 1,40 s**.
+  Bu, `L = g·T² / (4π²)` ile **L ≈ 0,49 m** demek (ip boyu ölçülüp karşılaştırılacak).
+- **Genlik (elle tahmin):** En büyük dönme hızı ≈ 105 °/s. Basit harmonik harekette `ω_max = θ₀ · 2π / T`
+  → **θ₀ ≈ 23°**. Bu, küçük açı yaklaşımı için büyük: periyot yaklaşık `T ≈ T₀ · (1 + θ₀²/16)` kadar uzar,
+  θ₀ = 0,41 rad için **%1**; g'de bu **≈ %2** hata demek (≈ 0,2 m/s²). Ya daha küçük açıyla (≤ 10°) bırakılmalı
+  ya da uygulama bu düzeltmeyi yapmalı.
+- **Sönüm:** 16 saniyede genlik gözle görülür biçimde azalmıyor; sarkaç düzgün.
 
 ## 6. Sorunlar ve çözümler
 

@@ -70,5 +70,18 @@ Her kayıt şu şablonu izler:
   bilgisayardan yerel ağda yayın (telefon için HTTPS sertifikası kurmak gerekir, karmaşık).
 - **Sonuçları / bedeli:** Ücretsiz planda depo public olmalı; kod herkese açıktır (gizli bilgi içermediği için sorun değil).
 
+## K-006: Periyot analizi ekseni kendisi seçer ve başlangıcı atlar
+- **Tarih:** 2026-11-17
+- **Durum:** Önerildi (Adım 4'te uygulanacak)
+- **Karar:** Periyot, 3 dönme ekseninden salınımı en büyük olanında (standart sapması en büyük) aranır.
+  Telefon elle bırakılırken oluşan düzensiz başlangıç analize katılmaz.
+- **Neden:** İlk gerçek kayıtta (TEST_SONUCLARI 5.2) salınım tek bir eksende net görüldü ama hangi eksen olduğu
+  telefonun ipe nasıl bağlandığına bağlı. Ayrıca eksen adları (alfa/beta/gama) tarayıcılar arasında farklı
+  yorumlanabiliyor; adlara güvenmek yerine veriye bakmak daha sağlam. İlk ~4 saniye bırakma hareketi yüzünden düzensizdi.
+- **Değerlendirilen alternatifler:** Kullanıcıya ekseni seçtirmek (lise öğrencisi için kafa karıştırıcı),
+  sabit bir eksen kullanmak (telefon farklı asılınca çalışmaz). Başlangıç için: kayıttan önce geri sayım
+  (kullanıcı sarkacı geri sayım bitmeden bırakır) ya da analizde ilk birkaç saniyeyi atlamak.
+- **Sonuçları / bedeli:** Seçilen eksen ekranda gösterilmeli ki öğrenci neyin ölçüldüğünü görsün.
+
 ## Açık kararlar (henüz verilmedi)
 - Üçüncü deney: serbest düşme mi, eğik düzlem mi?
