@@ -1,0 +1,66 @@
+/* css/stil.css — Tüm sayfaların ortak stili.
+   Telefon ekranı öncelikli; büyük butonlar, okunaklı sayılar. */
+
+:root {
+  --arka-plan: #ffffff;
+  --yazi: #1b1f24;
+  --soluk-yazi: #5b6470;
+  --vurgu: #1565c0;
+  --hata: #c62828;
+  --cizgi: #d7dce2;
+}
+
+/* Telefon karanlık moddaysa renkleri değiştir */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --arka-plan: #121417;
+    --yazi: #e8eaed;
+    --soluk-yazi: #9aa3ad;
+    --vurgu: #64a8f0;
+    --hata: #ef7070;
+    --cizgi: #2c3138;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--arka-plan);
+  color: var(--yazi);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 { font-size: 1.6rem; margin: 0.5rem 0; }
+h2 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+
+button {
+  font-size: 1.1rem;
+  padding: 0.8rem 1.2rem;
+  margin: 0.25rem 0.25rem 0.25rem 0;
+  border: none;
+  border-radius: 8px;
+  background: var(--vurgu);
+  color: #fff;
+}
+button:disabled { opacity: 0.4; }
+
+.durum { font-weight: 600; }
+.durum.hata { color: var(--hata); }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 0.4rem; border-bottom: 1px solid var(--cizgi); text-align: left; }
+td {
+  text-align: right;
+  /* Sayılar değişirken genişlik oynamasın diye eşit genişlikli rakamlar */
+  font-variant-numeric: tabular-nums;
+}
+
+.kucuk { font-size: 0.85rem; color: var(--soluk-yazi); word-break: break-word; }

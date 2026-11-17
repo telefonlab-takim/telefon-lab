@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sensör Testi — Telefon Laboratuvarı</title>
+  <link rel="stylesheet" href="css/stil.css">
+</head>
+<body>
+  <main>
+    <h1>Sensör Testi</h1>
+    <p>Bu sayfa telefonun hareket sensörlerinin çalışıp çalışmadığını ve saniyede kaç ölçüm verdiğini gösterir.</p>
+
+    <button id="baslatButonu" type="button">Sensörleri başlat</button>
+    <button id="durdurButonu" type="button" disabled>Durdur</button>
+
+    <!-- Durum ve hata mesajları buraya yazılır -->
+    <p id="durumMesaji" class="durum">Henüz başlatılmadı.</p>
+
+    <section>
+      <h2>İvme (yer çekimi dahil), m/s²</h2>
+      <table>
+        <tr><th>x</th><td id="ax">–</td></tr>
+        <tr><th>y</th><td id="ay">–</td></tr>
+        <tr><th>z</th><td id="az">–</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Dönme hızı (jiroskop), °/s</h2>
+      <table>
+        <tr><th>alfa</th><td id="donmeAlfa">–</td></tr>
+        <tr><th>beta</th><td id="donmeBeta">–</td></tr>
+        <tr><th>gama</th><td id="donmeGama">–</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Örnekleme</h2>
+      <table>
+        <tr><th>Gelen örnek sayısı</th><td id="ornekSayisi">0</td></tr>
+        <tr><th>Ortalama hız</th><td id="ortalamaHiz">–</td></tr>
+        <tr><th>En kısa / en uzun aralık</th><td id="aralikler">–</td></tr>
+        <tr><th>Tarayıcının bildirdiği aralık</th><td id="bildirilenAralik">–</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Cihaz bilgisi</h2>
+      <p id="cihazBilgisi" class="kucuk"></p>
+      <p class="kucuk">Bu bilgileri <code>docs/TEST_SONUCLARI.md</code> içindeki cihaz tablosuna yazın.</p>
+    </section>
+  </main>
+
+  <script type="module" src="js/sayfalar/sensor-testi-sayfa.js"></script>
+</body>
+</html>
