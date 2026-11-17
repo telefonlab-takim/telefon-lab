@@ -212,6 +212,23 @@ Uygulama bu sorunu doğrudan bilemez, ama "sistematik hata olabilir" uyarısıyl
 sabit bir noktaya bağlı, esnemeyen ince ip; telefon şarj girişinden değil, sıkı bir kılıf/bantla bağlı;
 L metreyle dönme noktasından telefonun ortasına doğrudan ölçülür.
 
+## 5.9 Yedinci gerçek kayıt — kapı koluna asılı (2026-11-18, iPhone 14, sürüm 2026-11-18.5)
+
+- **Düzenek:** Dönme noktası artık **kapı kolu** (sabit). Kablo/ip türü ve telefonun nasıl bağlandığı henüz netleşmedi.
+- **L nasıl bulundu (kullanıcı):** Kapı kolunun yerden yüksekliği 94 cm, telefonun ortası için 6 cm çıkarıldı → **L = 88 cm**
+  (yine yüksekliklerden hesap; doğrudan ölçüm değil).
+- **Uygulama:** T = **1,7429 ± 0,0018 s**, eksen alfa, 10 salınım, bölüm 1,8–19,2 s, periyot farkı **%1,8**, açı 4,3°,
+  **uyarı yok.** g = 11,44 ± 0,07 m/s², kabul edilen değerden 23,7 kat uzak → "sistematik hata" (doğru davranış).
+- **Eksen tablosu:** ✓ alfa 1,743 s (%1,8, 10) · beta 1,575 s (%10,5, 5) · gama 0,874 s (%8,5, 4).
+- **Önemli gözlem — tekrarlanabilirlik:** Önceki kayıtta (5.7, elde tutulan kablo, "L = 81 cm") T = 1,744 s idi;
+  bu kayıtta (kapı kolu, "L = 88 cm") T = 1,7429 s. **İki farklı askıda periyot %0,06 farkla aynı.**
+  - Uygulamanın periyot ölçümünün çok tekrarlanabilir olduğunu gösteriyor.
+  - Ama girilen L'ler (81 ve 88 cm) farklı olduğu hâlde periyot aynı: salınan sarkacın gerçek boyu iki seferde
+    de aynıydı ve yüksekliklerden hesaplanan L'ler onu ölçmüyor. T = 1,743 s, ≈ **75,4 cm**'lik basit sarkaca karşılık gelir.
+  - Muhtemel açıklama: iki seferde de **aynı şarj kablosu**, telefon şarj girişinden asılı. L = 88 cm doğruysa
+    (T beklenen 1,883 s), periyodun beklenenden kısa olması kablonun **sertliğinin** geri getirici etki eklemesiyle
+    açıklanabilir; ya da telefon yerden 6 cm'den daha yüksekte asılıydı. Doğrudan ölçüm ve ip ile deneme istendi.
+
 ## 6. Sorunlar ve çözümler
 
 | Tarih | Sorun | Neden | Çözüm |
