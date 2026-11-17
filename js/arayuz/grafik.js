@@ -16,6 +16,7 @@ const YEDEK_RENKLER = {
   '--seri-3': '#43a047',
   '--cizgi': '#888888',
   '--soluk-yazi': '#888888',
+  '--vurgu': '#1e88e5',
 };
 function cssRengi(degiskenAdi) {
   const renk = getComputedStyle(document.documentElement).getPropertyValue(degiskenAdi).trim();
@@ -27,7 +28,8 @@ function cssRengi(degiskenAdi) {
 //   zamanlarSn: her ölçümün zamanı (saniye), artan sırada
 //   seriler   : [{ ad, degerler, renkDegiskeni }]  (degerler zamanlarSn ile aynı uzunlukta; null = ölçüm yok)
 //   birim     : y ekseninin birimi (ör. '°/s')
-export function grafikCiz(canvas, { zamanlarSn, seriler, birim }) {
+//   isaretler : (isteğe bağlı) dikey kesikli çizgiyle işaretlenecek zamanlar (s), ör. sıfır geçişleri
+export function grafikCiz(canvas, { zamanlarSn, seriler, birim, isaretler = [] }) {
   // 1) Tuvali hazırla. Telefon ekranlarında 1 CSS pikseli 2–3 gerçek piksel olduğundan,
   //    tuvali o oranda büyük tutuyoruz; yoksa çizgiler bulanık görünür.
   const oran = window.devicePixelRatio || 1;
@@ -99,6 +101,20 @@ export function grafikCiz(canvas, { zamanlarSn, seriler, birim }) {
   // Birim yazısı (sol üst köşe)
   c.textAlign = 'left';
   c.fillText(birim, KENAR.sol + 4, KENAR.ust + 2);
+
+  // İşaretler: kesikli dikey çizgiler
+  if (isaretler.length > 0) {
+    c.strokeStyle = cssRengi('--vurgu');
+    c.setLineDash([4, 4]);
+    for (const t of isaretler) {
+      const x = xPiksel(t);
+      c.beginPath();
+      c.moveTo(x, KENAR.ust);
+      c.lineTo(x, yukseklik - KENAR.alt);
+      c.stroke();
+    }
+    c.setLineDash([]); // sonraki çizgiler düz olsun
+  }
 
   // 5) Seriler: değerleri çizgiyle birleştir. Değer yoksa (null) çizgiyi kopar.
   c.lineWidth = 1.5;

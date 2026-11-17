@@ -6,6 +6,10 @@
 import { ortalama, ortanca } from '../js/analiz/istatistik.js';
 import { araliklariHesapla, orneklemeRaporu } from '../js/analiz/ornekleme.js';
 import { guzelAdim, eksenCizgileri } from '../js/arayuz/olcek.js';
+import { standartSapma, dogruUydur } from '../js/analiz/istatistik.js';
+import { periyotBul, enCokSalinanSeri, yukariSifirGecisleri } from '../js/analiz/periyot.js';
+import { genlikAcisiTahmini, buyukAciGHatasi } from '../js/analiz/sarkac-hesap.js';
+import { belirsizlikleYaz } from '../js/arayuz/bicim.js';
 
 // ---- Küçük test aracı ----------------------------------------------------
 
@@ -39,6 +43,32 @@ function duzenliZamanlar(hz, sureSn) {
   const adet = Math.round(hz * sureSn) + 1;
   for (let i = 0; i < adet; i++) zamanlar.push((i * 1000) / hz);
   return zamanlar;
+}
+
+// Her çalıştırmada aynı "rastgele" sayıları veren basit üreteç (testler hep aynı sonucu versin diye).
+// Doğrusal eşlik üreteci: sonraki = (a × önceki + c) mod m
+function tohumluRastgele(tohum) {
+  let durum = tohum;
+  return () => {
+    durum = (1664525 * durum + 1013904223) % 4294967296;
+    return durum / 4294967296; // 0 ile 1 arası
+  };
+}
+
+// Sahte sarkaç sinyali üretir: dönme hızı = genlik · cos(2πt/T) + sabit kayma + gürültü
+// Zaman damgaları da iPhone'daki gibi titreşimli (± zamanTitremesiMs) olabilir.
+function sahteSarkac({ periyotSn, genlik, sureSn, hz = 60, gurultu = 0, kayma = 0, zamanTitremesiMs = 0, tohum = 1 }) {
+  const rastgele = tohumluRastgele(tohum);
+  const zamanlarSn = [];
+  const degerler = [];
+  for (let i = 0; i <= sureSn * hz; i++) {
+    const gercekZaman = i / hz;
+    // Ölçüm doğru anda alınır ama zaman damgası titreşimli kaydedilir
+    const damga = gercekZaman + ((rastgele() - 0.5) * 2 * zamanTitremesiMs) / 1000;
+    zamanlarSn.push(damga);
+    degerler.push(genlik * Math.cos((2 * Math.PI * gercekZaman) / periyotSn) + kayma + (rastgele() - 0.5) * 2 * gurultu);
+  }
+  return { zamanlarSn, degerler };
 }
 
 // ---- istatistik.js --------------------------------------------------------
@@ -103,6 +133,127 @@ test('eksenCizgileri: 0 ile 20 → [0, 5, 10, 15, 20]', () => esitMi(eksenCizgil
 test('eksenCizgileri: ondalık kırıntısı yok (0 ile 1)', () =>
   esitMi(eksenCizgileri(0, 1), [0, 0.2, 0.4, 0.6, 0.8, 1]));
 test('eksenCizgileri: min = max → tek değer', () => esitMi(eksenCizgileri(3, 3), [3]));
+
+// ---- istatistik.js: standart sapma ve doğru uydurma ---------------------------
+
+test('standartSapma: [2, 4, 4, 4, 5, 5, 7, 9] → 2,138 (n−1 ile)', () =>
+  yakinMi(standartSapma([2, 4, 4, 4, 5, 5, 7, 9]), Math.sqrt(32 / 7), 1e-12));
+test('dogruUydur: tam doğru y = 3 + 2x → eğim 2, kesişim 3, belirsizlik 0', () => {
+  const r = dogruUydur([0, 1, 2, 3], [3, 5, 7, 9]);
+  yakinMi(r.egim, 2);
+  yakinMi(r.kesisim, 3);
+  yakinMi(r.egimBelirsizligi, 0);
+});
+test('dogruUydur: sapmalı noktalar → elle hesaplanan eğim 1,91, kesişim 0,06, Δeğim 0,052', () => {
+  // Elle hesap:  x = 0, 1, 2, 3   y = 0, 2, 4, 5,7
+  //   x̄ = 1,5   ȳ = 2,925
+  //   Σ(x−x̄)² = 2,25 + 0,25 + 0,25 + 2,25 = 5
+  //   Σ(x−x̄)(y−ȳ) = 4,3875 + 0,4625 + 0,5375 + 4,1625 = 9,55
+  //   eğim = 9,55 / 5 = 1,91      kesişim = 2,925 − 1,91 × 1,5 = 0,06
+  //   artıklar: −0,06 ; 0,03 ; 0,12 ; −0,09 → kareler toplamı 0,027 → s² = 0,027 / 2 = 0,0135
+  //   Δeğim = √(0,0135 / 5) ≈ 0,052
+  const r = dogruUydur([0, 1, 2, 3], [0, 2, 4, 5.7]);
+  yakinMi(r.egim, 1.91, 1e-12);
+  yakinMi(r.kesisim, 0.06, 1e-12);
+  yakinMi(r.egimBelirsizligi, Math.sqrt(0.0135 / 5), 1e-12);
+});
+
+// ---- periyot.js -----------------------------------------------------------
+
+test('yukariSifirGecisleri: sin(2πt), t = 0…3,5 s → geçişler 1, 2, 3 s', () => {
+  const t = [];
+  const v = [];
+  for (let i = 0; i <= 350; i++) { t.push(i / 100); v.push(Math.sin(2 * Math.PI * i / 100)); }
+  const g = yukariSifirGecisleri(t, v, 0.3);
+  esitMi(g.length, 3); // t=0'daki ilk geçiş sayılmaz: sinyal önce bandın altına inmemişti
+  g.forEach((gt, k) => yakinMi(gt, k + 1, 1e-3));
+});
+
+test('periyotBul: kusursuz sinüs, T = 1,400 s → 1,400 s (±0,1 ms)', () => {
+  const { zamanlarSn, degerler } = sahteSarkac({ periyotSn: 1.4, genlik: 50, sureSn: 20 });
+  const r = periyotBul(zamanlarSn, degerler);
+  esitMi(r.gecerliMi, true);
+  yakinMi(r.periyotSn, 1.4, 1e-4);
+  esitMi(r.uyarilar.length, 0);
+});
+
+test('periyotBul: iPhone benzeri (gürültü ±3 °/s, kayma +2 °/s, zaman titremesi ±5 ms) → 1,400 s (±2 ms)', () => {
+  const { zamanlarSn, degerler } = sahteSarkac({
+    periyotSn: 1.4, genlik: 50, sureSn: 20, gurultu: 3, kayma: 2, zamanTitremesiMs: 5, tohum: 42,
+  });
+  const r = periyotBul(zamanlarSn, degerler);
+  yakinMi(r.periyotSn, 1.4, 0.002);
+  esitMi(r.salinimSayisi, 13); // 20 s / 1,4 s ≈ 14,3 → 14 geçiş → 13 periyot
+});
+
+test('periyotBul: gerçek periyot, hesaplanan belirsizliğin 3 katı içinde', () => {
+  const { zamanlarSn, degerler } = sahteSarkac({
+    periyotSn: 1.4, genlik: 50, sureSn: 20, gurultu: 3, zamanTitremesiMs: 5, tohum: 7,
+  });
+  const r = periyotBul(zamanlarSn, degerler);
+  if (!(Math.abs(r.periyotSn - 1.4) <= 3 * r.periyotBelirsizligiSn)) {
+    throw new Error(`T = ${r.periyotSn}, ΔT = ${r.periyotBelirsizligiSn}`);
+  }
+});
+
+test('periyotBul: gürültü sahte geçiş üretmez (zayıf sinyal + güçlü gürültü)', () => {
+  const { zamanlarSn, degerler } = sahteSarkac({ periyotSn: 2, genlik: 10, sureSn: 20, gurultu: 2, tohum: 3 });
+  const r = periyotBul(zamanlarSn, degerler);
+  esitMi(r.salinimSayisi, 9); // 20 s / 2 s = 10 geçiş → 9 periyot
+});
+
+test('periyotBul: 3 salınımlık kısa kayıt → "en az 5" uyarısı', () => {
+  const { zamanlarSn, degerler } = sahteSarkac({ periyotSn: 1.4, genlik: 50, sureSn: 5 });
+  const r = periyotBul(zamanlarSn, degerler);
+  esitMi(r.gecerliMi, true);
+  esitMi(r.uyarilar.length, 1);
+});
+
+test('periyotBul: salınım yok (yalnız gürültü değil, düz sinyal) → geçersiz', () => {
+  const r = periyotBul([0, 1, 2, 3, 4], [5, 5, 5, 5, 5]);
+  esitMi(r.gecerliMi, false);
+});
+
+test('periyotBul: null değerler atlanır', () => {
+  const { zamanlarSn, degerler } = sahteSarkac({ periyotSn: 1.4, genlik: 50, sureSn: 20 });
+  degerler[100] = null;
+  degerler[500] = null;
+  yakinMi(periyotBul(zamanlarSn, degerler).periyotSn, 1.4, 1e-3);
+});
+
+test('enCokSalinanSeri: en büyük salınımlı ekseni seçer', () => {
+  const seri = enCokSalinanSeri([
+    { ad: 'a', degerler: [1, -1, 1, -1] },
+    { ad: 'b', degerler: [50, -50, 50, null] },
+    { ad: 'c', degerler: [3, 3, 3, 3] },
+  ]);
+  esitMi(seri.ad, 'b');
+});
+
+// ---- sarkac-hesap.js ------------------------------------------------------
+
+test('genlikAcisiTahmini: ω_max = 105 °/s, T = 1,4 s → θ₀ ≈ 23,4°', () =>
+  yakinMi(genlikAcisiTahmini(105, 1.4), (105 * 1.4) / (2 * Math.PI), 1e-12));
+
+test('buyukAciGHatasi: 23° → yaklaşık %2', () => {
+  // 23° = 0,4014 rad → 0,4014² / 8 = 0,02014
+  yakinMi(buyukAciGHatasi(23), 0.02014, 1e-4);
+});
+test('buyukAciGHatasi: 5° → %0,1 (ihmal edilebilir)', () => yakinMi(buyukAciGHatasi(5), 0.00095, 1e-5));
+
+test('periyotBul + genlik: genliği 50 °/s olan sinüsün tepe değeri ≈ 50', () => {
+  const { zamanlarSn, degerler } = sahteSarkac({ periyotSn: 1.4, genlik: 50, sureSn: 14 });
+  yakinMi(periyotBul(zamanlarSn, degerler).tepeDegeri, 50, 0.5);
+});
+
+// ---- bicim.js: belirsizlikle yazma -----------------------------------------
+
+test('belirsizlikleYaz: 1,40023 ± 0,0023 s → "1,400 ± 0,002 s"', () =>
+  esitMi(belirsizlikleYaz(1.40023, 0.0023, 's'), '1,400 ± 0,002 s'));
+test('belirsizlikleYaz: 9,8123 ± 0,15 → "9,8 ± 0,2"', () =>
+  esitMi(belirsizlikleYaz(9.8123, 0.15), '9,8 ± 0,2'));
+test('belirsizlikleYaz: belirsizlik bilinmiyor → "± ?"', () =>
+  esitMi(belirsizlikleYaz(1.4, NaN, 's'), '1,400 ± ? s'));
 
 // ---- Sonuçları ekrana yaz -------------------------------------------------
 

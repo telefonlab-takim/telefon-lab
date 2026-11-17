@@ -16,15 +16,15 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 |---|---|
 | `index.html` | Ana menü, deney seçimi |
 | `sensor-testi.html` | ✅ Hareket sensörü test sayfası (canlı ham değerler) |
-| `sarkac.html` | 🔶 Sarkaç deneyi sayfası (şimdilik: kayıt + örnekleme raporu + sinyal grafiği) |
+| `sarkac.html` | 🔶 Sarkaç deneyi sayfası (şimdilik: geri sayım + kayıt + periyot + grafik + örnekleme raporu; g hesabı yok) |
 | `css/stil.css` | ✅ Ortak stil (karanlık mod destekli) |
 | `js/sensor/hareket.js` | ✅ Ön kontroller, izin, `devicemotion` dinleme, boş olay filtresi |
 | `js/sensor/kayit.js` | ✅ Belirli süre kayıt; kayıt sırasında sayfa arka plana geçti mi? |
-| `js/analiz/istatistik.js` | 🔶 Ortalama, ortanca (standart sapma sonra eklenecek) |
+| `js/analiz/istatistik.js` | ✅ Ortalama, ortanca, standart sapma, doğru uydurma (en küçük kareler) |
 | `js/analiz/ornekleme.js` | ✅ Örnekleme raporu: hız, ortanca aralık, uzun boşluklar, uyarılar |
-| `js/analiz/periyot.js` | Sinyalden periyot bulma |
-| `js/analiz/sarkac-hesap.js` | g ve belirsizlik hesabı |
-| `js/arayuz/bicim.js` | ✅ Sayıları Türkçe biçimde yazma (1.067,5) |
+| `js/analiz/periyot.js` | ✅ Eksen seçimi, yukarı sıfır geçişleri, periyot ± belirsizlik |
+| `js/analiz/sarkac-hesap.js` | 🔶 Bırakma açısı tahmini, büyük açı etkisi (g hesabı sonraki adımda) |
+| `js/arayuz/bicim.js` | ✅ Sayıları Türkçe biçimde yazma (1.067,5), belirsizlikle yazma (1,400 ± 0,002) |
 | `js/arayuz/grafik.js` | ✅ Canvas üzerine çizgi grafiği (ızgara, eksen yazıları, renk açıklaması) |
 | `js/arayuz/olcek.js` | ✅ Eksenler için "güzel" çizgi değerleri (-20, 0, 20, 40 gibi) |
 | `js/sayfalar/sensor-testi-sayfa.js` | ✅ Sensör testi sayfasının akışı |
@@ -106,8 +106,22 @@ Sarkaç periyodunu ölçümlerin zaman damgalarından hesaplayacağımız için 
 ### 4.1 Sarkaç
 - **Fizik:** Küçük açılı basit sarkaçta `T = 2π·√(L/g)`  →  `g = 4π²·L / T²`
 - **Belirsizlik:** `Δg / g = √( (ΔL/L)² + (2·ΔT/T)² )`
-- **Periyot bulma yöntemi:** _(doldurulacak)_
-- **Bilinen hata kaynakları:** _(doldurulacak)_
+- **Ölçüm akışı:** "Başlat" → bırakma süresi (geri sayım; kullanıcı sarkacı asıp bırakır, el hareketi kayda girmez)
+  → kayıt → sonuçlar.
+- **Periyot bulma yöntemi** (`js/analiz/periyot.js`):
+  1. 3 dönme ekseninden **standart sapması en büyük** olan seçilir (telefon nasıl asılırsa asılsın salınımı en iyi gören eksen).
+  2. Sinyalin ortalaması çıkarılır (jiroskobun küçük sabit kayması da gider).
+  3. **Yukarı sıfır geçişleri** bulunur. Gürültünün sahte geçiş üretmemesi için eşik bandı (histerezis) kullanılır:
+     sinyal önce −0,3·s'nin altına inmeli, sonra +0,3·s'nin üstüne çıkmalı (s = standart sapma).
+     Geçiş anı, sıfırın iki yanındaki ölçümler arasında **doğrusal ara değer** ile bulunur; böylece ≈17 ms'lik
+     ölçüm aralığından çok daha hassas olur.
+  4. Geçiş anları sıra numarasına karşı bir doğru oluşturur: `tₖ = t₀ + k·T`. **En küçük kareler** ile en uygun doğru
+     bulunur; **eğim = T**, eğimin belirsizliği = **ΔT** (bkz. K-007).
+- **Kalite kontrolleri:** en az 5 salınım; tek tek periyotlar arası fark %5'ten az; bırakma açısı 10°'den az.
+- **Bırakma açısı tahmini** (`sarkac-hesap.js`): `θ₀ = ω_max · T / (2π)`, `ω_max = √2 · s` (sinüs için tepe = √2 × standart sapma).
+- **Büyük açı etkisi:** `T ≈ T₀·(1 + θ₀²/16)` → g yaklaşık `θ₀²/8` oranında küçük çıkar (23° → %2,1).
+- **Bilinen hata kaynakları:** ip boyunun (L) ölçümü — özellikle telefonun ağırlık merkezinin tam yeri (baskın);
+  büyük bırakma açısı; telefonun ip ucunda burulması; zaman damgası titremesi (ihmal edilebilir, bkz. TEST_SONUCLARI 7).
 
 ### 4.2 Ses frekansı
 _(doldurulacak)_

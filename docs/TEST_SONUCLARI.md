@@ -28,6 +28,8 @@ Bir ölçüm kötü çıktıysa onu da yazıyoruz; jüri için başarısız dene
 | 2026-11-17 | Sarkaç sayfası kayıt + rapor | 10 s sahte veri, 3.–4. saniye arası bilerek veri gönderilmedi | 1 boşluk, ~3. saniyede, ~1000 ms | "2,98. saniyede 1.008,1 ms boşluk", ortanca 16,0 ms | ✅ |
 | 2026-11-17 | Eksen ölçeği testleri (`olcek.js`) | 7 test | Hepsi geçer | Toplam 21/21 geçti | ✅ |
 | 2026-11-17 | Sinyal grafiği | 10 s sahte sarkaç: beta = 45·cos(2πt/1,42 s), yavaş sönümlü + gürültü | ~7 düzgün dalga, renkli 3 seri, telefon genişliğinde (375 px) taşma yok, ivme seçeneği çalışıyor | Beklendiği gibi (masaüstünde) | ✅ |
+| 2026-11-17 | Periyot, doğru uydurma, belirsizlikle yazma, açı tahmini testleri | 19 yeni test (sahte sarkaç: gürültü ±3 °/s, kayma +2 °/s, zaman titremesi ±5 ms dahil) | Hepsi geçer | Toplam 40/40 geçti. İlk çalıştırmada 1 test başarısızdı: testteki **elle hesap** yanlıştı (eğim 1,90 yazılmış, doğrusu 1,91); kod doğruydu, test düzeltildi. | ✅ |
+| 2026-11-17 | Sarkaç sayfası uçtan uca (masaüstü) | 3 s bırakma (bilerek karışık sinyal) + 10 s kayıt; gama ekseninde 105·cos(2πt/1,40 s) | T ≈ 1,400 s, eksen gama, ~23° uyarısı, karışık başlangıç kayda girmez | T = 1,4000 ± 0,0004 s, eksen gama, 6 salınım, açı 23°, "%2,1" uyarısı | ✅ |
 | 2026-11-17 | Durdur sonrası veri alınmıyor | Durdur'dan sonra olay gönderildi | Örnek sayısı artmaz | Artmadı | ✅ |
 
 > Not: Masaüstü testlerinde örnekleme hızı anlamlı değildir (sahte olaylar). Gerçek hız telefonda ölçülecek.

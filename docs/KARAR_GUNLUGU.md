@@ -72,9 +72,10 @@ Her kayıt şu şablonu izler:
 
 ## K-006: Periyot analizi ekseni kendisi seçer ve başlangıcı atlar
 - **Tarih:** 2026-11-17
-- **Durum:** Önerildi (Adım 4'te uygulanacak)
+- **Durum:** Kabul edildi (Adım 4'te uygulandı)
 - **Karar:** Periyot, 3 dönme ekseninden salınımı en büyük olanında (standart sapması en büyük) aranır.
-  Telefon elle bırakılırken oluşan düzensiz başlangıç analize katılmaz.
+  Telefon elle bırakılırken oluşan düzensiz başlangıç analize katılmaz: "Başlat"a basınca önce
+  **bırakma süresi** (varsayılan 5 s) geri sayılır, kayıt ondan sonra başlar.
 - **Neden:** İlk gerçek kayıtta (TEST_SONUCLARI 5.2) salınım tek bir eksende net görüldü ama hangi eksen olduğu
   telefonun ipe nasıl bağlandığına bağlı. Ayrıca eksen adları (alfa/beta/gama) tarayıcılar arasında farklı
   yorumlanabiliyor; adlara güvenmek yerine veriye bakmak daha sağlam. İlk ~4 saniye bırakma hareketi yüzünden düzensizdi.
@@ -82,6 +83,22 @@ Her kayıt şu şablonu izler:
   sabit bir eksen kullanmak (telefon farklı asılınca çalışmaz). Başlangıç için: kayıttan önce geri sayım
   (kullanıcı sarkacı geri sayım bitmeden bırakır) ya da analizde ilk birkaç saniyeyi atlamak.
 - **Sonuçları / bedeli:** Seçilen eksen ekranda gösterilmeli ki öğrenci neyin ölçüldüğünü görsün.
+
+## K-007: Periyot ve belirsizliği, geçiş anlarına doğru uydurarak bulmak
+- **Tarih:** 2026-11-17
+- **Durum:** Kabul edildi
+- **Karar:** Yukarı sıfır geçiş anları sıra numarasına (0, 1, 2, …) karşı alınır ve en küçük kareler ile
+  `tₖ = t₀ + k·T` doğrusu uydurulur. Periyot = eğim, ΔT = eğimin standart hatası.
+- **Neden:**
+  - Lise yöntemi olan "tek tek periyotların ortalaması ± standart sapma/√n", ardışık periyotlar aynı geçiş anını
+    paylaştığı için (biri bittiği an diğeri başlar) belirsizliği **olduğundan büyük** gösterir.
+    Ayrıca tek tek periyotların ortalaması = (son geçiş − ilk geçiş) / periyot sayısı'dır; aradaki bütün geçişler boşa gider.
+  - Doğru uydurma bütün geçiş anlarını kullanır ve belirsizliği noktaların doğrudan sapmasından doğru biçimde hesaplar.
+  - Jüriye anlatması kolay: "Geçiş anlarını grafiğe koyduk, en iyi doğruyu çizdik, eğim periyot."
+- **Değerlendirilen alternatifler:** Tek tek periyotların ortalaması; Fourier dönüşümü ile frekans bulma
+  (doğru ama lise düzeyinde açıklaması zor, çözünürlüğü kayıt süresine bağlı).
+- **Sonuçları / bedeli:** Tek tek periyotların yayılımı (%) ayrıca gösteriliyor; öğrenci salınımın ne kadar düzenli
+  olduğunu yine görebiliyor.
 
 ## Açık kararlar (henüz verilmedi)
 - Üçüncü deney: serbest düşme mi, eğik düzlem mi?

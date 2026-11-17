@@ -9,11 +9,19 @@
 <body>
   <main>
     <h1>Sarkaç Deneyi</h1>
-    <p class="kucuk">Yapım aşaması — Adım 3: ölçüm kaydı, örnekleme kalitesi ve sinyal grafiği.
-      Periyot ve g hesabı sonraki adımlarda eklenecek.</p>
+    <p class="kucuk">Yapım aşaması — Adım 4: kayıt, periyot hesabı, grafik ve örnekleme kalitesi.
+      g hesabı bir sonraki adımda eklenecek.</p>
 
     <section>
       <h2>1. Kayıt</h2>
+      <p>
+        <label for="hazirlikSecimi">Bırakma süresi:</label>
+        <select id="hazirlikSecimi">
+          <option value="3">3 saniye</option>
+          <option value="5" selected>5 saniye</option>
+          <option value="10">10 saniye</option>
+        </select>
+      </p>
       <p>
         <label for="sureSecimi">Kayıt süresi:</label>
         <select id="sureSecimi">
@@ -22,15 +30,53 @@
           <option value="30">30 saniye</option>
         </select>
       </p>
-      <button id="kayitButonu" type="button">Kaydı başlat</button>
+      <button id="kayitButonu" type="button">Başlat</button>
       <p id="durumMesaji" class="durum">Hazır.</p>
-      <p class="kucuk">Kayıt sırasında ekranı kilitlemeyin ve başka uygulamaya geçmeyin;
-        telefon arka plandayken tarayıcı sensör verisi göndermez.</p>
+      <ol class="kucuk">
+        <li>"Başlat"a basın, telefonu ipe asın ve küçük bir açıyla (10°'den az, birkaç santim yana çekmek yeter) bırakın.</li>
+        <li>Bırakma süresi dolunca kayıt kendiliğinden başlar; böylece elinizin hareketi ölçüme girmez.</li>
+        <li>Kayıt sırasında ekranı kilitlemeyin; telefon arka plandayken tarayıcı sensör verisi göndermez.</li>
+      </ol>
     </section>
 
     <!-- Kayıt bitince doldurulur -->
+    <section id="periyotBolumu" hidden>
+      <h2>2. Periyot</h2>
+      <p id="pSonuc" class="sonuc"></p>
+      <table>
+        <tr><th>Kullanılan eksen</th><td id="pEksen"></td></tr>
+        <tr><th>Sayılan salınım</th><td id="pSalinim"></td></tr>
+        <tr><th>Tek tek periyotların farkı</th><td id="pYayilim"></td></tr>
+        <tr><th>Tahmini bırakma açısı</th><td id="pAci"></td></tr>
+      </table>
+      <h3>Uyarılar</h3>
+      <ul id="pUyarilar"></ul>
+      <details class="kucuk">
+        <summary>Periyot nasıl hesaplandı?</summary>
+        <p>Uygulama, en çok salınan dönme eksenini seçer. Bu sinyalin aşağıdan yukarı sıfırı geçtiği anları bulur
+          (grafikteki kesikli çizgiler); her periyotta bir geçiş olur. Geçiş anları sıra numarasına (0, 1, 2, …)
+          karşı bir doğru oluşturur: tₖ = t₀ + k·T. Bu noktalara en uygun doğru çizilir; doğrunun eğimi periyottur.
+          Noktalar doğrudan ne kadar saparsa periyodun belirsizliği o kadar büyük çıkar.</p>
+      </details>
+    </section>
+
+    <section id="grafikBolumu" hidden>
+      <h2>3. Sinyal grafiği</h2>
+      <p>
+        <label for="sinyalSecimi">Gösterilen sinyal:</label>
+        <select id="sinyalSecimi">
+          <option value="donme" selected>Dönme hızı (jiroskop)</option>
+          <option value="ivme">İvme (yer çekimi dahil)</option>
+        </select>
+      </p>
+      <canvas id="grafik" class="grafik"></canvas>
+      <p id="grafikAciklamasi" class="aciklama"></p>
+      <p class="kucuk">Kesikli dikey çizgiler, periyot hesabında kullanılan sıfır geçişleridir.
+        Ardışık iki çizgi arası bir periyottur.</p>
+    </section>
+
     <section id="raporBolumu" hidden>
-      <h2>2. Örnekleme raporu</h2>
+      <h2>4. Örnekleme raporu</h2>
       <table>
         <tr><th>Ölçüm sayısı</th><td id="rOrnekSayisi"></td></tr>
         <tr><th>Kayıt süresi</th><td id="rSure"></td></tr>
@@ -46,22 +92,6 @@
 
       <h3>Uzun boşluklar</h3>
       <ul id="rBosluklar"></ul>
-    </section>
-
-    <!-- Kayıt bitince çizilir -->
-    <section id="grafikBolumu" hidden>
-      <h2>3. Sinyal grafiği</h2>
-      <p>
-        <label for="sinyalSecimi">Gösterilen sinyal:</label>
-        <select id="sinyalSecimi">
-          <option value="donme" selected>Dönme hızı (jiroskop)</option>
-          <option value="ivme">İvme (yer çekimi dahil)</option>
-        </select>
-      </p>
-      <canvas id="grafik" class="grafik"></canvas>
-      <p id="grafikAciklamasi" class="aciklama"></p>
-      <p class="kucuk">Sarkaç salınırken dönme hızı eksenlerinden biri düzgün bir dalga gibi
-        inip çıkmalı. İki tepe arasındaki süre sarkacın periyodudur.</p>
     </section>
   </main>
 

@@ -62,6 +62,14 @@ button:disabled { opacity: 0.4; }
 select { font-size: 1rem; padding: 0.4rem; }
 h3 { font-size: 1rem; margin: 1.2rem 0 0.3rem; }
 
+/* Ana sonuç (ör. periyot) büyük yazılır */
+.sonuc {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  margin: 0.5rem 0;
+}
+
 /* Grafik */
 .grafik {
   display: block;

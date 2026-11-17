@@ -28,6 +28,18 @@ ve nerede oldukları. Boşluk varsa kullanıcı uyarılıyor. _(Android sonuçla
 _(Cevap yazılacak — ipucu: tek bir 1 saniyelik boşluk ortalamayı çok değiştirir, ortancayı değiştirmez.
 `testler/index.html` içinde bunu gösteren bir test var.)_
 
+### Periyodu nasıl buluyorsunuz?
+Telefonun jiroskobu sarkacın dönme hızını ölçüyor; bu sinyal sarkaçla aynı periyotla salınıyor. Uygulama, sinyalin
+aşağıdan yukarı sıfırı geçtiği anları buluyor (her periyotta bir tane). Bu anları sıra numarasına karşı grafiğe
+koyunca bir doğru çıkıyor; doğrunun eğimi periyot. Ayrıntı: KARAR_GUNLUGU K-007.
+
+### Telefonu nasıl asarsanız asın çalışıyor mu?
+Evet. Uygulama 3 dönme ekseninden en çok salınanı kendisi seçiyor ve hangisini seçtiğini ekranda gösteriyor (K-006).
+
+### Küçük açı yaklaşımını nasıl kontrol ediyorsunuz?
+Dönme hızının tepe değerinden bırakma açısını tahmin ediyoruz: θ₀ = ω_max·T/(2π). 10°'yi geçerse uygulama uyarıyor ve
+g'nin yaklaşık ne kadar hatalı çıkacağını söylüyor (θ₀²/8). İlk gerçek denememizde açı ≈ 23° çıktı → g'de ≈ %2 hata.
+
 ### Belirsizliği nasıl hesaplıyorsunuz?
 _(Cevap yazılacak)_
 
