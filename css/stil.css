@@ -18,6 +18,10 @@
   --golge: 0 1px 2px rgba(16, 24, 40, 0.06), 0 2px 8px rgba(16, 24, 40, 0.06);
   --basari: #2e7d32;
   --basari-zemin: #e7f4e8;
+  --dikkat: #b45309;
+  --dikkat-zemin: #fdf0e1;
+  --hata-zemin: #fdecec;
+  --giris-zemin: #f6f7f9;
 }
 
 /* Telefon karanlık moddaysa renkleri değiştir */
@@ -37,6 +41,10 @@
     --golge: none;
     --basari: #7fd38a;
     --basari-zemin: #1d3322;
+    --dikkat: #f5b462;
+    --dikkat-zemin: #3a2a14;
+    --hata-zemin: #3a1c1c;
+    --giris-zemin: #22262c;
   }
 }
 
@@ -287,6 +295,96 @@ a.kart:active, a.liste-satiri:active { transform: scale(0.98); }
 }
 .durum-hapi:empty { display: none; }
 .surum { text-align: center; margin-top: 1.5rem; }
+
+/* ===================== Deney sayfaları (sarkac.html) ===================== */
+
+body.uygulama-sayfasi { background: var(--sayfa-zemini); }
+
+/* Üst şerit: ana menüdeki şeridin daha ince hâli */
+.ust-serit {
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+  color: #fff;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 18px;
+}
+.ust-serit-ic {
+  max-width: 40rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.ust-serit h1 { margin: 0; font-size: 1.4rem; line-height: 1.2; }
+.ust-serit p { margin: 0; opacity: 0.85; font-size: 0.9rem; }
+.geri-dugmesi {
+  flex-basis: 100%;           /* kendi satırında dursun */
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+.ikon-beyaz { background: rgba(255, 255, 255, 0.18); color: #fff; }
+
+/* Bölüm kartları */
+.kart-bolum {
+  background: var(--kart);
+  border: 1px solid var(--cizgi);
+  border-radius: 16px;
+  box-shadow: var(--golge);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.kart-bolum h2 { margin-top: 0; }
+
+/* Form alanları: etiket üstte, kutu altta; iki alan yan yana */
+.alan-satiri { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+.alan { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+.alan-etiketi { font-size: 0.8rem; font-weight: 600; color: var(--soluk-yazi); }
+.alan input, .alan select {
+  width: 100%;
+  font-size: 1rem;           /* 16px'ten küçükse iPhone dokununca yakınlaştırır */
+  padding: 10px 12px;
+  border: 1px solid var(--cizgi);
+  border-radius: 10px;
+  background: var(--giris-zemin);
+  color: var(--yazi);
+}
+.alan input:focus, .alan select:focus { outline: 2px solid var(--vurgu); outline-offset: 1px; }
+
+/* Büyük ana düğme */
+.ana-dugme {
+  display: block;
+  width: 100%;
+  margin: 8px 0 0;
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 12px;
+}
+
+/* Durum mesajı kutusu (geri sayım, kayıt, hata) */
+.durum-kutusu {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--giris-zemin);
+  font-weight: 600;
+}
+.durum-kutusu.hata { background: var(--hata-zemin); }
+
+/* Açılır talimat kutuları */
+details.talimat { margin-top: 14px; border-top: 1px solid var(--cizgi); padding-top: 10px; }
+details summary { cursor: pointer; font-weight: 600; color: var(--vurgu); }
+summary .ozet-basligi { display: inline; margin: 0; }
+
+/* Sonuç kartı: g büyük yazılır, üstünde durum rozeti */
+.buyuk-sonuc { font-size: 2rem; margin: 6px 0 12px; }
+.sonuc-karti .rozet { display: inline-block; margin: 0; font-size: 0.8rem; }
+.rozet-dikkat { background: var(--dikkat-zemin); color: var(--dikkat); }
+.rozet-hata { background: var(--hata-zemin); color: var(--hata); }
+
+.aciklama-listesi { padding-left: 1.2rem; margin: 6px 0; }
+.aciklama-listesi li { margin-bottom: 6px; }
 
 /* Sayfaların üstündeki "Ana menü" bağlantısı */
 .geri { display: inline-block; margin-top: 0.5rem; color: var(--vurgu); }

@@ -16,7 +16,7 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 |---|---|
 | `index.html` | ✅ Ana menü: mavi üst şerit, deney kartları (simge, durum rozeti, kullandığı sensör), araçlar, ana ekrana ekleme adımları, internetsiz kullanım durumu. Simgeler sayfanın içinde SVG olarak çizili (ek dosya, dış simge kütüphanesi ya da yazı tipi yok → internetsiz de aynı görünür). Açık/karanlık mod destekli. |
 | `sensor-testi.html` | ✅ Hareket sensörü test sayfası (canlı ham değerler) |
-| `sarkac.html` | ✅ Sarkaç deneyi sayfası: L girişi, geri sayım, kayıt, g ± Δg ve açıklama, periyot, grafik, örnekleme raporu |
+| `sarkac.html` | ✅ Sarkaç deneyi sayfası: L girişi, geri sayım, kayıt, g ± Δg ve açıklama, periyot, grafik, örnekleme raporu. Ana menüyle aynı görsel dil: üst şerit, bölüm kartları, yan yana form alanları, büyük "Başlat" düğmesi, açılır talimatlar. Sonucun üstünde durum rozeti: yeşil "uyumlu", turuncu "sistematik hata olabilir", kırmızı "güvenilir değil". Örnekleme raporu kapalı durur, uyarı varsa kendiliğinden açılır. |
 | `css/stil.css` | ✅ Ortak stil (karanlık mod destekli) |
 | `js/sensor/hareket.js` | ✅ Ön kontroller, izin, `devicemotion` dinleme, boş olay filtresi |
 | `js/sensor/kayit.js` | ✅ Belirli süre kayıt; kayıt sırasında sayfa arka plana geçti mi? |

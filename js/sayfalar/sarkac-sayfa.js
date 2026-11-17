@@ -246,6 +246,25 @@ function gAciklamalari(sonuc, karsilastirma, girdi, periyotBilgisi) {
   return cumleler;
 }
 
+// Sonucun üstündeki renkli rozet. Rengi ve yazısı sonucun durumuna göre değişir.
+// (Açıklama cümleleri ayrıntıyı verir; rozet ilk bakışta durumu anlatır.)
+const DURUM_ROZETLERI = {
+  uyumlu: { metin: '✓ Kabul edilen değerle uyumlu', sinif: 'rozet-hazir' },
+  sistematik: { metin: '! Sistematik hata olabilir', sinif: 'rozet-dikkat' },
+  guvenilmez: { metin: '⚠ Ölçüm güvenilir değil', sinif: 'rozet-hata' },
+};
+function durumRozetiniGoster(durum) {
+  const rozet = el('gDurum');
+  rozet.classList.remove('rozet-hazir', 'rozet-dikkat', 'rozet-hata');
+  if (!durum) {
+    rozet.hidden = true;
+    return;
+  }
+  rozet.textContent = DURUM_ROZETLERI[durum].metin;
+  rozet.classList.add(DURUM_ROZETLERI[durum].sinif);
+  rozet.hidden = false;
+}
+
 // L değiştiğinde ya da yeni kayıt bittiğinde g bölümünü yeniden hesaplar.
 function gHesabiniGuncelle() {
   if (sonOrnekler.length === 0) return; // henüz kayıt yok
@@ -256,6 +275,7 @@ function gHesabiniGuncelle() {
   if (!sonPeriyot || girdi.hata) {
     el('gSonuc').textContent = 'g = ?';
     el('gSonuc').classList.remove('guvenilmez');
+    durumRozetiniGoster(null);
     for (const id of satirIdleri) el(id).textContent = '–';
     const mesaj = !sonPeriyot ? 'Periyot bulunamadığı için g hesaplanamadı.' : girdi.hata;
     listeyiDoldur(el('gAciklama'), [mesaj], '');
@@ -276,6 +296,9 @@ function gHesabiniGuncelle() {
   listeyiDoldur(el('gAciklama'), gAciklamalari(sonuc, karsilastirma, girdi, sonPeriyot), '');
   // Güvenilmez sonucu görsel olarak da soluk göster
   el('gSonuc').classList.toggle('guvenilmez', !sonPeriyot.guvenilirMi);
+  if (!sonPeriyot.guvenilirMi) durumRozetiniGoster('guvenilmez');
+  else if (karsilastirma.uyumluMu) durumRozetiniGoster('uyumlu');
+  else durumRozetiniGoster('sistematik');
   el('gBolumu').hidden = false;
 }
 
@@ -351,6 +374,8 @@ function raporuGoster(ornekler, kesildiMi) {
   );
 
   listeyiDoldur(el('rUyarilar'), uyarilar, 'Uyarı yok. Örnekleme düzenli görünüyor.');
+  // Rapor normalde kapalı durur; uyarı varsa kendiliğinden açılsın ki gözden kaçmasın.
+  el('raporBolumu').querySelector('details').open = uyarilar.length > 0;
   listeyiDoldur(el('rBosluklar'), boslukMetinleri, 'Uzun boşluk yok.');
   el('raporBolumu').hidden = false;
 }

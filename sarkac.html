@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Sarkaç Deneyi — Telefon Laboratuvarı</title>
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#1565c0">
@@ -10,65 +10,87 @@
   <link rel="apple-touch-icon" href="ikonlar/ikon-180.png">
   <link rel="stylesheet" href="css/stil.css">
 </head>
-<body>
-  <main>
-    <a class="geri" href="./">← Ana menü</a>
-    <h1>Sarkaç Deneyi</h1>
-    <p class="kucuk">Yapım aşaması — Adım 5: kayıt, periyot, g ± Δg ve açıklama.</p>
+<body class="uygulama-sayfasi">
+  <!-- Üst şerit: geri dönüş ve sayfa başlığı -->
+  <header class="ust-serit">
+    <div class="ust-serit-ic">
+      <a class="geri-dugmesi" href="./" aria-label="Ana menüye dön">‹ Menü</a>
+      <span class="kart-ikon ikon-beyaz" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M6 3h12" /><path d="M12 3l3 11" /><circle cx="15.5" cy="16.5" r="3.5" class="dolu" /></svg>
+      </span>
+      <div>
+        <h1>Sarkaç</h1>
+        <p>Yer çekimi ivmesini (g) ölç</p>
+      </div>
+    </div>
+  </header>
 
-    <section>
+  <main>
+    <!-- 1. Hazırlık ve kayıt -->
+    <section class="kart-bolum">
       <h2>1. Hazırlık ve kayıt</h2>
-      <p>
-        <label for="uzunlukGirisi">Sarkaç boyu L (cm):</label>
-        <input id="uzunlukGirisi" type="text" inputmode="decimal" placeholder="ör. 48,5" size="7">
-      </p>
-      <p>
-        <label for="uzunlukBelirsizligiGirisi">L'nin belirsizliği ΔL (cm):</label>
-        <input id="uzunlukBelirsizligiGirisi" type="text" inputmode="decimal" value="0,5" size="7">
-      </p>
-      <p class="kucuk">L: ipin asıldığı noktadan telefonun ortasına (ağırlık merkezine) kadar olan dikey uzaklık.
-        ΔL: bu ölçümden ne kadar emin olduğunuz. Telefonun ortasının tam yerini bilmediğimiz için 0,5–1 cm makuldür.
-        L'yi kayıttan sonra da girebilir veya değiştirebilirsiniz.</p>
-      <p>
-        <label for="hazirlikSecimi">Bırakma süresi:</label>
-        <select id="hazirlikSecimi">
-          <option value="3">3 saniye</option>
-          <option value="5" selected>5 saniye</option>
-          <option value="10">10 saniye</option>
-        </select>
-      </p>
-      <p>
-        <label for="sureSecimi">Kayıt süresi:</label>
-        <select id="sureSecimi">
-          <option value="10">10 saniye</option>
-          <option value="20" selected>20 saniye</option>
-          <option value="30">30 saniye</option>
-        </select>
-      </p>
-      <button id="kayitButonu" type="button">Başlat</button>
-      <p id="durumMesaji" class="durum">Hazır.</p>
-      <h3>Düzenek</h3>
-      <ul class="kucuk">
-        <li><strong>İpi sabit bir noktaya bağlayın, elle tutmayın.</strong> Kapı kolu, iki sandalye arasına konmuş bir sopa
-          veya masa kenarından taşan bantlanmış bir cetvel olabilir. Elle tutulan ip, el kıpırdadıkça sarkacın periyodunu değiştirir.</li>
-        <li><strong>Esnemeyen, ince bir ip kullanın</strong> (ayakkabı bağcığı, olta misinası). Şarj kablosu sert ve ağırdır;
-          sarkacı basit sarkaç olmaktan çıkarır.</li>
-        <li><strong>Telefonu şarj girişinden asmayın.</strong> Telefon giriş etrafında ayrıca sallanır, giriş zarar görebilir
-          ve fiş çıkarsa telefon düşer. Telefonu sıkı bir kılıfa ya da bantla ipe sağlam bağlayın; altına yastık koyun.</li>
-        <li><strong>L'yi doğrudan ölçün:</strong> metreyi ipin döndüğü noktaya dayayıp telefonun ortasına kadar.</li>
-      </ul>
-      <h3>Ölçüm</h3>
-      <ol class="kucuk">
-        <li>"Başlat"a basın, telefonu ipe asın ve küçük bir açıyla (10°'den az, birkaç santim yana çekmek yeter) bırakın.</li>
-        <li>Bırakma süresi dolunca kayıt kendiliğinden başlar; böylece elinizin hareketi ölçüme girmez.</li>
-        <li>Kayıt sırasında ekranı kilitlemeyin; telefon arka plandayken tarayıcı sensör verisi göndermez.</li>
-      </ol>
+
+      <div class="alan-satiri">
+        <label class="alan">
+          <span class="alan-etiketi">Sarkaç boyu L (cm)</span>
+          <input id="uzunlukGirisi" type="text" inputmode="decimal" placeholder="ör. 48,5">
+        </label>
+        <label class="alan">
+          <span class="alan-etiketi">Belirsizliği ΔL (cm)</span>
+          <input id="uzunlukBelirsizligiGirisi" type="text" inputmode="decimal" value="0,5">
+        </label>
+      </div>
+      <p class="kucuk">L: ipin döndüğü noktadan telefonun ortasına kadar, metreyle doğrudan ölçülen dikey uzaklık.
+        Kayıttan sonra da girebilirsiniz. <strong>Sonuca bakarak değiştirmeyin.</strong></p>
+
+      <div class="alan-satiri">
+        <label class="alan">
+          <span class="alan-etiketi">Bırakma süresi</span>
+          <select id="hazirlikSecimi">
+            <option value="3">3 saniye</option>
+            <option value="5" selected>5 saniye</option>
+            <option value="10">10 saniye</option>
+          </select>
+        </label>
+        <label class="alan">
+          <span class="alan-etiketi">Kayıt süresi</span>
+          <select id="sureSecimi">
+            <option value="10">10 saniye</option>
+            <option value="20" selected>20 saniye</option>
+            <option value="30">30 saniye</option>
+          </select>
+        </label>
+      </div>
+
+      <button id="kayitButonu" class="ana-dugme" type="button">Başlat</button>
+      <p id="durumMesaji" class="durum durum-kutusu">Hazır.</p>
+
+      <details class="talimat">
+        <summary>📋 Düzenek ve ölçüm talimatları</summary>
+        <h3>Düzenek</h3>
+        <ul class="kucuk">
+          <li><strong>İpi sabit bir noktaya bağlayın, elle tutmayın.</strong> Kapı kolu, iki sandalye arasına konmuş bir sopa
+            veya masa kenarından taşan bantlanmış bir cetvel olabilir. Elle tutulan ip, el kıpırdadıkça sarkacın periyodunu değiştirir.</li>
+          <li><strong>Esnemeyen, ince bir ip kullanın</strong> (ayakkabı bağcığı, olta misinası). Şarj kablosu sert ve ağırdır;
+            sarkacı basit sarkaç olmaktan çıkarır.</li>
+          <li><strong>Telefonu şarj girişinden asmayın.</strong> Telefon giriş etrafında ayrıca sallanır, giriş zarar görebilir
+            ve fiş çıkarsa telefon düşer. Telefonu sıkı bir kılıfa ya da bantla ipe sağlam bağlayın; altına yastık koyun.</li>
+          <li><strong>L'yi doğrudan ölçün:</strong> metreyi ipin döndüğü noktaya dayayıp telefonun ortasına kadar.</li>
+        </ul>
+        <h3>Ölçüm</h3>
+        <ol class="kucuk">
+          <li>"Başlat"a basın, telefonu ipe asın ve küçük bir açıyla (10°'den az, birkaç santim yana çekmek yeter) bırakın.</li>
+          <li>Bırakma süresi dolunca kayıt kendiliğinden başlar; böylece elinizin hareketi ölçüme girmez.</li>
+          <li>Kayıt sırasında ekranı kilitlemeyin; telefon arka plandayken tarayıcı sensör verisi göndermez.</li>
+        </ol>
+      </details>
     </section>
 
-    <!-- Kayıt bitince doldurulur -->
-    <section id="gBolumu" hidden>
+    <!-- 2. Sonuç: kayıt bitince doldurulur -->
+    <section id="gBolumu" class="kart-bolum sonuc-karti" hidden>
       <h2>2. Yer çekimi ivmesi</h2>
-      <p id="gSonuc" class="sonuc"></p>
+      <p id="gDurum" class="rozet" hidden></p>
+      <p id="gSonuc" class="sonuc buyuk-sonuc"></p>
       <table>
         <tr><th>Sarkaç boyu L</th><td id="gUzunluk"></td></tr>
         <tr><th>Periyot T</th><td id="gPeriyot"></td></tr>
@@ -76,10 +98,11 @@
         <tr><th>Kabul edilen değerle fark</th><td id="gFark"></td></tr>
       </table>
       <h3>Bu sonuç ne anlatıyor?</h3>
-      <ul id="gAciklama"></ul>
+      <ul id="gAciklama" class="aciklama-listesi"></ul>
     </section>
 
-    <section id="periyotBolumu" hidden>
+    <!-- 3. Periyot -->
+    <section id="periyotBolumu" class="kart-bolum" hidden>
       <h2>3. Periyot</h2>
       <p id="pSonuc" class="sonuc"></p>
       <table>
@@ -90,7 +113,7 @@
         <tr><th>Tahmini bırakma açısı</th><td id="pAci"></td></tr>
       </table>
       <h3>Uyarılar</h3>
-      <ul id="pUyarilar"></ul>
+      <ul id="pUyarilar" class="aciklama-listesi"></ul>
       <h3>Eksenlere göre</h3>
       <p class="kucuk">Her dönme ekseni için periyot ayrı bulunur; tek tek periyotları birbirine en yakın olan
         (en düzenli salınan) eksen kullanılır. İki eksende farklı periyot görüyorsanız telefon iki yönde sallanmıştır.</p>
@@ -98,54 +121,56 @@
         <thead><tr><th>Eksen</th><th>Periyot</th><th>Periyot farkı</th><th>Salınım</th></tr></thead>
         <tbody id="pEksenTablosu"></tbody>
       </table>
-      <details class="kucuk">
+      <details class="talimat">
         <summary>Periyot nasıl hesaplandı?</summary>
-        <p>Uygulama önce hızlı titreşimleri bastırmak için sinyali yumuşatır (her noktayı çevresindeki 0,15 saniyenin
+        <p class="kucuk">Uygulama önce hızlı titreşimleri bastırmak için sinyali yumuşatır (her noktayı çevresindeki 0,15 saniyenin
           ortalamasıyla değiştirir). Her dönme ekseni için aşağıdakileri ayrı ayrı yapar ve en düzenli salınan ekseni
-          kullanır. Sinyalin aşağıdan yukarı sıfırı geçtiği
-          anları bulur (grafikteki kesikli çizgiler); her periyotta bir geçiş olur. Diğerlerinden çok farklı (%20'den fazla)
-          periyotlar düzensiz sayılır; yalnızca düzenli salınımın en uzun kesintisiz bölümü kullanılır. Geçiş anları sıra numarasına (0, 1, 2, …)
-          karşı bir doğru oluşturur: tₖ = t₀ + k·T. Bu noktalara en uygun doğru çizilir; doğrunun eğimi periyottur.
-          Noktalar doğrudan ne kadar saparsa periyodun belirsizliği o kadar büyük çıkar.</p>
+          kullanır. Sinyalin aşağıdan yukarı sıfırı geçtiği anları bulur (grafikteki kesikli çizgiler); her periyotta bir
+          geçiş olur. Diğerlerinden çok farklı (%20'den fazla) periyotlar düzensiz sayılır; yalnızca düzenli salınımın en uzun
+          kesintisiz bölümü kullanılır. Geçiş anları sıra numarasına (0, 1, 2, …) karşı bir doğru oluşturur: tₖ = t₀ + k·T.
+          Bu noktalara en uygun doğru çizilir; doğrunun eğimi periyottur. Noktalar doğrudan ne kadar saparsa periyodun
+          belirsizliği o kadar büyük çıkar.</p>
       </details>
     </section>
 
-    <section id="grafikBolumu" hidden>
+    <!-- 4. Grafik -->
+    <section id="grafikBolumu" class="kart-bolum" hidden>
       <h2>4. Sinyal grafiği</h2>
-      <p>
-        <label for="sinyalSecimi">Gösterilen sinyal:</label>
+      <label class="alan">
+        <span class="alan-etiketi">Gösterilen sinyal</span>
         <select id="sinyalSecimi">
           <option value="donme" selected>Dönme hızı (jiroskop)</option>
           <option value="ivme">İvme (yer çekimi dahil)</option>
         </select>
-      </p>
+      </label>
       <canvas id="grafik" class="grafik"></canvas>
       <p id="grafikAciklamasi" class="aciklama"></p>
       <p class="kucuk">Kesikli dikey çizgiler, periyot hesabında kullanılan sıfır geçişleridir.
         Ardışık iki çizgi arası bir periyottur.</p>
     </section>
 
-    <section id="raporBolumu" hidden>
-      <h2>5. Örnekleme raporu</h2>
-      <table>
-        <tr><th>Ölçüm sayısı</th><td id="rOrnekSayisi"></td></tr>
-        <tr><th>Kayıt süresi</th><td id="rSure"></td></tr>
-        <tr><th>Ortalama hız</th><td id="rHiz"></td></tr>
-        <tr><th>Ortanca aralık</th><td id="rOrtanca"></td></tr>
-        <tr><th>En kısa / en uzun aralık</th><td id="rEnKisaUzun"></td></tr>
-        <tr><th>Uzun boşluk sayısı</th><td id="rBoslukSayisi"></td></tr>
-        <tr><th>Jiroskop verisi</th><td id="rJiroskop"></td></tr>
-      </table>
-
-      <h3>Uyarılar</h3>
-      <ul id="rUyarilar"></ul>
-
-      <h3>Uzun boşluklar</h3>
-      <ul id="rBosluklar"></ul>
+    <!-- 5. Örnekleme raporu (teknik ayrıntı; varsayılan olarak kapalı) -->
+    <section id="raporBolumu" class="kart-bolum" hidden>
+      <details>
+        <summary><h2 class="ozet-basligi">5. Örnekleme raporu</h2></summary>
+        <table>
+          <tr><th>Ölçüm sayısı</th><td id="rOrnekSayisi"></td></tr>
+          <tr><th>Kayıt süresi</th><td id="rSure"></td></tr>
+          <tr><th>Ortalama hız</th><td id="rHiz"></td></tr>
+          <tr><th>Ortanca aralık</th><td id="rOrtanca"></td></tr>
+          <tr><th>En kısa / en uzun aralık</th><td id="rEnKisaUzun"></td></tr>
+          <tr><th>Uzun boşluk sayısı</th><td id="rBoslukSayisi"></td></tr>
+          <tr><th>Jiroskop verisi</th><td id="rJiroskop"></td></tr>
+        </table>
+        <h3>Uyarılar</h3>
+        <ul id="rUyarilar" class="aciklama-listesi"></ul>
+        <h3>Uzun boşluklar</h3>
+        <ul id="rBosluklar" class="aciklama-listesi"></ul>
+      </details>
     </section>
 
     <!-- Hangi sürümün çalıştığını gösterir; ikisi farklıysa sayfayı yenileyin (bkz. js/surum.js) -->
-    <p id="surum" class="kucuk">Sayfa: 2026-11-18.8</p>
+    <p id="surum" class="kucuk surum">Sayfa: 2026-11-18.9</p>
   </main>
 
   <script type="module" src="js/sayfalar/sarkac-sayfa.js"></script>

@@ -14,7 +14,7 @@
 // ÖNEMLİ: Yeni bir dosya eklendiğinde DOSYALAR listesine de eklenmeli; sürüm her yayında değiştirilmeli
 // (CLAUDE.md kural 8). Sürüm değişince tarayıcı bu dosyanın değiştiğini anlar ve listeyi yeniden indirir.
 
-const SURUM = '2026-11-18.8';
+const SURUM = '2026-11-18.9';
 const ONBELLEK_ADI = 'telefon-lab-' + SURUM;
 
 // İlk açılışta hepsi indirilip saklanır; böylece hiç açılmamış bir sayfa da internetsiz çalışır.
