@@ -38,9 +38,13 @@ lise fizik deneylerini **gerçek ölçümle** yaptıran, tarayıcıda çalışan
    böylece bilinen sahte verilerle test edilebilir.
 7. **Ölçüm dürüstlüğü.** Sonuçlar her zaman belirsizlikle birlikte gösterilir (ör. `g = 9,78 ± 0,12 m/s²`).
    Veri kötüyse (çok az salınım, düzensiz örnekleme) uygulama bunu açıkça söyler, sonucu güzel göstermeye çalışmaz.
-8. **Sürüm etiketi.** Telefona gidecek her değişiklikte `js/surum.js` içindeki `KOD_SURUMU` ve sayfaların
-   altındaki `<p id="surum">` metni aynı yeni değerle güncellenir (ör. `2026-11-18.3`). Telefon tarayıcısı eski
-   dosyaları önbellekte tutabildiği için, ekran görüntüsünden hangi kodun çalıştığı buradan anlaşılır.
+8. **Sürüm etiketi.** Telefona gidecek her değişiklikte şu üç yer **aynı yeni değerle** güncellenir
+   (ör. `2026-11-18.7`): `js/surum.js` → `KOD_SURUMU`, `sw.js` → `SURUM`, ve her sayfanın altındaki
+   `<p id="surum">` metni. Ekran görüntüsünden hangi kodun çalıştığı buradan anlaşılır; `sw.js` değişince de
+   telefon internetsiz kopyayı yeniler.
+9. **Yeni dosya = sw.js listesi.** Uygulamaya yeni bir sayfa, JS, CSS ya da resim dosyası eklenince `sw.js`
+   içindeki `DOSYALAR` listesine de eklenir; yoksa o dosya internetsiz açılmaz. Listedeki bir dosya silinirse
+   listeden de çıkarılır (listede olmayan dosya, servis çalışanının kurulumunu tamamen bozar).
 
 ## Teknik notlar (önemli kısıtlar)
 
@@ -55,7 +59,11 @@ lise fizik deneylerini **gerçek ölçümle** yaptıran, tarayıcıda çalışan
 Ayrıntılı açıklama `docs/TEKNIK_OZET.md` içindedir.
 
 ```
-index.html, sarkac.html ...   sayfalar (her deney bir sayfa)
+index.html                    ana menü
+sarkac.html, sensor-testi.html  sayfalar (her deney bir sayfa)
+manifest.webmanifest, sw.js   uygulama (PWA) tanımı ve internetsiz çalışma
+ikonlar/                      uygulama simgeleri (araclar/ikon_uret.py üretir)
+araclar/                      geliştirme yardımcıları (uygulamanın parçası değil)
 css/                          stiller
 js/sensor/                    sensörlerden veri alma
 js/analiz/                    saf hesap fonksiyonları (test edilebilir)

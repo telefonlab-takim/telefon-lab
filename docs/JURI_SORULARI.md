@@ -87,13 +87,20 @@ _(Cevap yazılacak)_
 
 ## 3. Teknik
 ### Neden uygulama mağazası yerine web uygulaması (PWA)?
-_(Cevap yazılacak)_
+- Tek bir kodla hem iPhone hem Android'de çalışıyor; iki ayrı uygulama yazmadık.
+- Mağaza onayı, geliştirici hesabı ücreti yok; öğretmen bir bağlantı paylaşınca bütün sınıf kullanabiliyor.
+- Yine de "Ana Ekrana Ekle" ile telefonda uygulama gibi (simgesiyle, tarayıcı çubuğu olmadan) açılıyor ve
+  internetsiz çalışıyor.
+- Kodu jüri dahil herkes açıp okuyabiliyor.
 
 ### Neden framework kullanmadınız?
 _(Cevap yazılacak — bkz. KARAR_GUNLUGU.md K-001)_
 
 ### İnternet olmadan nasıl çalışıyor?
-_(Cevap yazılacak)_
+Uygulama ilk açıldığında "servis çalışanı" adlı küçük bir kod bütün uygulama dosyalarını telefona kaydediyor.
+Sonraki açılışlarda internet varsa dosyaların en yenisini alıyor, yoksa kayıtlı kopyayı kullanıyor (KARAR_GUNLUGU K-010).
+Bunu bilgisayarda sunucuyu kapatarak denedik: bütün sayfalar açıldı ve testler geçti. Ölçüm ve hesapların hepsi
+telefonun içinde yapıldığı için internete hiç ihtiyaç yok.
 
 ### iPhone ve Android arasında fark var mı?
 _(Cevap yazılacak)_

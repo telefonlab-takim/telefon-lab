@@ -4,6 +4,11 @@
 
 import { hareketSensorunuHazirla, dinlemeyiBaslat, dinlemeyiDurdur } from '../sensor/hareket.js';
 import { sayiYaz } from '../arayuz/bicim.js';
+import { surumuGoster } from '../surum.js';
+import { servisCalisaniniKaydet } from '../pwa.js';
+
+surumuGoster();
+servisCalisaniniKaydet();
 
 // Sayfadaki elemanları kısa bir yardımcıyla buluyoruz.
 const el = (id) => document.getElementById(id);

@@ -140,6 +140,23 @@ Her kayıt şu şablonu izler:
 - **Sonuçları / bedeli:** İki yönde salınım olduğunda sonuç "güvenilmez" işaretlenir; kullanıcı sarkacı tek yönde itip
   kaydı tekrarlamalı. Bu bilinçli bir seçim: belirsiz durumda sonuç uydurmuyoruz.
 
+## K-010: İnternetsiz çalışma için "önce ağ, olmazsa önbellek" stratejisi
+- **Tarih:** 2026-11-18
+- **Durum:** Kabul edildi
+- **Karar:** Servis çalışanı (`sw.js`) her dosyayı önce sunucudan taze almaya çalışır (en fazla 4 s bekler);
+  alamazsa telefona kaydedilmiş kopyayı verir. İlk açılışta bütün uygulama dosyaları kaydedilir.
+- **Neden:**
+  - Geliştirme sırasında telefonun eski dosyaları göstermesi bizi defalarca yanılttı (TEST_SONUCLARI 5.5).
+    "Önce ağ" ile internet varken her zaman en yeni kod çalışır.
+  - Okulda / laboratuvarda internet yoksa uygulama yine de açılır (projenin temel hedefi).
+  - Açıklaması kolay: "İnternet varsa yenisini al, yoksa sakladığını kullan."
+- **Değerlendirilen alternatifler:**
+  - "Önce önbellek": daha hızlı açılır, ama yeni sürüm ancak bir sonraki açılışta görünür; geliştirme aşamasında
+    hangi kodun çalıştığı karışır.
+  - Hazır bir kütüphane (Workbox): güçlü ama dış kütüphane ve derleme gerektirir (K-001'e aykırı).
+- **Sonuçları / bedeli:** Zayıf internette sayfa en fazla 4 saniye bekleyip kayıtlı kopyayla açılır.
+  Yeni dosya eklenince `DOSYALAR` listesine eklemek unutulmamalı (CLAUDE.md kural 9).
+
 ## Açık kararlar (henüz verilmedi)
 - Üçüncü deney: serbest düşme mi, eğik düzlem mi?
 - ~~Sarkaç: Telefon burulduğunda bileşik yön (temel bileşen analizi) kullanılmalı mı?~~ → K-009 ile kapandı:

@@ -97,6 +97,19 @@ h3 { font-size: 1rem; margin: 1.2rem 0 0.3rem; }
   vertical-align: middle;
 }
 
+/* Ana menü listesi */
+.menu { list-style: none; padding: 0; margin: 0; }
+.menu li {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--cizgi);
+}
+.menu li a { font-size: 1.15rem; font-weight: 600; color: var(--vurgu); }
+.menu li .kucuk { display: block; }
+.menu li.pasif { color: var(--soluk-yazi); font-size: 1.15rem; }
+
+/* Sayfaların üstündeki "Ana menü" bağlantısı */
+.geri { display: inline-block; margin-top: 0.5rem; color: var(--vurgu); }
+
 /* Test sayfası için */
 .basarili { color: #2e7d32; }
 .basarisiz { color: var(--hata); font-weight: 600; }

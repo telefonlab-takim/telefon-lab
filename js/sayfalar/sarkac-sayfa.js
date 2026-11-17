@@ -17,9 +17,11 @@ import {
 import { sayiYaz, sayiOku, belirsizlikleYaz } from '../arayuz/bicim.js';
 import { grafikCiz, aciklamaYaz } from '../arayuz/grafik.js';
 import { surumuGoster } from '../surum.js';
+import { servisCalisaniniKaydet } from '../pwa.js';
 
 const el = (id) => document.getElementById(id);
 surumuGoster();
+servisCalisaniniKaydet();
 const kayitButonu = el('kayitButonu');
 
 // Son kaydın örnekleri ve sıfır geçişleri. Grafik yeniden çizilirken

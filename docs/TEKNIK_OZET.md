@@ -14,7 +14,7 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 
 | Dosya / klasör | Görevi |
 |---|---|
-| `index.html` | Ana menü, deney seçimi |
+| `index.html` | ✅ Ana menü: deneyler, araçlar, ana ekrana ekleme, internetsiz kullanım durumu |
 | `sensor-testi.html` | ✅ Hareket sensörü test sayfası (canlı ham değerler) |
 | `sarkac.html` | ✅ Sarkaç deneyi sayfası: L girişi, geri sayım, kayıt, g ± Δg ve açıklama, periyot, grafik, örnekleme raporu |
 | `css/stil.css` | ✅ Ortak stil (karanlık mod destekli) |
@@ -30,7 +30,13 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 | `js/sayfalar/sensor-testi-sayfa.js` | ✅ Sensör testi sayfasının akışı |
 | `js/sayfalar/sarkac-sayfa.js` | ✅ Sarkaç sayfasının akışı ve sonuç açıklamaları |
 | `testler/index.html`, `testler/testler.js` | ✅ Analiz fonksiyonlarının testleri (tarayıcıda açılınca çalışır) |
-| `manifest.webmanifest`, `sw.js` | PWA ve çevrimdışı çalışma (sonraki aşama) |
+| `manifest.webmanifest` | ✅ Uygulama tanımı: ad, simgeler, renkler, "uygulama gibi aç" (standalone) |
+| `sw.js` | ✅ Servis çalışanı: dosyaları saklar, internetsiz açılmayı sağlar (önce ağ, olmazsa önbellek) |
+| `js/pwa.js` | ✅ Servis çalışanını kaydetme ve "internetsiz kullanıma hazır" durumu |
+| `js/surum.js` | ✅ Kod sürüm etiketi (sayfanın altında görünür) |
+| `js/sayfalar/ana-sayfa.js` | ✅ Ana menünün akışı |
+| `ikonlar/` | ✅ Uygulama simgeleri (180, 192, 512 piksel PNG) |
+| `araclar/ikon_uret.py` | ✅ Simgeleri üreten Python betiği (uygulamanın parçası değil; dış kütüphane yok) |
 
 ✅ = yazıldı, 🔶 = kısmen yazıldı. Diğerleri plandaki sonraki adımlar.
 
@@ -159,7 +165,29 @@ _(doldurulacak)_
 _(doldurulacak: ölçüm tekrarından gelen istatistiksel belirsizlik, alet çözünürlüğü, hata yayılımı.)_
 
 ## 6. Çevrimdışı çalışma ve gizlilik
-_(doldurulacak)_
+
+**Uygulama (PWA) olarak kurulum:** `manifest.webmanifest` uygulamanın adını, simgesini ve renklerini tanımlar.
+Kullanıcı "Ana Ekrana Ekle" deyince Telefon Lab, tarayıcı çubuğu olmadan bir uygulama gibi açılır.
+
+**Servis çalışanı (`sw.js`)** tarayıcı ile internet arasında duran küçük bir koddur:
+1. **Kurulum (ilk açılış):** `DOSYALAR` listesindeki bütün dosyalar indirilip telefona kaydedilir.
+   Böylece hiç açılmamış bir sayfa bile internetsiz açılır.
+2. **Etkinleşme:** Eski sürümlerin kayıtlı kopyaları silinir.
+3. **Her istek — "önce ağ, olmazsa önbellek":** İnternet varsa dosya sunucudan **taze** alınır
+   (`cache: 'no-cache'` → sunucuya "değişti mi?" diye sorulur) ve kopyası güncellenir. İnternet yoksa
+   ya da 4 saniyede cevap gelmezse kayıtlı kopya kullanılır. (Neden bu strateji: KARAR_GUNLUGU K-010.)
+
+**Güncelleme:** `sw.js` içindeki `SURUM` değişince tarayıcı yeni servis çalışanını kurar ve dosyaları yeniden indirir.
+Sürüm etiketi kuralı için CLAUDE.md kural 8, yeni dosya kuralı için kural 9.
+
+**Gizlilik:**
+- Servis çalışanı yalnızca uygulamanın **kendi dosyalarını** saklar (HTML, CSS, JS, simgeler). Ölçüm verisi saklanmaz.
+- Ölçüm verisi yalnızca sayfa açıkken telefonun belleğinde durur; hiçbir sunucuya gönderilmez.
+- Telefonda kalıcı olarak saklanan tek kullanıcı bilgisi son girilen sarkaç boyu (L, ΔL) — yalnızca o tarayıcıda (`localStorage`).
+- GitHub Pages yalnızca dosya sunar; sunucu tarafında çalışan kod yoktur (K-005).
+
+**Nasıl denendi:** Yerel sunucu kapatılınca ana menü, sarkaç, sensör testi ve hesap testleri sayfaları
+servis çalışanının kayıtlı kopyalarından açıldı (TEST_SONUCLARI).
 
 ## 7. Bilinen sınırlamalar
 _(doldurulacak)_
