@@ -119,12 +119,36 @@ Henüz otomatik periyot hesabı yok; aşağıdaki değerler ekran görüntüsün
 - **Açık soru:** L nasıl ölçüldü? Askı düzeni (tek ip / V) neydi? Bir sonraki ölçümde L'nin askı noktasından
   telefonun ortasına kadar **dikey** ölçülmesi gerekiyor.
 
+## 5.5 Dördüncü gerçek kayıt — iki farklı salınım (2026-11-18, iPhone 14)
+
+- **Telefonda çalışan kod eskiydi.** Ekran görüntüsünde K-008 ile eklenen "Hesaba katılan bölüm" satırı yok,
+  uyarıda "%33.5" (nokta) yazıyor ve periyot uyarısına rağmen g'nin üstü çizili değil. GitHub'da yeni kod vardı;
+  telefon tarayıcısı eski dosyaları önbellekten kullandı. → Sayfaya **sürüm etiketi** eklendi (CLAUDE.md kural 8).
+- **Uygulamanın gösterdiği (eski kod):** L = 40,0 ± 0,5 cm. T = 1,28 ± 0,04 s, eksen alfa, 15 salınım,
+  periyot farkı **%33,5**, açı 6,7°. g = 9,7 ± 0,6 m/s², "uyumlu".
+- **Kullanıcının notu:** L'yi 40–41 cm ölçmüş; 41 cm girilince g = 9,9 çıkıyor.
+- **Grafikten görülen (elle tahmin, kesin değil):**
+  - **Beta (turuncu)** düzgün salınıyor; tepeler arası ≈ 44 piksel ≈ **1,25 s**.
+    L = 40,5 cm için beklenen `T = 2π·√(L/g)` = **1,28 s** → beta, gerçek sarkaç salınımına uyuyor.
+  - **Alfa (mavi)** daha büyük ama gürültülü; kesikli çizgiler arası çoğunlukla ≈ 55–57 piksel ≈ **1,55 s**,
+    11–13. saniyelerde sık sık sahte geçiş var.
+  - Yani telefon **aynı anda iki yönde, iki farklı periyotla** salınıyor. V biçiminde asılan telefonda bu beklenir:
+    V'nin düzlemine dik salınım basit sarkaç gibi davranır (L = dikey yükseklik), V'nin düzlemi içindeki hareket ise
+    farklı bir periyotla olur.
+- **Sorun:** Uygulama ekseni "en büyük salınım" (standart sapma) ile seçiyor (K-006); bu kayıtta yanlış ekseni (alfa) seçti.
+  Gösterilen T = 1,28 s, sahte geçişlerin etkisiyle **tesadüfen** doğru değere yakın çıktı. Yeni kod (K-008) aynı veride
+  alfanın ≈ 1,55 s'lik bölümünü seçerdi ve g'yi yaklaşık 6,6 m/s² bulurdu — o da yanlış olurdu.
+- **Öneri (henüz yapılmadı):** Ekseni "en büyük" değil, **en düzenli salınan** olarak seçmek; her eksenin periyodunu
+  ayrı ayrı göstermek; iki eksen farklı periyotla düzenli salınıyorsa "iki yönde salınım var" uyarısı vermek.
+  Deneyde: telefonu yalnızca V'nin düzlemine dik yönde itmek.
+
 ## 6. Sorunlar ve çözümler
 
 | Tarih | Sorun | Neden | Çözüm |
 |---|---|---|---|
 | 2026-11-17 | Bilgisayarda "veri gelmedi" uyarısı çıkmıyordu | Chrome, sensör yokken de bütün değerleri boş tek bir olay gönderiyor; bu olay "veri geldi" sayılıyordu | `hareket.js` içinde boş olaylar yok sayılıyor |
 | 2026-11-17 | iPhone 14'te örnekler arası aralık 1,0 ms ile 1.067 ms arasında değişiyor (ortalama 60 Hz olmasına rağmen) | Henüz kesin değil. 1 ms: iOS olayları bazen arka arkaya, yığın hâlinde teslim ediyor olabilir. ~1 sn: tek seferlik bir duraklama olabilir (başlangıç, ekrana dokunma, uygulama değiştirme). En küçük/en büyük değer, durumun bir kez mi yoksa sürekli mi olduğunu göstermiyor. | Sarkaç sayfasının örnekleme raporuyla tekrar ölçüldü (20 sn, masada, dokunmadan): boşluk yok, aralıklar 12–21 ms. Yani normal kayıtta sorun yok; ilk testteki 1 sn'lik boşluk tek seferlikti (muhtemelen ekrana dokunma/kaydırma ya da başlangıç anı, kesin nedeni bilinmiyor). Kayıt sırasında ekrana dokunulmaması önerisi sayfada yazıyor. Aralıkların 12–21 ms arasında oynamasının etkisi için bkz. Bölüm 7. |
+| 2026-11-18 | Telefonda yeni kod yerine eski kod çalıştı (GitHub güncel olduğu hâlde) | Telefon tarayıcısı dosyaların eski hâlini önbellekte tuttu | Sayfanın altına "Sayfa / Kod sürümü" etiketi eklendi; ikisi beklenen değeri göstermiyorsa sayfa yenilenmeli. Kalıcı çözüm PWA adımında (Service Worker). |
 | 2026-11-18 | Gerçek kayıtta uygulama yanlış periyotla (1,09 s yerine ≈1,50 s) "g uyumlu" dedi | Kaydın başındaki hızlı titreşim sahte sıfır geçişleri üretti; periyot uyarısı g bölümüne taşınmıyordu | Sinyal yumuşatılıyor, yalnızca düzenli en uzun bölüm kullanılıyor; periyot güvenilir değilse g üstü çizili gösterilip "güvenmeyin" deniyor (K-008, Bölüm 5.4) |
 | 2026-11-17 | Grafik çizgileri gri çıktı, grafik yüksekliği yanlıştı | Tarayıcı `stil.css` dosyasının eski hâlini önbellekten kullandı; yeni renk değişkenleri yoktu. GitHub Pages da dosyaları 10 dakikaya kadar önbellekte tutturur, aynı şey telefonda olabilir. | `grafik.js` renk bulamazsa yedek renk kullanıyor. Güncellemeden hemen sonra tuhaf görünüm olursa sayfa yenilenmeli. Kalıcı çözüm: PWA adımında Service Worker ile dosya sürümleri yönetilecek. |
 | 2026-11-17 | Sayfa `file://` ile açılınca çalışmıyor | Tarayıcılar güvenlik nedeniyle `file://` üzerinden ES modülü yüklemez | Sayfa yerel sunucu ya da HTTPS ile açılmalı |

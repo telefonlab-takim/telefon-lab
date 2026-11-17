@@ -38,6 +38,9 @@ lise fizik deneylerini **gerçek ölçümle** yaptıran, tarayıcıda çalışan
    böylece bilinen sahte verilerle test edilebilir.
 7. **Ölçüm dürüstlüğü.** Sonuçlar her zaman belirsizlikle birlikte gösterilir (ör. `g = 9,78 ± 0,12 m/s²`).
    Veri kötüyse (çok az salınım, düzensiz örnekleme) uygulama bunu açıkça söyler, sonucu güzel göstermeye çalışmaz.
+8. **Sürüm etiketi.** Telefona gidecek her değişiklikte `js/surum.js` içindeki `KOD_SURUMU` ve sayfaların
+   altındaki `<p id="surum">` metni aynı yeni değerle güncellenir (ör. `2026-11-18.3`). Telefon tarayıcısı eski
+   dosyaları önbellekte tutabildiği için, ekran görüntüsünden hangi kodun çalıştığı buradan anlaşılır.
 
 ## Teknik notlar (önemli kısıtlar)
 
