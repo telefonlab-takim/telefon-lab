@@ -9,7 +9,7 @@ import { guzelAdim, eksenCizgileri } from '../js/arayuz/olcek.js';
 import { standartSapma, dogruUydur } from '../js/analiz/istatistik.js';
 import {
   periyotBul,
-  enCokSalinanSeri,
+  enDuzenliSonuc,
   yukariSifirGecisleri,
   enUzunTutarliBolum,
   hareketliOrtalama,
@@ -228,15 +228,6 @@ test('periyotBul: null değerler atlanır', () => {
   yakinMi(periyotBul(zamanlarSn, degerler).periyotSn, 1.4, 1e-3);
 });
 
-test('enCokSalinanSeri: en büyük salınımlı ekseni seçer', () => {
-  const seri = enCokSalinanSeri([
-    { ad: 'a', degerler: [1, -1, 1, -1] },
-    { ad: 'b', degerler: [50, -50, 50, null] },
-    { ad: 'c', degerler: [3, 3, 3, 3] },
-  ]);
-  esitMi(seri.ad, 'b');
-});
-
 // ---- periyot.js: düzensiz kısımları ayıklama ve yumuşatma ---------------------
 
 test('enUzunTutarliBolum: bozuk periyotlar arasından en uzun düzenli bölümü seçer', () => {
@@ -295,12 +286,86 @@ function baslangiciTitresenSarkac(tohum) {
   };
 }
 
-test('sarkacPeriyoduBul: başı titreşen kayıt → T = 1,50 s (±0,01), eksen alfa, titreşimli baş atılır', () => {
+test('sarkacPeriyoduBul: başı titreşen kayıt → T = 1,50 s (±0,01), titreşimli baş atılır, uyarı yok', () => {
+  // Burada alfa ve beta aynı salınımı (aynı periyotla) görüyor; hangisi seçilirse seçilsin T = 1,50 s olmalı.
   const { zamanlarSn, seriler } = baslangiciTitresenSarkac(11);
   const r = sarkacPeriyoduBul(zamanlarSn, seriler);
-  esitMi(r.secilenEksen, 'alfa');
   yakinMi(r.periyotSn, 1.5, 0.01);
   if (!(r.salinimSayisi >= 10)) throw new Error(`yalnızca ${r.salinimSayisi} salınım kullanıldı`);
+  esitMi(r.uyarilar, []);
+});
+
+// ---- periyot.js: eksen seçimi (K-009) ---------------------------------------------
+
+test('enDuzenliSonuc: en küçük yayılımlıyı seçer; az salınımlıyı ancak başka aday yoksa', () => {
+  const a = { eksen: 'a', gecerliMi: true, salinimSayisi: 12, yayilimOrani: 0.04 };
+  const b = { eksen: 'b', gecerliMi: true, salinimSayisi: 14, yayilimOrani: 0.01 };
+  const c = { eksen: 'c', gecerliMi: true, salinimSayisi: 2, yayilimOrani: 0.001 }; // çok düzenli ama yalnız 2 salınım
+  const d = { eksen: 'd', gecerliMi: false };
+  esitMi(enDuzenliSonuc([a, b, c, d]).eksen, 'b');
+  esitMi(enDuzenliSonuc([c, d]).eksen, 'c');
+  esitMi(enDuzenliSonuc([d]), null);
+});
+
+// Gerçek kayıttaki (TEST_SONUCLARI 5.5) duruma benzeyen sahte veri:
+// beta = asıl sarkaç (T = 1,28 s, düzgün), alfa = daha BÜYÜK ama gürültülü ikinci salınım (T = 1,55 s).
+function ikiYondeSalinan(tohum) {
+  const rastgele = tohumluRastgele(tohum);
+  const zamanlarSn = [];
+  const alfa = [];
+  const beta = [];
+  const gama = [];
+  for (let i = 0; i <= 20 * 60; i++) {
+    const t = i / 60;
+    zamanlarSn.push(t + (rastgele() - 0.5) * 0.006);
+    alfa.push(45 * Math.cos((2 * Math.PI * t) / 1.55) + (rastgele() - 0.5) * 30);
+    beta.push(30 * Math.sin((2 * Math.PI * t) / 1.28) + (rastgele() - 0.5) * 6);
+    gama.push((rastgele() - 0.5) * 12);
+  }
+  return {
+    zamanlarSn,
+    seriler: [
+      { ad: 'alfa', degerler: alfa },
+      { ad: 'beta', degerler: beta },
+      { ad: 'gama', degerler: gama },
+    ],
+  };
+}
+
+test('sarkacPeriyoduBul: iki yönde salınım → daha düzenli olan beta seçilir (T = 1,28 s), "iki ayrı yönde" uyarısı', () => {
+  const { zamanlarSn, seriler } = ikiYondeSalinan(5);
+  const r = sarkacPeriyoduBul(zamanlarSn, seriler);
+  esitMi(r.secilenEksen, 'beta');
+  yakinMi(r.periyotSn, 1.28, 0.01);
+  esitMi(r.guvenilirMi, false);
+  if (!r.uyarilar.some((u) => u.includes('iki ayrı yönde'))) throw new Error('iki yön uyarısı yok: ' + r.uyarilar.join(' | '));
+  esitMi(r.eksenler.map((e) => e.ad), ['alfa', 'beta', 'gama']);
+});
+
+test('sarkacPeriyoduBul: büyük ama gürültü dolu eksen yerine küçük ama düzenli eksen seçilir', () => {
+  // alfa yalnızca gürültü (standart sapması en büyük!), gama düzenli 1,40 s salınım
+  const rastgele = tohumluRastgele(9);
+  const zamanlarSn = [];
+  const alfa = [];
+  const gama = [];
+  for (let i = 0; i <= 20 * 60; i++) {
+    const t = i / 60;
+    zamanlarSn.push(t);
+    alfa.push((rastgele() - 0.5) * 120);
+    gama.push(25 * Math.cos((2 * Math.PI * t) / 1.4) + (rastgele() - 0.5) * 4);
+  }
+  const r = sarkacPeriyoduBul(zamanlarSn, [
+    { ad: 'alfa', degerler: alfa },
+    { ad: 'gama', degerler: gama },
+  ]);
+  esitMi(r.secilenEksen, 'gama');
+  yakinMi(r.periyotSn, 1.4, 0.005);
+});
+
+test('sarkacPeriyoduBul: hiçbir eksende salınım yok → geçersiz, eksen yok', () => {
+  const r = sarkacPeriyoduBul([0, 1, 2, 3], [{ ad: 'a', degerler: [1, 1, 1, 1] }]);
+  esitMi(r.gecerliMi, false);
+  esitMi(r.secilenEksen, null);
 });
 
 test('Eski yöntem (yumuşatma ve ayıklama yok) aynı kayıtta yanılıyordu: sahte geçişler sayılıyor', () => {

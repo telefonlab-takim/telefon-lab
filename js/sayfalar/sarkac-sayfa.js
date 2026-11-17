@@ -102,25 +102,41 @@ function geriSay(sureSn, ilerleme) {
 
 // ---- 3. Periyot ---------------------------------------------------------------
 
+// "Eksenlere göre" tablosu: her eksenin periyodu, periyot farkı ve salınım sayısı. Seçilen eksen ✓ ile işaretlenir.
+function eksenTablosunuDoldur(eksenler, secilenEksen) {
+  const govde = el('pEksenTablosu');
+  govde.replaceChildren();
+  for (const e of eksenler) {
+    const satir = document.createElement('tr');
+    const hucreler = e.gecerliMi
+      ? [
+          (e.ad === secilenEksen ? '✓ ' : '') + e.ad,
+          sayiYaz(e.periyotSn, 3) + ' s',
+          '%' + sayiYaz(e.yayilimOrani * 100, 1),
+          String(e.salinimSayisi),
+        ]
+      : [e.ad, 'salınım yok', '–', '–'];
+    for (const metin of hucreler) {
+      const td = document.createElement('td');
+      td.textContent = metin;
+      satir.appendChild(td);
+    }
+    govde.appendChild(satir);
+  }
+}
+
 function periyoduHesaplaVeGoster(ornekler) {
   sonPeriyot = null; // geçerli periyot bulunursa aşağıda doldurulur
   const zamanlarSn = goreliZamanlarSn(ornekler);
   const seriler = serileriCikar(ornekler, SINYALLER.donme);
 
-  // Yumuşat → en çok salınan dönme eksenini seç → periyodu bul (bkz. KARAR_GUNLUGU K-006, K-008)
+  // Her ekseni yumuşat → her eksende periyodu bul → en düzenli salınanı seç (bkz. KARAR_GUNLUGU K-008, K-009)
   const sonuc = sarkacPeriyoduBul(zamanlarSn, seriler);
-  if (!sonuc) {
-    // Hiçbir eksende yeterli jiroskop verisi yok
-    el('pSonuc').textContent = 'Periyot bulunamadı';
-    for (const id of ['pEksen', 'pSalinim', 'pBolum', 'pYayilim', 'pAci']) el(id).textContent = '–';
-    listeyiDoldur(el('pUyarilar'), ['Jiroskop verisi gelmedi; periyot hesaplanamadı.'], '');
-    el('periyotBolumu').hidden = false;
-    return;
-  }
   const uyarilar = [...sonuc.uyarilar];
 
-  el('pEksen').textContent = sonuc.secilenEksen;
+  el('pEksen').textContent = sonuc.secilenEksen || '–';
   sonGecisler = sonuc.gecisler || [];
+  eksenTablosunuDoldur(sonuc.eksenler, sonuc.secilenEksen);
 
   if (sonuc.gecerliMi) {
     el('pSonuc').textContent = 'T = ' + belirsizlikleYaz(sonuc.periyotSn, sonuc.periyotBelirsizligiSn, 's');

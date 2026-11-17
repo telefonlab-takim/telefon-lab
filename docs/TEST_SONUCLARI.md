@@ -32,6 +32,8 @@ Bir ölçüm kötü çıktıysa onu da yazıyoruz; jüri için başarısız dene
 | 2026-11-17 | Sarkaç sayfası uçtan uca (masaüstü) | 3 s bırakma (bilerek karışık sinyal) + 10 s kayıt; gama ekseninde 105·cos(2πt/1,40 s) | T ≈ 1,400 s, eksen gama, ~23° uyarısı, karışık başlangıç kayda girmez | T = 1,4000 ± 0,0004 s, eksen gama, 6 salınım, açı 23°, "%2,1" uyarısı | ✅ |
 | 2026-11-17 | g hesabı, karşılaştırma, sayı okuma, belirsizlik yazma testleri | 14 yeni test (ör. L = 0,487 ± 0,005 m, T = 1,400 ± 0,001 s → elle hesaplanan g = 9,809, Δg ≈ 0,102) | Hepsi geçer | Toplam 54/54 geçti | ✅ |
 | 2026-11-17 | Sarkaç sayfası g bölümü (masaüstü) | L = 48,7 ± 0,5 cm, sahte sarkaç T = 1,40 s, ~7° | g ≈ 9,81 ± 0,10, uyumlu, belirsizlik çoğunlukla L'den | g = 9,82 ± 0,10 m/s², L %99,0 · T %1,0, fark 0,2 kat. L = 40 cm girilince g = 8,1 ve "sistematik hata" açıklaması; "abc" girilince "L'yi girin" mesajı | ✅ |
+| 2026-11-18 | Eksen seçimi (K-009) testleri | En düzenli seçim; iki yönde salınım (alfa büyük-gürültülü 1,55 s, beta düzgün 1,28 s); gürültü dolu büyük eksen; salınımsız kayıt | Beta seçilir + iki yön uyarısı; düzenli küçük eksen seçilir | Toplam 62/62 geçti (eski "en büyük eksen" testi kaldırıldı) | ✅ |
+| 2026-11-18 | Sarkaç sayfası, iki yönde salınım (masaüstü) | L = 40,5 cm, alfa 45·cos(2πt/1,55)+gürültü, beta 30·sin(2πt/1,28) | Beta seçilir, T ≈ 1,28 s, tablo iki periyodu gösterir, g üstü çizili | T = 1,2798 ± 0,0002 s, tablo: alfa 1,550 / ✓ beta 1,280 / gama salınım yok sayılacak kadar az; g = 9,76 ± 0,12 üstü çizili; 375 px'te taşma yok | ✅ |
 | 2026-11-18 | Yumuşatma, düzenli bölüm seçimi, başı titreşen sarkaç | 5 yeni test; biri eski yöntemin aynı veride yanıldığını belgeliyor (ham ortalama periyot < 1,4 s) | Hepsi geçer | Toplam 59/59 geçti | ✅ |
 | 2026-11-18 | Sarkaç sayfası, gerçek kayda benzeyen veri (masaüstü) | L = 30 cm, ilk 3 s ≈5,5 Hz titreşim, T = 1,50 s | T ≈ 1,50 s, g ≈ 5,3 ve "sistematik hata" açıklaması | T = 1,5002 ± 0,0005 s, g = 5,26 ± 0,09, fark 51,7 kat, sistematik hata açıklaması | ✅ |
 | 2026-11-18 | Sarkaç sayfası, periyodu düzensiz salınım (masaüstü) | Periyodu ±%15 oynayan salınım, L = 48,7 cm | Periyot uyarıları, g üstü çizili, "güvenmeyin", karşılaştırma "anlamlı değil" | Beklendiği gibi (3 periyot uyarısı, g = 9,3 ± 1,5 üstü çizili) | ✅ |
@@ -138,9 +140,12 @@ Henüz otomatik periyot hesabı yok; aşağıdaki değerler ekran görüntüsün
 - **Sorun:** Uygulama ekseni "en büyük salınım" (standart sapma) ile seçiyor (K-006); bu kayıtta yanlış ekseni (alfa) seçti.
   Gösterilen T = 1,28 s, sahte geçişlerin etkisiyle **tesadüfen** doğru değere yakın çıktı. Yeni kod (K-008) aynı veride
   alfanın ≈ 1,55 s'lik bölümünü seçerdi ve g'yi yaklaşık 6,6 m/s² bulurdu — o da yanlış olurdu.
-- **Öneri (henüz yapılmadı):** Ekseni "en büyük" değil, **en düzenli salınan** olarak seçmek; her eksenin periyodunu
-  ayrı ayrı göstermek; iki eksen farklı periyotla düzenli salınıyorsa "iki yönde salınım var" uyarısı vermek.
-  Deneyde: telefonu yalnızca V'nin düzlemine dik yönde itmek.
+- **Yapılan düzeltme (K-009):** Eksen artık "en düzenli salınan" olarak seçiliyor; her eksenin periyodu tabloda
+  gösteriliyor; iki eksen farklı periyotla düzenli salınıyorsa "iki ayrı yönde" uyarısı veriliyor ve g güvenilmez işaretleniyor.
+  Aynı duruma benzeyen sahte veride yeni kod beta'yı seçti: T = 1,2798 ± 0,0002 s (alfa 1,550 s tabloda ayrıca görünüyor).
+- **L ölçümü (kullanıcıdan):** Masanın kenarından (ipin bağlandığı nokta) telefonun ortasına kadar cetvelle 40–41 cm
+  → uygulamaya **L = 40,5 ± 0,5 cm** girilmesi önerildi (aralığın ortası ± yarısı).
+- **Deney için:** Telefonu yalnızca V'nin düzlemine dik yönde itmek.
 
 ## 6. Sorunlar ve çözümler
 

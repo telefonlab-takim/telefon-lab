@@ -34,7 +34,15 @@ aşağıdan yukarı sıfırı geçtiği anları buluyor (her periyotta bir tane)
 koyunca bir doğru çıkıyor; doğrunun eğimi periyot. Ayrıntı: KARAR_GUNLUGU K-007.
 
 ### Telefonu nasıl asarsanız asın çalışıyor mu?
-Evet. Uygulama 3 dönme ekseninden en çok salınanı kendisi seçiyor ve hangisini seçtiğini ekranda gösteriyor (K-006).
+Evet. Uygulama her dönme ekseninde periyodu ayrı ayrı buluyor ve **en düzenli** salınan ekseni kullanıyor; hepsini
+ekranda tablo olarak gösteriyor. İlk sürümde "en büyük salınan" ekseni seçiyorduk; bir denemede telefon iki yönde
+farklı periyotlarla sallandı ve büyük ama yanlış olan seçildi. Şimdi böyle bir durumda uygulama "iki yönde salınım var,
+tek yönde itin" diye uyarıyor (K-006 → K-009).
+
+### Neden "g'yi 9,8'e en yakın veren ekseni seç" demediniz?
+Çünkü o zaman deney g'yi ölçmez, bildiğimiz değeri geri yazardı. Eksen seçimi yalnızca sinyalin ne kadar düzenli
+olduğuna bakıyor; g'nin kabul edilen değeri hiçbir seçimde kullanılmıyor, yalnızca en sonda karşılaştırma için.
+Aynı nedenle sarkaç boyunu (L) da uygulamaya bakmadan cetvelle ölçüyoruz.
 
 ### Küçük açı yaklaşımını nasıl kontrol ediyorsunuz?
 Dönme hızının tepe değerinden bırakma açısını tahmin ediyoruz: θ₀ = ω_max·T/(2π). 10°'yi geçerse uygulama uyarıyor ve

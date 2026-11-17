@@ -72,7 +72,7 @@ Her kayıt şu şablonu izler:
 
 ## K-006: Periyot analizi ekseni kendisi seçer ve başlangıcı atlar
 - **Tarih:** 2026-11-17
-- **Durum:** Kabul edildi (Adım 4'te uygulandı)
+- **Durum:** Kabul edildi (Adım 4'te uygulandı). **Eksen seçimi kısmı K-009 ile değişti.**
 - **Karar:** Periyot, 3 dönme ekseninden salınımı en büyük olanında (standart sapması en büyük) aranır.
   Telefon elle bırakılırken oluşan düzensiz başlangıç analize katılmaz: "Başlat"a basınca önce
   **bırakma süresi** (varsayılan 5 s) geri sayılır, kayıt ondan sonra başlar.
@@ -123,8 +123,24 @@ Her kayıt şu şablonu izler:
 - **Sonuçları / bedeli:** Düzenli bölüm kısa kalırsa (kaydın yarısından az) uyarı verilir. Yumuşatma, çok kısa
   sarkaçlarda (T < 0,6 s) salınımı da biraz küçültür; ders sarkaçları bundan uzundur.
 
+## K-009: Ekseni "en büyük" değil "en düzenli" salınıma göre seçmek; iki salınım uyarısı
+- **Tarih:** 2026-11-18
+- **Durum:** Kabul edildi (K-006'nın eksen seçimi kısmının yerini alır)
+- **Karar:** Periyot her dönme ekseni için ayrı ayrı bulunur. Tek tek periyotları birbirine en yakın olan
+  (yayılımı en küçük) ve en az 5 düzenli salınımı olan eksen seçilir. Başka bir eksen de düzenli ama %10'dan fazla
+  farklı periyotla salınıyorsa "telefon iki ayrı yönde salınıyor" uyarısı verilir ve sonuç güvenilir sayılmaz.
+  Her eksenin periyodu ekranda tablo olarak gösterilir.
+- **Neden:** Dördüncü gerçek kayıtta (TEST_SONUCLARI 5.5) V askıdaki telefon iki yönde, iki farklı periyotla salındı:
+  düzgün bir 1,25–1,28 s'lik salınım (beklenen sarkaç periyodu) ve daha büyük ama gürültülü ≈1,55 s'lik bir salınım.
+  "En büyük standart sapma" kuralı büyük ama yanlış olanı seçti.
+- **Neden "kabul edilen g'ye en yakın periyodu veren ekseni seç" değil?** Bu, sonucu bildiğimiz değere doğru itmek olur;
+  deney g'yi ölçmez, bildiğimizi geri yazar. Eksen seçimi yalnızca sinyalin kendisine (düzenliliğine) bakar.
+- **Değerlendirilen alternatifler:** Kullanıcıya ekseni seçtirmek; üç eksenin bileşik yönünü bulmak (temel bileşen analizi)
+  — iki farklı periyotlu salınımı ayıramaz.
+- **Sonuçları / bedeli:** İki yönde salınım olduğunda sonuç "güvenilmez" işaretlenir; kullanıcı sarkacı tek yönde itip
+  kaydı tekrarlamalı. Bu bilinçli bir seçim: belirsiz durumda sonuç uydurmuyoruz.
+
 ## Açık kararlar (henüz verilmedi)
 - Üçüncü deney: serbest düşme mi, eğik düzlem mi?
-- Sarkaç: Telefon burulup hareket düzlemsel olmadığında (TEST_SONUCLARI 5.3) tek eksen yerine 3 eksenin en çok
-  salınan **bileşik yönü** (temel bileşen analizi) kullanılmalı mı? Önce V biçiminde (iki ipli) asmanın sorunu
-  çözüp çözmediği denenecek; çözerse kod basit kalır.
+- ~~Sarkaç: Telefon burulduğunda bileşik yön (temel bileşen analizi) kullanılmalı mı?~~ → K-009 ile kapandı:
+  iki farklı periyotlu salınımı bileşik yön ayıramaz; bunun yerine en düzenli eksen seçiliyor ve iki salınım uyarısı var.

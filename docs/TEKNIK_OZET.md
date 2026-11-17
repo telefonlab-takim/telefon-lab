@@ -110,7 +110,10 @@ Sarkaç periyodunu ölçümlerin zaman damgalarından hesaplayacağımız için 
   → kayıt → sonuçlar.
 - **Periyot bulma yöntemi** (`js/analiz/periyot.js` → `sarkacPeriyoduBul`):
   0. Her eksen 0,15 s'lik **hareketli ortalama** ile yumuşatılır (telefonun ip ucundaki hızlı titreşimini bastırır; K-008).
-  1. 3 dönme ekseninden **standart sapması en büyük** olan seçilir (telefon nasıl asılırsa asılsın salınımı en iyi gören eksen).
+  1. Aşağıdaki 2–5. adımlar **her dönme ekseni için ayrı ayrı** yapılır. Tek tek periyotları birbirine en yakın olan
+     (**en düzenli**) ve en az 5 düzenli salınımı olan eksen seçilir (K-009). Başka bir eksen de düzenli ama %10'dan fazla
+     farklı periyotla salınıyorsa "telefon iki ayrı yönde salınıyor" uyarısı verilir. Ekranda her eksenin periyodu tablo
+     olarak görünür; seçilen eksen ✓ ile işaretlidir.
   2. Sinyalin ortalaması çıkarılır (jiroskobun küçük sabit kayması da gider).
   3. **Yukarı sıfır geçişleri** bulunur. Gürültünün sahte geçiş üretmemesi için eşik bandı (histerezis) kullanılır:
      sinyal önce −0,3·s'nin altına inmeli, sonra +0,3·s'nin üstüne çıkmalı (s = standart sapma).

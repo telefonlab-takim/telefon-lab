@@ -2,7 +2,8 @@
 // Salınan bir sinyalden periyodu bulur.
 //
 // Yöntem (adım adım):
-//   0. (sarkacPeriyoduBul) Sinyali hareketli ortalamayla yumuşat, en çok salınan ekseni seç.
+//   0. (sarkacPeriyoduBul) Her ekseni hareketli ortalamayla yumuşat; 1–4. adımları her eksen için ayrı yap
+//      ve en düzenli salınan ekseni seç (K-009).
 //   1. Sinyalin ortalamasını çıkar → sinyal sıfır etrafında salınır.
 //   2. Sinyalin aşağıdan yukarı doğru sıfırı geçtiği anları bul ("yukarı sıfır geçişleri").
 //      Bir periyotta tam bir tane yukarı geçiş olur.
@@ -38,20 +39,9 @@ export const EN_AZ_KULLANILAN_ORAN = 0.5;
 // salınımı neredeyse hiç küçültmez, ama telefonun ip ucundaki hızlı titreşimlerini (≥ 5 Hz) bastırır.
 export const YUMUSATMA_PENCERESI_SN = 0.15;
 
-// Verilen seriler arasından salınımı en büyük olanı (standart sapması en büyük) seçer.
-// seriler: [{ ad, degerler }]  (degerler içinde null olabilir, yok sayılır)
-export function enCokSalinanSeri(seriler) {
-  let enIyi = null;
-  let enIyiSapma = -Infinity;
-  for (const seri of seriler) {
-    const sapma = standartSapma(seri.degerler.filter((v) => v !== null));
-    if (sapma > enIyiSapma) {
-      enIyiSapma = sapma;
-      enIyi = seri;
-    }
-  }
-  return enIyi;
-}
+// İki eksen de düzenli salınıyor ama periyotları bundan fazla (oran olarak) farklıysa
+// telefon iki ayrı yönde, iki ayrı periyotla sallanıyor demektir → uyarı.
+export const IKI_SALINIM_FARKI = 0.1; // %10
 
 // Sinyalin aşağıdan yukarı sıfırı geçtiği anları (saniye) döndürür.
 // Geçiş anı, sıfırın iki yanındaki iki ölçüm arasında doğrusal ara değer bulmayla (interpolasyon) hesaplanır;
@@ -225,11 +215,82 @@ export function hareketliOrtalama(zamanlarSn, degerler, pencereSn = YUMUSATMA_PE
   return sonuc;
 }
 
-// Sarkaç için tam akış: 3 ekseni yumuşat → en çok salınanı seç → periyodu bul.
-// seriler: [{ ad, degerler }]  Dönen değer: periyotBul sonucu + secilenEksen (ad) ; eksen yoksa null.
+// Bir eksenin sonucu, eksen seçiminde aday olabilir mi? (geçerli ve en az EN_AZ_SALINIM düzenli salınım)
+function yeterliMi(sonuc) {
+  return sonuc.gecerliMi && sonuc.salinimSayisi >= EN_AZ_SALINIM;
+}
+
+// Sonuçlar arasından "en düzenli" olanı seçer: tek tek periyotları birbirine en yakın olan
+// (yayılım oranı en küçük). Önce yeterli salınımı olanlara bakılır; hiçbiri yoksa geçerli olanlara.
+export function enDuzenliSonuc(sonuclar) {
+  const adaylar = sonuclar.filter(yeterliMi);
+  const havuz = adaylar.length > 0 ? adaylar : sonuclar.filter((s) => s.gecerliMi);
+  let enIyi = null;
+  for (const s of havuz) {
+    if (enIyi === null || s.yayilimOrani < enIyi.yayilimOrani) enIyi = s;
+  }
+  return enIyi;
+}
+
+// Sarkaç için tam akış:
+//   1. Her ekseni yumuşat ve periyodunu ayrı ayrı bul.
+//   2. En düzenli salınan ekseni seç (en büyük salınan değil! Bkz. KARAR_GUNLUGU K-009).
+//   3. Başka bir eksen de düzenli ama belirgin farklı periyotla salınıyorsa uyar:
+//      telefon iki yönde sallanıyor, hangisinin asıl sarkaç salınımı olduğu kesin değil.
+// seriler: [{ ad, degerler }]
+// Dönen değer: seçilen eksenin periyotBul sonucu + secilenEksen + eksenler (her eksenin özeti);
+//              hiçbir eksende düzenli salınım yoksa gecerliMi: false.
 export function sarkacPeriyoduBul(zamanlarSn, seriler) {
-  const yumusak = seriler.map((s) => ({ ad: s.ad, degerler: hareketliOrtalama(zamanlarSn, s.degerler) }));
-  const secilen = enCokSalinanSeri(yumusak);
-  if (!secilen) return null;
-  return { ...periyotBul(zamanlarSn, secilen.degerler), secilenEksen: secilen.ad };
+  const sonuclar = seriler.map((s) => ({
+    ...periyotBul(zamanlarSn, hareketliOrtalama(zamanlarSn, s.degerler)),
+    eksen: s.ad,
+  }));
+
+  // Ekranda tablo olarak gösterilecek özet
+  const eksenler = sonuclar.map((s) => ({
+    ad: s.eksen,
+    gecerliMi: s.gecerliMi,
+    periyotSn: s.periyotSn,
+    yayilimOrani: s.yayilimOrani,
+    salinimSayisi: s.salinimSayisi,
+  }));
+
+  const secilen = enDuzenliSonuc(sonuclar);
+  if (!secilen) {
+    return {
+      gecerliMi: false,
+      gecisler: [],
+      eksenler,
+      secilenEksen: null,
+      uyarilar: ['Hiçbir eksende düzenli salınım bulunamadı. Sarkaç salınırken kayıt yapıldığından emin olun.'],
+    };
+  }
+
+  const uyarilar = [...secilen.uyarilar];
+
+  // İkinci bir düzenli salınım var mı?
+  for (const diger of sonuclar) {
+    if (diger === secilen || !yeterliMi(diger) || diger.yayilimOrani > EN_FAZLA_PERIYOT_YAYILIMI) continue;
+    const fark = Math.abs(diger.periyotSn - secilen.periyotSn) / secilen.periyotSn;
+    if (fark > IKI_SALINIM_FARKI) {
+      uyarilar.push(
+        `Telefon iki ayrı yönde, farklı periyotlarla salınıyor (${secilen.eksen}: ${sayi3(secilen.periyotSn)} s, ` +
+          `${diger.eksen}: ${sayi3(diger.periyotSn)} s). Hangisinin asıl sarkaç salınımı olduğu kesin değil. ` +
+          'Sarkacı yalnızca tek yönde itin (V askıda: iplerin düzlemine dik).'
+      );
+    }
+  }
+
+  return {
+    ...secilen,
+    secilenEksen: secilen.eksen,
+    eksenler,
+    uyarilar,
+    guvenilirMi: uyarilar.length === 0,
+  };
+}
+
+// Saniye değerini 3 ondalıkla Türkçe yazar: 1.2534 → "1,253"
+function sayi3(deger) {
+  return deger.toFixed(3).replace('.', ',');
 }
