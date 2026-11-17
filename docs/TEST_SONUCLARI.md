@@ -171,6 +171,24 @@ Henüz otomatik periyot hesabı yok; aşağıdaki değerler ekran görüntüsün
   L'yi o noktadan telefonun ortasına cetvelle ölçmek ve sarkacı tek yönde itmek.
 - **Küçük düzeltme:** Eksen tablosunda "1,558 s" gibi değerler dar ekranda iki satıra bölünüyordu; artık bölünmüyor (sürüm 2026-11-18.4).
 
+## 5.7 Altıncı gerçek kayıt — L ölçüldüğü gibi girildi (2026-11-18, iPhone 14)
+
+- **L nasıl bulundu (kullanıcı):** Metreyle masa yüksekliği 74 cm ölçüldü, telefonun ortası için 7 cm eklendi → **L = 81 cm**.
+  L bu kez sonuca bakılarak **değiştirilmedi**. ✅
+- **Uygulama:** T = 1,744 ± 0,004 s, eksen alfa, 11 salınım, bölüm 0,7–20,0 s, periyot farkı **%2,8**, açı 4,0°,
+  **uyarı yok.** g = 10,51 ± 0,08 m/s², kabul edilen değerden belirsizliğin 8,8 katı uzak → uygulama "sistematik hata
+  olabilir" dedi. Doğru davranış.
+- **Eksen tablosu:** ✓ alfa 1,744 s (%2,8, 11) · beta 1,164 s (%14,5, 6) · gama 0,282 s (%7,2, 12 → ≈ 3,5 Hz).
+- **Yorum:**
+  - Periyot bu kez düzenli ve güvenilir; sorun **L'nin ne ölçtüğünde**.
+  - "Masa yüksekliği + 7 cm" **masadan yere** olan uzaklığı ölçer, **dönme noktasından telefonun ortasına** olan uzaklığı
+    değil. Telefon masa kenarından sarkıyorsa ortası yerin üstündedir; L masa yüksekliğinden **kısa** olmalı
+    (ör. telefonun ortası yerden 7 cm yüksekteyse L ≈ 74 − 7 = 67 cm).
+  - 1,744 s'lik periyot ≈ 75,5 cm'lik basit sarkaca karşılık gelir; ne 81 ne 67 cm ile tam uyuşuyor.
+    Düzeneğin fotoğrafı istendi.
+  - Gama ekseninde düzenli ≈ 3,5 Hz'lik salınım: telefon ipin ucunda kendi bağlantı noktası etrafında hızlı
+    sallanıyor olabilir (iki parçalı sarkaç). Ana salınımı etkilemiyor ama düzeneğin sağlam olmadığını gösteriyor.
+
 ## 6. Sorunlar ve çözümler
 
 | Tarih | Sorun | Neden | Çözüm |
