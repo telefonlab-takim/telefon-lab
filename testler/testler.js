@@ -17,6 +17,14 @@ import {
 } from '../js/analiz/periyot.js';
 import { genlikAcisiTahmini, buyukAciGHatasi, gHesapla, kabulEdilenleKarsilastir } from '../js/analiz/sarkac-hesap.js';
 import { belirsizlikleYaz, sayiOku } from '../js/arayuz/bicim.js';
+import {
+  ivmeBuyuklukleri,
+  esikGecisZamani,
+  dususleriBul,
+  dususSuresiOzeti,
+  serbestDusmeG,
+  beklenenSure,
+} from '../js/analiz/serbest-dusme.js';
 
 // ---- Küçük test aracı ----------------------------------------------------
 
@@ -453,6 +461,165 @@ test('belirsizlikleYaz: 48,7 ± 0,5 cm → "48,7 ± 0,5 cm"', () =>
   esitMi(belirsizlikleYaz(48.7, 0.5, 'cm'), '48,7 ± 0,5 cm'));
 test('belirsizlikleYaz: belirsizlik bilinmiyor → "± ?"', () =>
   esitMi(belirsizlikleYaz(1.4, NaN, 's'), '1,400 ± ? s'));
+
+// ---- serbest-dusme.js -----------------------------------------------------
+
+const G_TEST = 9.81;
+
+// Sahte serbest düşme kaydı üretir (devicemotion örnekleri gibi: zaman ms, ax, ay, az).
+// İvme büyüklüğünün zamanla değişimi:
+//   durgun: 9,81 → el açılırken gecisSn içinde doğrusal olarak 0'a iner (tam ortası = baslangicSn)
+//   → düşüş boyunca 0 → yastığa değince gecisSn içinde doğrusal olarak 9,81'e çıkar (tam ortası = bitisSn)
+//   → 0,05 s kadar 25 m/s² (çarpma) → yeniden 9,81.
+// Böylece eşik (9,81/2) tam baslangicSn ve bitisSn anlarında geçilir: doğru cevap bilinir.
+// İvme, telefonun eğik durduğunu göstermek için üç eksene paylaştırılır.
+function sahteDusmeKaydi({ dususler, sureSn = 10, hz = 60, gecisSn = 0.04, gurultu = 0, zamanTitremesiMs = 0, tohum = 1 }) {
+  const rastgele = tohumluRastgele(tohum);
+  const yon = [0.3, 0.5, Math.sqrt(1 - 0.09 - 0.25)]; // birim vektör
+  const yarim = gecisSn / 2;
+
+  function buyukluk(t) {
+    for (const d of dususler) {
+      const bas = d.baslangicSn;
+      const son = d.baslangicSn + d.sureSn;
+      if (t >= bas - yarim && t < bas + yarim) return G_TEST * (1 - (t - (bas - yarim)) / gecisSn); // el açılıyor
+      if (t >= bas + yarim && t < son - yarim) return 0; // serbest düşme
+      if (t >= son - yarim && t < son + yarim) return G_TEST * ((t - (son - yarim)) / gecisSn); // yastığa değiyor
+      if (t >= son + yarim && t < son + yarim + 0.05) return 25; // çarpma
+    }
+    return G_TEST;
+  }
+
+  const ornekler = [];
+  for (let i = 0; i <= sureSn * hz; i++) {
+    const gercekZaman = i / hz;
+    const damga = gercekZaman + ((rastgele() - 0.5) * 2 * zamanTitremesiMs) / 1000;
+    const a = Math.abs(buyukluk(gercekZaman) + (rastgele() - 0.5) * 2 * gurultu);
+    ornekler.push({ zaman: damga * 1000, ax: a * yon[0], ay: a * yon[1], az: a * yon[2] });
+  }
+  return ornekler;
+}
+
+// Örneklerden (zamanlarSn, büyüklükler) çiftini hazırlar
+function dusmeGirdisi(ornekler) {
+  return { zamanlarSn: ornekler.map((o) => o.zaman / 1000), buyuklukler: ivmeBuyuklukleri(ornekler) };
+}
+
+test('ivmeBuyuklukleri: (3, 4, 0) → 5 ; eksik eksen → null', () => {
+  esitMi(ivmeBuyuklukleri([{ ax: 3, ay: 4, az: 0 }, { ax: 1, ay: null, az: 1 }]), [5, null]);
+});
+
+test('esikGecisZamani: (0 s, 10) ile (1 s, 0) arasında 4 eşiği 0,6 s\'de geçilir', () =>
+  yakinMi(esikGecisZamani(0, 10, 1, 0, 4), 0.6, 1e-12));
+
+test('beklenenSure: 50 cm → √(2·0,5/9,8) ≈ 0,319 s', () => yakinMi(beklenenSure(0.5), Math.sqrt(1 / 9.8), 1e-12));
+
+test('dususleriBul: 60 Hz, 50 cm\'lik tek düşüş → t = 0,3193 s (±1 ms)', () => {
+  const t = beklenenSure(0.5, G_TEST); // 0,31928 s
+  const { zamanlarSn, buyuklukler } = dusmeGirdisi(sahteDusmeKaydi({ dususler: [{ baslangicSn: 2.013, sureSn: t }] }));
+  const r = dususleriBul(zamanlarSn, buyuklukler);
+  esitMi(r.dususler.length, 1);
+  yakinMi(r.dususler[0].sureSn, t, 0.001);
+  yakinMi(r.dususler[0].baslangicSn, 2.013, 0.001);
+  // Uç belirsizlikleri yarım aralık (8,33 ms) → Δt = √2 × 8,33 ≈ 11,8 ms
+  yakinMi(r.dususler[0].sureBelirsizligiSn, Math.SQRT2 * (1 / 120), 1e-6);
+  esitMi(r.uyarilar, []);
+});
+
+test('dususleriBul + özet: gürültülü 5 düşüş (±0,5 m/s², ±5 ms zaman titremesi) → t ortalaması 3 ms içinde, g doğru', () => {
+  const t = beklenenSure(0.5, G_TEST);
+  const dususler = [1.1, 3.27, 5.44, 7.61, 9.03].map((b) => ({ baslangicSn: b, sureSn: t }));
+  const { zamanlarSn, buyuklukler } = dusmeGirdisi(
+    sahteDusmeKaydi({ dususler, sureSn: 11, gurultu: 0.5, zamanTitremesiMs: 5, tohum: 21 })
+  );
+  const bulunan = dususleriBul(zamanlarSn, buyuklukler);
+  esitMi(bulunan.dususler.length, 5);
+  const ozet = dususSuresiOzeti(bulunan.dususler);
+  yakinMi(ozet.sureSn, t, 0.003);
+  const g = serbestDusmeG({ yukseklikM: 0.5, yukseklikBelirsizligiM: 0.005, sureSn: ozet.sureSn, sureBelirsizligiSn: ozet.sureBelirsizligiSn });
+  // Gerçek değer, hesaplanan belirsizliğin 2 katı içinde olmalı
+  if (!(Math.abs(g.g - G_TEST) <= 2 * g.gBelirsizligi)) throw new Error(`g = ${g.g} ± ${g.gBelirsizligi}`);
+});
+
+test('dususleriBul: telefon hep durgun → düşüş yok, uyarı var', () => {
+  const { zamanlarSn, buyuklukler } = dusmeGirdisi(sahteDusmeKaydi({ dususler: [], gurultu: 0.3, tohum: 4 }));
+  const r = dususleriBul(zamanlarSn, buyuklukler);
+  esitMi(r.dususler.length, 0);
+  esitMi(r.uyarilar.length, 1);
+});
+
+test('dususleriBul: elin kısa aşağı hareketi (0,08 s, ivme 3 m/s²) düşüş sayılmaz', () => {
+  const zamanlarSn = [];
+  const buyuklukler = [];
+  for (let i = 0; i <= 120; i++) {
+    const t = i / 60;
+    zamanlarSn.push(t);
+    buyuklukler.push(t > 1 && t < 1.08 ? 3 : G_TEST); // 3 m/s² > DERIN_ESIK (2) ve süre < 0,1 s
+  }
+  esitMi(dususleriBul(zamanlarSn, buyuklukler).dususler.length, 0);
+});
+
+test('dususleriBul: kaydın başında süren düşüş sayılmaz, uyarı verilir', () => {
+  const { zamanlarSn, buyuklukler } = dusmeGirdisi(
+    sahteDusmeKaydi({ dususler: [{ baslangicSn: -0.1, sureSn: 0.32 }, { baslangicSn: 3, sureSn: 0.32 }] })
+  );
+  const r = dususleriBul(zamanlarSn, buyuklukler);
+  esitMi(r.dususler.length, 1);
+  esitMi(r.uyarilar.length, 1);
+});
+
+test('dususleriBul: 1,2 s süren düşük ivme (havaya atma) sayılmaz, uyarı verilir', () => {
+  const { zamanlarSn, buyuklukler } = dusmeGirdisi(sahteDusmeKaydi({ dususler: [{ baslangicSn: 2, sureSn: 1.2 }] }));
+  const r = dususleriBul(zamanlarSn, buyuklukler);
+  esitMi(r.dususler.length, 0);
+  if (!r.uyarilar.some((u) => u.includes('havaya'))) throw new Error(r.uyarilar.join(' | '));
+});
+
+test('dususSuresiOzeti: süreler 0,30…0,33 s → ortalama 0,31, Δt = s/√5 (dağılım baskın), yayılım uyarısı', () => {
+  // Elle hesap: ortalama = 1,55 / 5 = 0,31 ; s = √(0,001/4) = 0,015811 ; s/√5 = 0,007071
+  //            çözünürlükten: 0,0118 / √5 = 0,005277 → büyük olan 0,007071 kullanılır
+  //            yayılım = 0,015811 / 0,31 = %5,1 > %5 → uyarı
+  const dususler = [0.3, 0.32, 0.31, 0.33, 0.29].map((s) => ({ sureSn: s, sureBelirsizligiSn: 0.0118 }));
+  const r = dususSuresiOzeti(dususler);
+  yakinMi(r.sureSn, 0.31, 1e-12);
+  yakinMi(r.sureBelirsizligiSn, Math.sqrt(0.00025) / Math.sqrt(5), 1e-9);
+  esitMi(r.uyarilar.length, 1);
+  esitMi(r.guvenilirMi, false);
+});
+
+test('dususSuresiOzeti: süreler çok yakınsa çözünürlük belirsizliği kullanılır (küçüğü seçilmez)', () => {
+  const dususler = [0.319, 0.32, 0.319, 0.32].map((s) => ({ sureSn: s, sureBelirsizligiSn: 0.0118 }));
+  const r = dususSuresiOzeti(dususler);
+  yakinMi(r.sureBelirsizligiSn, 0.0118 / 2, 1e-12); // 0,0118 / √4
+  esitMi(r.uyarilar, []);
+});
+
+test('dususSuresiOzeti: tek düşüş → "en az 3" uyarısı, Δt = tek düşüşün Δt\'si', () => {
+  const r = dususSuresiOzeti([{ sureSn: 0.32, sureBelirsizligiSn: 0.0118 }]);
+  yakinMi(r.sureBelirsizligiSn, 0.0118, 1e-12);
+  esitMi(r.uyarilar.length, 1);
+});
+
+test('dususSuresiOzeti: 0,15 s\'lik kısa düşüşler → "çok kısa" uyarısı', () => {
+  const dususler = [0.15, 0.15, 0.15].map((s) => ({ sureSn: s, sureBelirsizligiSn: 0.0118 }));
+  const r = dususSuresiOzeti(dususler);
+  if (!r.uyarilar.some((u) => u.includes('çok kısa'))) throw new Error(r.uyarilar.join(' | '));
+});
+
+test('serbestDusmeG: h = 0,5 m, t = √(1/9,81) s → g = 9,81 (formülün tersi)', () =>
+  yakinMi(serbestDusmeG({ yukseklikM: 0.5, yukseklikBelirsizligiM: 0, sureSn: Math.sqrt(1 / 9.81), sureBelirsizligiSn: 0 }).g, 9.81, 1e-12));
+
+test('serbestDusmeG: h = 0,500 ± 0,005 m, t = 0,320 ± 0,004 s → elle hesap ile aynı', () => {
+  // Elle:  g = 2 × 0,5 / 0,32² = 1 / 0,1024 = 9,765625
+  //        Δh/h = 0,01      2Δt/t = 0,008 / 0,32 = 0,025
+  //        Δg/g = √(0,0001 + 0,000625) = 0,026926   →   Δg ≈ 0,26295
+  //        payları: h → 0,0001 / 0,000725 = %13,8 ; t → %86,2
+  const r = serbestDusmeG({ yukseklikM: 0.5, yukseklikBelirsizligiM: 0.005, sureSn: 0.32, sureBelirsizligiSn: 0.004 });
+  yakinMi(r.g, 9.765625, 1e-12);
+  yakinMi(r.gBelirsizligi, 9.765625 * Math.sqrt(0.000725), 1e-12);
+  yakinMi(r.surePayi, 0.000625 / 0.000725, 1e-12);
+  yakinMi(r.yukseklikPayi + r.surePayi, 1, 1e-12);
+});
 
 // ---- Sonuçları ekrana yaz -------------------------------------------------
 

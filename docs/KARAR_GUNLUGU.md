@@ -175,8 +175,38 @@ Her kayıt şu şablonu izler:
   - Kimya deneylerinde güvenlik önemli: yalnızca evde/okulda güvenle kullanılabilen malzemeler önerilecek.
   - Ana menü derslere göre gruplandı; henüz yapılmayan deneyler "Fikir" rozetiyle gösteriliyor.
 
+## K-012: İkinci fizik deneyi serbest düşme; süre, ivme büyüklüğünün g/2 eşiğinden bulunur
+- **Tarih:** 2026-11-19
+- **Durum:** Kabul edildi
+- **Karar:** İkinci fizik deneyi **serbest düşme** (FİZ.11.1.1–11.1.2). Telefon 40–80 cm yükseklikten yastığa
+  bırakılır. Düşme süresi t, yer çekimi dahil ivmenin **büyüklüğünden** (|a| = √(ax² + ay² + az²)) bulunur:
+  |a|'nın g/2 ≈ 4,9 m/s² eşiğinin altında kaldığı süre. g = 2h / t². Bir kayıtta birkaç düşüş yapılır ve
+  düşme sürelerinin ortalaması kullanılır.
+- **Neden:**
+  - Serbest düşen telefonda ivmeölçer ≈ 0 gösterir; durgunken ≈ 9,8. Fark çok büyük olduğundan düşüş kolayca ve
+    güvenle bulunur. Telefonun hangi yönde durduğu önemli değildir (büyüklük kullanılıyor).
+  - Eşik neden g/2? Elin açılması birkaç on milisaniye sürer. Tutan kuvvet düzgünce azalıyorsa, telefonun hareketi
+    tam bu geçişin ortasında bırakılmış bir cisimle aynıdır; geçişin ortası da ivmenin yarıya indiği andır.
+    Yastığa değme için de aynı düşünce geçerlidir.
+  - Eşiğin geçildiği an iki ölçüm arasında doğrusal ara değerle bulunur (ölçüm aralığından daha hassas).
+  - Belirsizlik dürüstçe tahmin edilir: her uçta gerçek geçiş iki ölçüm arasının herhangi bir yerinde olabilir
+    (uç belirsizliği = aralığın yarısı ≈ 8,3 ms; tek düşüşte Δt ≈ 12 ms). Birkaç düşüşün ortalamasında hem bu
+    "çözünürlük" belirsizliği (Δt/√n) hem dağılımdan gelen belirsizlik (s/√n) hesaplanır, **büyük olan** kullanılır.
+  - Müfredat "verileri toplayarak kaydeder, veri setleri oluşturur" diyor; düşüşlerin tablosu buna uyar.
+- **Değerlendirilen alternatifler:**
+  - Eğik düzlem: telefonun kaymasında sürtünme ve dönme sonucu bozar; müfredatla eşleşmesi daha dolaylı.
+  - Düşüşü düşük bir eşikle (ör. |a| < 2 m/s²) bulmak: elin açıldığı süreyi keser, t'yi kısa ölçer (g büyük çıkar).
+    2 m/s² yalnızca "bu gerçekten serbest düşme mi?" kontrolü olarak kullanılıyor.
+  - Tek düşüş: hızlı ama 50 cm'de Δg/g ≈ %8; birkaç düşüşün ortalaması belirsizliği √n kadar küçültür.
+- **Sonuçları / bedeli:**
+  - Kısa düşüşte (50 cm ≈ 0,32 s) belirsizliğin çoğu süreden gelir (2Δt/t). Uygulama bunu öğrenciye açıklar;
+    0,2 s'den kısa düşüşlerde ayrıca uyarır.
+  - Yastık telefonu yavaşça durdurduğu için değme anı biraz geç bulunabilir → g biraz küçük çıkabilir (sistematik hata;
+    sonuç açıklamasında yazıyor).
+  - Telefon düşerken dönerse sensör merkezcil ivme hisseder ve |a| 0'a inmeyebilir; talimatta "düz bırakın" deniyor.
+  - Güvenlik: yalnızca yastık/yatak üstüne, en çok 1 m yükseklikten.
+
 ## Açık kararlar (henüz verilmedi)
-- Üçüncü deney: serbest düşme mi, eğik düzlem mi? → **Öneri: serbest düşme** (FİZ.11.1.1–11.1.2 ile doğrudan
-  eşleşiyor; bkz. `docs/MUFREDAT_ARASTIRMASI.md`). Takımın onayı bekleniyor.
+- ~~Üçüncü deney: serbest düşme mi, eğik düzlem mi?~~ → K-012 ile kapandı: **serbest düşme** (FİZ.11.1.1–11.1.2).
 - ~~Sarkaç: Telefon burulduğunda bileşik yön (temel bileşen analizi) kullanılmalı mı?~~ → K-009 ile kapandı:
   iki farklı periyotlu salınımı bileşik yön ayıramaz; bunun yerine en düzenli eksen seçiliyor ve iki salınım uyarısı var.

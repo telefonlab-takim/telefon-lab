@@ -45,6 +45,7 @@ açıldı ✅ (2026-11-18). Önce internetle hiç açılmadan denenince açılma
 | 2026-11-18 | Yumuşatma, düzenli bölüm seçimi, başı titreşen sarkaç | 5 yeni test; biri eski yöntemin aynı veride yanıldığını belgeliyor (ham ortalama periyot < 1,4 s) | Hepsi geçer | Toplam 59/59 geçti | ✅ |
 | 2026-11-18 | Sarkaç sayfası, gerçek kayda benzeyen veri (masaüstü) | L = 30 cm, ilk 3 s ≈5,5 Hz titreşim, T = 1,50 s | T ≈ 1,50 s, g ≈ 5,3 ve "sistematik hata" açıklaması | T = 1,5002 ± 0,0005 s, g = 5,26 ± 0,09, fark 51,7 kat, sistematik hata açıklaması | ✅ |
 | 2026-11-18 | Sarkaç sayfası, periyodu düzensiz salınım (masaüstü) | Periyodu ±%15 oynayan salınım, L = 48,7 cm | Periyot uyarıları, g üstü çizili, "güvenmeyin", karşılaştırma "anlamlı değil" | Beklendiği gibi (3 periyot uyarısı, g = 9,3 ± 1,5 üstü çizili) | ✅ |
+| 2026-11-19 | Serbest düşme hesap testleri (`serbest-dusme.js`) | 15 yeni test: 50 cm'lik ideal düşüş (60 Hz), gürültülü 5 düşüş (±0,5 m/s², ±5 ms zaman titremesi), durgun telefon, elin kısa hareketi, kaydın başında kesik düşüş, 1,2 s havaya atma, süre özeti (elle hesap), g ve belirsizliği (h = 0,500 ± 0,005 m, t = 0,320 ± 0,004 s → g = 9,766, Δg = 0,263) | Hepsi geçer | Toplam 77/77 geçti | ✅ |
 | 2026-11-17 | Durdur sonrası veri alınmıyor | Durdur'dan sonra olay gönderildi | Örnek sayısı artmaz | Artmadı | ✅ |
 
 > Not: Masaüstü testlerinde örnekleme hızı anlamlı değildir (sahte olaylar). Gerçek hız telefonda ölçülecek.

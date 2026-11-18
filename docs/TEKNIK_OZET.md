@@ -24,6 +24,7 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 | `js/analiz/ornekleme.js` | ✅ Örnekleme raporu: hız, ortanca aralık, uzun boşluklar, uyarılar |
 | `js/analiz/periyot.js` | ✅ Eksen seçimi, yukarı sıfır geçişleri, periyot ± belirsizlik |
 | `js/analiz/sarkac-hesap.js` | ✅ g ± Δg, belirsizlik payları, kabul edilen değerle karşılaştırma, bırakma açısı, büyük açı etkisi |
+| `js/analiz/serbest-dusme.js` | ✅ İvme büyüklüğü, düşüşleri bulma (g/2 eşiği + ara değer), ortalama düşme süresi ± belirsizlik, g = 2h/t² ± Δg |
 | `js/arayuz/bicim.js` | ✅ Türkçe sayı yazma (1.067,5), virgüllü sayı okuma ("48,7"), belirsizlikle yazma (9,81 ± 0,10) |
 | `js/arayuz/grafik.js` | ✅ Canvas üzerine çizgi grafiği (ızgara, eksen yazıları, renk açıklaması) |
 | `js/arayuz/olcek.js` | ✅ Eksenler için "güzel" çizgi değerleri (-20, 0, 20, 40 gibi) |
@@ -158,8 +159,27 @@ Sarkaç periyodunu ölçümlerin zaman damgalarından hesaplayacağımız için 
 ### 4.2 Ses frekansı
 _(doldurulacak)_
 
-### 4.3 Serbest düşme / eğik düzlem
-_(doldurulacak)_
+### 4.3 Serbest düşme (FİZ.11.1.1–11.1.2; bkz. KARAR_GUNLUGU K-012)
+
+**Fikir:** İvmeölçer yer çekimi dahil ivmeyi ölçer. Elde duran telefonda büyüklüğü |a| ≈ 9,8 m/s²; serbest düşerken
+telefon ve sensör birlikte düştüğü için |a| ≈ 0 ("ağırlıksızlık"). Yastığa değince |a| birden büyür.
+
+**Hesap adımları** (`js/analiz/serbest-dusme.js`):
+1. `ivmeBuyuklukleri`: her örnek için |a| = √(ax² + ay² + az²). Telefonun yönü önemli değil.
+2. `dususleriBul`: |a|'nın **g/2 ≈ 4,9 m/s²** eşiğinin altında kaldığı kesintisiz bölümler bulunur.
+   - Eşiği geçme anı, iki ölçüm arasında doğrusal ara değerle (`esikGecisZamani`) hesaplanır.
+   - Sayılmayanlar: en düşük değeri 2 m/s²'nin altına inmeyen (elin hareketi), 0,1 s'den kısa, 0,8 s'den uzun
+     (havaya atma) ve kaydın başında/sonunda kesilen bölümler. Son ikisi için uyarı verilir.
+   - Tek düşüşün süre belirsizliği: her uçta ölçüm aralığının yarısı → Δt = √(Δbaş² + Δson²) (60 Hz'de ≈ 12 ms).
+3. `dususSuresiOzeti`: düşme sürelerinin ortalaması t̄. Belirsizlik = büyük olanı { s/√n , ortalama Δt/√n }.
+   Uyarılar: 3'ten az düşüş, süreler %5'ten fazla dağınık, düşme süresi 0,2 s'den kısa.
+4. `serbestDusmeG`: h = ½·g·t² → **g = 2h / t²**, Δg/g = √((Δh/h)² + (2Δt/t)²). Belirsizliğin h'den ve t'den gelen
+   payları da hesaplanır.
+5. Kabul edilen değerle karşılaştırma sarkaçtaki `kabulEdilenleKarsilastir` ile yapılır (fark ≤ 2·Δg → uyumlu).
+
+**Sayılarla örnek:** h = 50 cm → t ≈ 0,32 s. 60 Hz'de tek düşüşte Δt ≈ 12 ms → 2Δt/t ≈ %7,4; h'yi ±0,5 cm ölçmek
+yalnızca %1 getirir. Yani **belirsizliğin çoğu süreden gelir**; 5 düşüşün ortalaması bunu √5 ≈ 2,2 kat küçültür
+(g ≈ 9,8 ± 0,3 m/s²).
 
 ## 5. Belirsizlik hesabı genel yaklaşımı
 _(doldurulacak: ölçüm tekrarından gelen istatistiksel belirsizlik, alet çözünürlüğü, hata yayılımı.)_
