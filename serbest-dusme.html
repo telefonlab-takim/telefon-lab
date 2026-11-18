@@ -156,10 +156,40 @@
         serbest düşmedir; hemen ardından gelen tepe yastığa çarpmadır.</p>
     </section>
 
-    <!-- 5. Örnekleme raporu (teknik ayrıntı; varsayılan olarak kapalı) -->
+    <!-- 5. Bir düşüşe yakından bakış: bırakma ve değme anları, tek tek ölçümlerle -->
+    <section id="yakinBolumu" class="kart-bolum" hidden>
+      <h2>5. Düşüşe yakından bak</h2>
+      <label class="alan">
+        <span class="alan-etiketi">Düşüş</span>
+        <select id="yakinDususSecimi"></select>
+      </label>
+      <h3>Bırakma anı</h3>
+      <canvas id="yakinBirakma" class="grafik grafik-kisa"></canvas>
+      <h3>Yastığa değme anı</h3>
+      <canvas id="yakinDegme" class="grafik grafik-kisa"></canvas>
+      <table>
+        <tr><th>Bırakma geçişi (%90 → %10)</th><td id="yBirakma"></td></tr>
+        <tr><th>Değme geçişi (%10 → %90)</th><td id="yDegme"></td></tr>
+        <tr><th>Bütün düşüşlerin ortalaması</th><td id="yOrtalama"></td></tr>
+      </table>
+      <p class="kucuk">Her nokta bir ölçümdür (≈ 17 ms arayla). Yatay kesikli çizgi 4,9 m/s² eşiğidir; dikey kesikli
+        çizgi, eşiğin geçildiği ve düşüşün başı ya da sonu sayılan andır. 20 m/s²'nin üstü kesilmiştir.</p>
+      <details class="talimat">
+        <summary>Bu grafik ne işe yarar?</summary>
+        <p class="kucuk">"Geçiş süresi", ivmenin g'nin %90'ından %10'una inmesi (bırakma) ya da %10'undan %90'ına çıkması
+          (değme) için geçen süredir. Elin açılması gerçekte birkaç on milisaniye sürer; yastığa çarpma ise çok ani olur.
+          Telefon ivme verisini yumuşatarak (filtreleyerek) veriyorsa bırakma geçişi beklenenden uzun görünür ve düşüşün
+          başı geç bulunur; bu da düşme süresini kısa, g'yi büyük çıkarır. İlk gerçek ölçümümüzde süreler beklenenden
+          ≈ 29 ms kısa çıktı; bu grafik nedenini bulmak için eklendi.</p>
+        <p class="kucuk">Not: 17 ms'den (iki ölçüm arası) kısa çıkan geçiş süreleri tam ölçülemez; yalnızca "geçiş, iki ölçüm
+          arasında bitecek kadar hızlıydı" anlamına gelir.</p>
+      </details>
+    </section>
+
+    <!-- 6. Örnekleme raporu (teknik ayrıntı; varsayılan olarak kapalı) -->
     <section id="raporBolumu" class="kart-bolum" hidden>
       <details>
-        <summary><h2 class="ozet-basligi">5. Örnekleme raporu</h2></summary>
+        <summary><h2 class="ozet-basligi">6. Örnekleme raporu</h2></summary>
         <table>
           <tr><th>Ölçüm sayısı</th><td id="rOrnekSayisi"></td></tr>
           <tr><th>Kayıt süresi</th><td id="rSure"></td></tr>
@@ -176,7 +206,7 @@
     </section>
 
     <!-- Hangi sürümün çalıştığını gösterir; ikisi farklıysa sayfayı yenileyin (bkz. js/surum.js) -->
-    <p id="surum" class="kucuk surum">Sayfa: 2026-11-19.5</p>
+    <p id="surum" class="kucuk surum">Sayfa: 2026-11-19.6</p>
   </main>
 
   <script type="module" src="js/sayfalar/serbest-dusme-sayfa.js"></script>

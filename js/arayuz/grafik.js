@@ -29,7 +29,12 @@ function cssRengi(degiskenAdi) {
 //   seriler   : [{ ad, degerler, renkDegiskeni }]  (degerler zamanlarSn ile aynı uzunlukta; null = ölçüm yok)
 //   birim     : y ekseninin birimi (ör. '°/s')
 //   isaretler : (isteğe bağlı) dikey kesikli çizgiyle işaretlenecek zamanlar (s), ör. sıfır geçişleri
-export function grafikCiz(canvas, { zamanlarSn, seriler, birim, isaretler = [] }) {
+//   yatayCizgiler: (isteğe bağlı) yatay kesikli çizgiyle gösterilecek değerler, ör. bir eşik (4,9 m/s²)
+//   noktalar  : (isteğe bağlı) true ise her ölçüm küçük bir daireyle gösterilir (yakından bakarken
+//               ölçümlerin nerede alındığını görmek için)
+//   yAraligi  : (isteğe bağlı) { min, max } — y ekseni bu aralıkta sabit tutulur, dışındaki değerler kesilir
+//               (ör. 100 m/s²'lik çarpma tepesi küçük ayrıntıları ezmesin diye)
+export function grafikCiz(canvas, { zamanlarSn, seriler, birim, isaretler = [], yatayCizgiler = [], noktalar = false, yAraligi = null }) {
   // 1) Tuvali hazırla. Telefon ekranlarında 1 CSS pikseli 2–3 gerçek piksel olduğundan,
   //    tuvali o oranda büyük tutuyoruz; yoksa çizgiler bulanık görünür.
   const oran = window.devicePixelRatio || 1;
@@ -59,10 +64,15 @@ export function grafikCiz(canvas, { zamanlarSn, seriler, birim, isaretler = [] }
     c.fillText('Gösterilecek veri yok.', KENAR.sol, yukseklik / 2);
     return;
   }
-  if (yMin === yMax) { yMin -= 1; yMax += 1; } // düz çizgi ise biraz aralık aç
-  const pay = (yMax - yMin) * 0.05; // çizgiler kenara yapışmasın
-  yMin -= pay;
-  yMax += pay;
+  if (yAraligi) {
+    yMin = yAraligi.min;
+    yMax = yAraligi.max;
+  } else {
+    if (yMin === yMax) { yMin -= 1; yMax += 1; } // düz çizgi ise biraz aralık aç
+    const pay = (yMax - yMin) * 0.05; // çizgiler kenara yapışmasın
+    yMin -= pay;
+    yMax += pay;
+  }
 
   // 3) Veri değerini ekrandaki piksel konumuna çeviren fonksiyonlar
   const alanGenislik = genislik - KENAR.sol - KENAR.sag;
@@ -89,13 +99,17 @@ export function grafikCiz(canvas, { zamanlarSn, seriler, birim, isaretler = [] }
 
   c.textAlign = 'center';
   c.textBaseline = 'top';
-  for (const t of eksenCizgileri(tMin, tMax, 6)) {
+  const zamanCizgileri = eksenCizgileri(tMin, tMax, 6);
+  // Etiketlerin ondalık basamağı çizgi aralığına göre: 5 s → "10 s", 0,5 s → "1,5 s", 0,05 s → "0,15 s"
+  const zamanAdimi = zamanCizgileri.length > 1 ? zamanCizgileri[1] - zamanCizgileri[0] : 1;
+  const zamanBasamagi = zamanAdimi >= 1 ? 0 : Math.ceil(-Math.log10(zamanAdimi) - 1e-9);
+  for (const t of zamanCizgileri) {
     const x = xPiksel(t);
     c.beginPath();
     c.moveTo(x, KENAR.ust);
     c.lineTo(x, yukseklik - KENAR.alt);
     c.stroke();
-    c.fillText(sayiYaz(t, t % 1 === 0 ? 0 : 1) + ' s', x, yukseklik - KENAR.alt + 6);
+    c.fillText(sayiYaz(t, zamanBasamagi) + ' s', x, yukseklik - KENAR.alt + 6);
   }
 
   // Birim yazısı (sol üst köşe)
@@ -116,7 +130,26 @@ export function grafikCiz(canvas, { zamanlarSn, seriler, birim, isaretler = [] }
     c.setLineDash([]); // sonraki çizgiler düz olsun
   }
 
+  // Yatay çizgiler (ör. eşik): kesikli
+  if (yatayCizgiler.length > 0) {
+    c.strokeStyle = cssRengi('--soluk-yazi');
+    c.setLineDash([2, 4]);
+    for (const v of yatayCizgiler) {
+      const y = yPiksel(v);
+      c.beginPath();
+      c.moveTo(KENAR.sol, y);
+      c.lineTo(genislik - KENAR.sag, y);
+      c.stroke();
+    }
+    c.setLineDash([]);
+  }
+
   // 5) Seriler: değerleri çizgiyle birleştir. Değer yoksa (null) çizgiyi kopar.
+  //    Çizim alanının dışına taşan kısımlar (yAraligi verildiyse) kesilir.
+  c.save();
+  c.beginPath();
+  c.rect(KENAR.sol, KENAR.ust, alanGenislik, alanYukseklik);
+  c.clip();
   c.lineWidth = 1.5;
   for (const seri of seriler) {
     c.strokeStyle = cssRengi(seri.renkDegiskeni);
@@ -134,7 +167,19 @@ export function grafikCiz(canvas, { zamanlarSn, seriler, birim, isaretler = [] }
       kalemKagitta = true;
     });
     c.stroke();
+
+    // Ölçüm noktaları: her ölçüm küçük dolu bir daire
+    if (noktalar) {
+      c.fillStyle = cssRengi(seri.renkDegiskeni);
+      seri.degerler.forEach((deger, i) => {
+        if (deger === null) return;
+        c.beginPath();
+        c.arc(xPiksel(zamanlarSn[i]), yPiksel(deger), 2.5, 0, 2 * Math.PI);
+        c.fill();
+      });
+    }
   }
+  c.restore(); // kesme alanını kaldır
 }
 
 // Grafiğin altına hangi rengin hangi seri olduğunu gösteren açıklama yazar.

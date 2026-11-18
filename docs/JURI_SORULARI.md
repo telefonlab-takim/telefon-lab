@@ -120,6 +120,14 @@ demek: **belirsizliğin çoğu süreden gelir**, uygulama bunu öğrenciye söyl
 İki tahmin hesaplıyoruz: düşme sürelerinin dağılımından (s/√n) ve ölçüm aralığından (tek düşüşün Δt'si/√n).
 **Büyük olanı** kullanıyoruz; küçüğünü seçmek sonucu olduğundan iyi gösterirdi. Sonra Δg/g = √((Δh/h)² + (2Δt/t)²).
 
+### Serbest düşmede ilk gerçek sonucunuz neden 9,8 değil 11,9 çıktı?
+_(Çalışma sürüyor; cevap gerçek ölçümle güncellenecek.)_ Düşme süreleri birbirine çok yakın (%3) ama hepsi beklenenden
+≈ 29 ms kısaydı; yani rastgele değil, sistematik bir hata. h'yi sonuca göre değiştirmek yerine nedenini aradık: yükseklik
+ölçümünü, bırakma biçimini, hava direncini ve telefonun dönmesini eledik. En güçlü adayımız telefonun ivme verisini
+yumuşatarak vermesi; bu, bırakma anını geç gösterir. Bu varsayımı önce sahte veriyle sınadık (40 ms'lik filtre ölçümümüzü
+neredeyse birebir tekrarladı), sonra gerçek kayıtta bırakma ve değme anlarını yakından gösteren bir grafik ekledik.
+(TEST_SONUCLARI 5.10–5.11)
+
 ### Hava direnci ve yastık sonucu etkilemiyor mu?
 Kaba bir hesap: 50 cm'de telefonun en büyük hızı ≈ 3 m/s. Yatay düşen telefonun yüzeyi ≈ 7 × 15 cm; hava direnci
 F ≈ ½·ρ·C·A·v² ≈ ½ × 1,2 × 1 × 0,0105 × 9 ≈ 0,06 N, telefonun ağırlığı ise ≈ 1,7 N (≈ 170 g). Yani düşüşün sonunda

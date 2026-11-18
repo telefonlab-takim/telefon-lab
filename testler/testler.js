@@ -22,6 +22,7 @@ import {
   esikGecisZamani,
   dususleriBul,
   durgunMu,
+  gecisSureleri,
   dususSuresiOzeti,
   serbestDusmeG,
   beklenenSure,
@@ -608,6 +609,29 @@ test('durgunMu: bırakmadan önce telefon durgun → evet; önce çarpma (25 m/s
   esitMi(durgunMu(t, durgun, 0.8), 'evet');
   esitMi(durgunMu(t, carpmali, 0.8), 'hayir'); // 0,5 s'deki çarpma [0,4 … 0,7] penceresinde
   esitMi(durgunMu(t, durgun, 0.12), 'veri-yok'); // pencere kaydın başından önce
+});
+
+test('gecisSureleri: 40 ms\'lik doğrusal bırakma ve değme → %90–%10 geçişi 0,8 × 40 = 32 ms (1000 Hz)', () => {
+  // Sahte kayıtta ivme 40 ms içinde doğrusal olarak 9,81 ↔ 0 arasında değişiyor.
+  // %90'dan %10'a inmek bu sürenin %80'ini alır: 0,8 × 40 ms = 32 ms.
+  // (Kabul edilen g = 9,8 ile sahte veri g = 9,81 arasındaki küçük farkın etkisi < 0,1 ms.)
+  const ornekler = sahteDusmeKaydi({ dususler: [{ baslangicSn: 1, sureSn: 0.32 }], sureSn: 2, hz: 1000 });
+  const { zamanlarSn, buyuklukler } = dusmeGirdisi(ornekler);
+  const { dususler } = dususleriBul(zamanlarSn, buyuklukler);
+  esitMi(dususler.length, 1);
+  const g = gecisSureleri(zamanlarSn, buyuklukler, dususler[0]);
+  yakinMi(g.birakmaSn, 0.032, 0.0005);
+  yakinMi(g.degmeSn, 0.032, 0.0005);
+});
+
+test('gecisSureleri: 60 Hz\'de 100 ms\'lik bırakma ve değme → ikisi de ≈ 80 ms', () => {
+  const ornekler = sahteDusmeKaydi({ dususler: [{ baslangicSn: 1, sureSn: 0.32 }], sureSn: 2, hz: 60, gecisSn: 0.1 });
+  const { zamanlarSn, buyuklukler } = dusmeGirdisi(ornekler);
+  const { dususler } = dususleriBul(zamanlarSn, buyuklukler);
+  const g = gecisSureleri(zamanlarSn, buyuklukler, dususler[0]);
+  // 60 Hz'de ölçüm aralığı 17 ms; ara değer düz bölgeyle eğimli bölge arasında tam doğru olmaz → ±12 ms tolerans
+  yakinMi(g.birakmaSn, 0.08, 0.012);
+  yakinMi(g.degmeSn, 0.08, 0.012);
 });
 
 test('dususSuresiOzeti: süreler 0,30…0,33 s → ortalama 0,31, Δt = s/√5 (dağılım baskın), yayılım uyarısı', () => {

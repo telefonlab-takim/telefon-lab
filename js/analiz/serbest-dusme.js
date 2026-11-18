@@ -189,6 +189,75 @@ export function durgunMu(zamanlarSn, buyuklukler, baslangicSn) {
   return adet >= 3 ? 'evet' : 'veri-yok';
 }
 
+// ---- Geçiş süreleri: bırakma ve yastığa değme ne kadar sürdü? -------------------------
+//
+// Bırakma anında ivme büyüklüğü 9,8'den 0'a, yastığa değince 0'dan 9,8'in üstüne çıkar. Bu geçişlerin ne kadar
+// sürdüğünü ölçmek için bilimde yaygın bir tanım kullanıyoruz: değerin g'nin %90'ı ile %10'u arasında geçen süre
+// ("%10–%90 geçiş süresi").
+//
+// Neden ilginç? İlk gerçek ölçümde düşme süreleri beklenenden ≈ 29 ms kısa çıktı (TEST_SONUCLARI 5.10).
+// Telefon ivme verisini yumuşatarak (filtreleyerek) veriyorsa, bırakmadaki yavaş iniş daha da yavaşlar ve
+// düşüşün başı geç bulunur. Çarpma ise çok ani olduğu için az etkilenir. Bu iki süreyi gerçek kayıtta karşılaştırmak,
+// kaymanın nedenini anlamamızı sağlar.
+
+export const GECIS_UST_ORANI = 0.9; // g'nin %90'ı
+export const GECIS_ALT_ORANI = 0.1; // g'nin %10'u
+// Geçiş noktası eşik anından bu kadar uzakta aranmaz (bulunamazsa süre "bilinmiyor" olur)
+export const GECIS_ARAMA_SINIRI_SN = 0.2;
+
+// zamanlarSn/buyuklukler içinde, baslangicIndeks'ten başlayıp adim (+1 ileri, -1 geri) yönünde giderek
+// değerin esik'i geçtiği ilk anı bulur (iki ölçüm arasında ara değerle). Bulamazsa NaN döner.
+//   kosul(deger) → true olduğu ilk ölçümde durulur; geçiş, o ölçümle bir önceki (geldiğimiz yöndeki) arasındadır.
+function esikAnindanAra(zamanlarSn, buyuklukler, baslangicIndeks, adim, esik, kosul) {
+  const merkezSn = zamanlarSn[baslangicIndeks];
+  for (let k = baslangicIndeks + adim; k >= 0 && k < zamanlarSn.length; k += adim) {
+    if (Math.abs(zamanlarSn[k] - merkezSn) > GECIS_ARAMA_SINIRI_SN) return NaN;
+    if (kosul(buyuklukler[k])) {
+      const onceki = k - adim; // geldiğimiz yöndeki komşu
+      return esikGecisZamani(zamanlarSn[onceki], buyuklukler[onceki], zamanlarSn[k], buyuklukler[k], esik);
+    }
+  }
+  return NaN;
+}
+
+// Verilen zamandan sonraki ilk ölçümün sıra numarası
+function ilkIndeksSonra(zamanlarSn, zamanSn) {
+  let i = 0;
+  while (i < zamanlarSn.length && zamanlarSn[i] < zamanSn) i++;
+  return i;
+}
+
+// Bir düşüşün bırakma ve değme geçiş sürelerini (s) hesaplar.
+//   dusus: dususleriBul sonucundaki bir düşüş ({ baslangicSn, bitisSn })
+// Dönen değer: { birakmaSn, degmeSn }  (bulunamayan NaN)
+//   birakmaSn: ivmenin g'nin %90'ından %10'una inmesi için geçen süre
+//   degmeSn  : ivmenin g'nin %10'undan %90'ına çıkması için geçen süre
+export function gecisSureleri(zamanlarSn, buyuklukler, dusus) {
+  // Değeri olmayan ölçümleri çıkar
+  const t = [];
+  const a = [];
+  for (let i = 0; i < buyuklukler.length; i++) {
+    if (buyuklukler[i] !== null) {
+      t.push(zamanlarSn[i]);
+      a.push(buyuklukler[i]);
+    }
+  }
+  const ust = GECIS_UST_ORANI * KABUL_EDILEN_G;
+  const alt = GECIS_ALT_ORANI * KABUL_EDILEN_G;
+
+  // Bırakma: eşiğin altındaki ilk ölçümden geriye doğru %90'ı, ileriye doğru %10'u ara
+  const i0 = ilkIndeksSonra(t, dusus.baslangicSn);
+  const birakma90 = esikAnindanAra(t, a, i0, -1, ust, (v) => v >= ust);
+  const birakma10 = esikAnindanAra(t, a, i0 - 1, +1, alt, (v) => v <= alt);
+
+  // Değme: eşiğin üstüne çıkan ilk ölçümden geriye doğru %10'u, ileriye doğru %90'ı ara
+  const j0 = ilkIndeksSonra(t, dusus.bitisSn);
+  const degme10 = esikAnindanAra(t, a, j0, -1, alt, (v) => v <= alt);
+  const degme90 = esikAnindanAra(t, a, j0 - 1, +1, ust, (v) => v >= ust);
+
+  return { birakmaSn: birakma10 - birakma90, degmeSn: degme90 - degme10 };
+}
+
 // Bütün düşüşlerden ortalama düşme süresini ve belirsizliğini hesaplar.
 // Dönen değer: { gecerliMi, dususSayisi, sureSn, sureBelirsizligiSn, yayilimOrani, uyarilar, guvenilirMi }
 //

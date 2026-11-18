@@ -27,7 +27,7 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 | `js/analiz/sarkac-hesap.js` | ✅ g ± Δg, belirsizlik payları, kabul edilen değerle karşılaştırma, bırakma açısı, büyük açı etkisi |
 | `js/analiz/serbest-dusme.js` | ✅ İvme büyüklüğü, düşüşleri bulma (g/2 eşiği + ara değer), ortalama düşme süresi ± belirsizlik, g = 2h/t² ± Δg |
 | `js/arayuz/bicim.js` | ✅ Türkçe sayı yazma (1.067,5), virgüllü sayı okuma ("48,7"), belirsizlikle yazma (9,81 ± 0,10) |
-| `js/arayuz/grafik.js` | ✅ Canvas üzerine çizgi grafiği (ızgara, eksen yazıları, renk açıklaması) |
+| `js/arayuz/grafik.js` | ✅ Canvas üzerine çizgi grafiği (ızgara, eksen yazıları, renk açıklaması; isteğe bağlı: ölçüm noktaları, yatay eşik çizgisi, sabit y aralığı) |
 | `js/arayuz/olcek.js` | ✅ Eksenler için "güzel" çizgi değerleri (-20, 0, 20, 40 gibi) |
 | `js/sayfalar/sensor-testi-sayfa.js` | ✅ Sensör testi sayfasının akışı |
 | `js/sayfalar/sarkac-sayfa.js` | ✅ Sarkaç sayfasının akışı ve sonuç açıklamaları |
@@ -186,6 +186,12 @@ telefon ve sensör birlikte düştüğü için |a| ≈ 0 ("ağırlıksızlık").
 **Sayılarla örnek:** h = 50 cm → t ≈ 0,32 s. 60 Hz'de tek düşüşte Δt ≈ 12 ms → 2Δt/t ≈ %7,4; h'yi ±0,5 cm ölçmek
 yalnızca %1 getirir. Yani **belirsizliğin çoğu süreden gelir**; 5 düşüşün ortalaması bunu √5 ≈ 2,2 kat küçültür
 (g ≈ 9,8 ± 0,3 m/s²).
+
+**Geçiş süreleri** (`gecisSureleri`): her düşüş için ivmenin g'nin %90'ından %10'una inme süresi (bırakma) ve
+%10'undan %90'ına çıkma süresi (değme), ara değerle. Sayfadaki **"Düşüşe yakından bak"** bölümü seçilen düşüşün
+bırakma ve değme anlarını ±0,15 s pencerede, tek tek ölçüm noktalarıyla, 4,9 m/s² eşik çizgisiyle ve 0–20 m/s² sabit
+aralıkta gösterir. Amaç: düşme süresindeki ≈ 29 ms'lik sistematik kısalığın nedenini (ör. telefonun ivmeyi filtrelemesi)
+görmek (TEST_SONUCLARI 5.10–5.11).
 
 **Sayfa akışı** (`serbest-dusme.html`, `js/sayfalar/serbest-dusme-sayfa.js`): Başlat → hareket izni → 3 s hazırlanma
 (telefon ölçülen yükseklikte, düz tutulur) → 15/20/30 s kayıt (bu sürede telefon birkaç kez bırakılır) → örnekleme raporu →

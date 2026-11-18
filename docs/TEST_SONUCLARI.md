@@ -50,6 +50,7 @@ açıldı ✅ (2026-11-18). Önce internetle hiç açılmadan denenince açılma
 | 2026-11-19 | Serbest düşme, kötü veri (masaüstü) | Kayıt başında süren düşük ivme + 40 cm'den tek düşüş, h = 50 cm girili | Kesik düşüş sayılmaz, "en az 3 düşüş" uyarısı, kırmızı rozet | "1 düşüş … kesildiği için sayılmadı", "Yalnızca 1 düşüş", g = 12,2 ± 1,0 soluk, "⚠ Ölçüm güvenilir değil" | ✅ |
 | 2026-11-19 | Sarkaç sayfası, ortak yardımcılar ayrıldıktan sonra (regresyon) | Sahte gama = 40·cos(2πt/1,40), L = 48,7 cm, 10 s | Önceki gibi çalışır | T = 1,40009 ± 0,00014 s, g = 9,81 ± 0,10, yeşil rozet, rapor ve jiroskop satırı doğru | ✅ |
 | 2026-11-19 | Yastıktan sekmeleri ayıklama (sürüm .5) | 2 yeni test (sekmeli kayıt, `durgunMu`); sayfada sahte veri: 4 düşüş (0,294 s) + her birinden 0,09 s sonra 0,11 s'lik sekme, h = 50 cm | 4 düşüş sayılır, sekme uyarısı | Toplam 79/79 geçti. Sayfa: 4 düşüş (294–295 ms), "4 kez … durgun değildi; sayılmadı … yastıktan sekme", g = 11,5 ± 0,5, turuncu rozet | ✅ |
+| 2026-11-19 | Geçiş süreleri ve "Düşüşe yakından bak" (sürüm .6) | 2 yeni test (40 ms doğrusal geçiş, 1000 Hz → 32 ms; 100 ms geçiş, 60 Hz → ≈ 80 ms); sayfada filtreli sahte veri (5.11) | Hepsi geçer; grafikler noktalı, eşik çizgili, taşma yok | Toplam 81/81 geçti. Bırakma ≈ 100 ms, değme ≈ 10 ms; 375 px'te taşma yok, konsolda hata yok, düşüş seçimi çalışıyor | ✅ |
 | 2026-11-17 | Durdur sonrası veri alınmıyor | Durdur'dan sonra olay gönderildi | Örnek sayısı artmaz | Artmadı | ✅ |
 
 > Not: Masaüstü testlerinde örnekleme hızı anlamlı değildir (sahte olaylar). Gerçek hız telefonda ölçülecek.
@@ -282,10 +283,31 @@ bu yüzden ayıklanır ve "yastıktan sekme" uyarısı verilir. Test eklendi (4 
 → g = 2 × 0,500 / 0,2903² ≈ **11,9 ± 0,4 m/s²**. Kabul edilen değerden ≈ 5 belirsizlik uzak → **sistematik hata**.
 
 **Sistematik hata nereden olabilir?** Düşüşler birbirine çok yakın (%3), yani süre ölçümü tekrarlanabilir; ama 50 cm için
-beklenen süre 0,319 s, ölçülen 0,290 s (≈ 29 ms kısa). Bu süre ≈ 41 cm'lik düşüşe karşılık gelir. En olası neden,
-h'nin yastığın üst yüzüne değil yere (ya da başka bir noktaya) kadar ölçülmüş olması (yastık ≈ 9 cm kalınsa tam açıklar).
-Diğer adaylar: telefonun dik tutulması, elin açılırken telefonu aşağı itmesi. **h sonuca göre değiştirilmeyecek;**
-düzenek kontrol edilip h yeniden ölçülerek yeni kayıt alınacak.
+beklenen süre 0,319 s, ölçülen 0,290 s (≈ 29 ms kısa). Bu süre ≈ 41 cm'lik düşüşe karşılık gelir.
+- **Elenen nedenler:** h yastığın üst yüzüne kadar ölçülmüş; telefon yatay (ekran yukarı) tutulmuş ve yalnızca parmaklar
+  açılarak bırakılmış (kullanıcıya soruldu). Hava direnci ve yastığın yumuşaklığı süreyi uzatır, kısaltmaz. Düşerken
+  ivme 0,0–0,1 m/s²'ye indiği için telefon dönmemiş.
+- **En güçlü aday (henüz kanıtlanmadı):** iPhone ivme verisini yumuşatarak (filtreleyerek) veriyor olabilir. Bu durumda
+  bırakmadaki 9,8 → 0 inişi gecikir ve düşüşün başı geç bulunur; çarpma ise çok ani olduğu için az etkilenir → süre kısa.
+  Masaüstünde 40 ms'lik birinci dereceden filtre uygulanmış sahte veri bu ölçümü neredeyse birebir tekrarladı (5.11).
+- **h sonuca göre değiştirilmeyecek.** Sonraki adım: yeni kayıtta "Düşüşe yakından bak" bölümüyle bırakma ve değme
+  geçiş sürelerini ölçmek.
+
+## 5.11 Filtre varsayımının sahte veriyle sınanması (2026-11-19, masaüstü, sürüm .6)
+
+**Amaç:** "iPhone ivmeyi yumuşatıyor" varsayımı 5.10'daki ölçümü açıklayabilir mi?
+**Sahte veri:** 50 cm'lik gerçek düşüş (t = 0,319 s), el 40 ms'de açılıyor, yastığa çarpma 10 ms'de 100 m/s²'ye çıkıyor.
+Sinyale **τ = 40 ms'lik birinci dereceden alçak geçiren filtre** uygulandı (her ölçümde
+a_filtreli ← a_filtreli + (a_gerçek − a_filtreli)·(1 − e^(−Δt/τ))), sonra sayfaya gönderildi. 3 düşüş.
+
+| | Ölçülen düşme süresi | g | Bırakma geçişi (%90→%10) | Değme geçişi (%10→%90) |
+|---|---|---|---|---|
+| Sahte veri (filtreli) | 292–293 ms (gerçeği 319) | 11,7 ± 0,5 | ≈ 100 ms | ≈ 10 ms |
+| 5.10 gerçek ölçüm | 290–296 ms | ≈ 11,9 ± 0,4 (elle) | ? (o sürümde yoktu) | ? |
+
+**Sonuç:** Varsayım ölçümü sayısal olarak açıklayabiliyor. Ama bu bir **kanıt değil**: aynı sonucu başka nedenler de
+verebilir. Gerçek kayıtta bırakma geçişi ≈ 100 ms, değme geçişi çok kısa çıkarsa varsayım güçlenir; iki geçiş de kısa
+çıkarsa varsayım yanlıştır ve başka neden aranır.
 
 ## 6. Sorunlar ve çözümler
 

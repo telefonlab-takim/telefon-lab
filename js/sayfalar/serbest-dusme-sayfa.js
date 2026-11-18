@@ -11,7 +11,10 @@ import {
   dususleriBul,
   dususSuresiOzeti,
   serbestDusmeG,
+  gecisSureleri,
+  DUSUS_ESIGI,
 } from '../analiz/serbest-dusme.js';
+import { ortalama } from '../analiz/istatistik.js';
 import { kabulEdilenleKarsilastir, KABUL_EDILEN_G } from '../analiz/sarkac-hesap.js';
 import { sayiYaz, sayiOku, belirsizlikleYaz } from '../arayuz/bicim.js';
 import { grafikCiz, aciklamaYaz } from '../arayuz/grafik.js';
@@ -246,8 +249,98 @@ function grafigiGuncelle() {
 }
 
 el('sinyalSecimi').addEventListener('change', grafigiGuncelle);
+
+// ---- 5. Düşüşe yakından bak ------------------------------------------------------
+
+// Yakından bakış penceresi: eşik anının ne kadar öncesi ve sonrası gösterilsin (s)
+const YAKIN_PENCERE_SN = 0.15;
+// Yakından bakış grafiklerinin y aralığı (m/s²). Çarpma tepesi (≈ 100) kesilir; yoksa küçük ayrıntılar görünmez.
+const YAKIN_Y_ARALIGI = { min: 0, max: 20 };
+
+// Her düşüşün geçiş süreleri (dususleriHesaplaVeGoster sonrası doldurulur)
+let sonGecisler = [];
+
+// Milisaniye olarak yazar; bilinmiyorsa "bulunamadı"
+function msYaz(saniye) {
+  return Number.isFinite(saniye) ? sayiYaz(saniye * 1000, 0) + ' ms' : 'bulunamadı';
+}
+
+// Eşik anının çevresindeki ölçümleri seçer. Zaman, eşik anı 0 olacak şekilde kaydırılır
+// (böylece grafikte "eşikten 0,05 s önce" gibi okunur).
+function pencereyiKes(merkezSn) {
+  const zamanlarSn = goreliZamanlarSn(sonOrnekler);
+  const buyuklukler = ivmeBuyuklukleri(sonOrnekler);
+  const t = [];
+  const a = [];
+  for (let i = 0; i < zamanlarSn.length; i++) {
+    if (Math.abs(zamanlarSn[i] - merkezSn) <= YAKIN_PENCERE_SN) {
+      t.push(zamanlarSn[i] - merkezSn);
+      a.push(buyuklukler[i]);
+    }
+  }
+  return { t, a };
+}
+
+function yakinGrafikCiz(canvas, merkezSn) {
+  const { t, a } = pencereyiKes(merkezSn);
+  grafikCiz(canvas, {
+    zamanlarSn: t,
+    seriler: [{ ad: '|a|', renkDegiskeni: '--seri-1', degerler: a }],
+    birim: 'm/s²',
+    isaretler: [0],
+    yatayCizgiler: [DUSUS_ESIGI],
+    noktalar: true,
+    yAraligi: YAKIN_Y_ARALIGI,
+  });
+}
+
+function yakinBakisiGuncelle() {
+  const sira = Number(el('yakinDususSecimi').value);
+  const dusus = sonDususler[sira];
+  if (!dusus) return;
+  yakinGrafikCiz(el('yakinBirakma'), dusus.baslangicSn);
+  yakinGrafikCiz(el('yakinDegme'), dusus.bitisSn);
+  el('yBirakma').textContent = msYaz(sonGecisler[sira].birakmaSn);
+  el('yDegme').textContent = msYaz(sonGecisler[sira].degmeSn);
+}
+
+// Kayıt bitince: düşüş listesini doldur, geçiş sürelerini hesapla, ilk düşüşü göster
+function yakinBakisiHazirla() {
+  if (sonDususler.length === 0) {
+    el('yakinBolumu').hidden = true;
+    return;
+  }
+  const zamanlarSn = goreliZamanlarSn(sonOrnekler);
+  const buyuklukler = ivmeBuyuklukleri(sonOrnekler);
+  sonGecisler = sonDususler.map((d) => gecisSureleri(zamanlarSn, buyuklukler, d));
+
+  const secim = el('yakinDususSecimi');
+  secim.replaceChildren();
+  sonDususler.forEach((d, i) => {
+    const secenek = document.createElement('option');
+    secenek.value = String(i);
+    secenek.textContent = `Düşüş ${i + 1} (${sayiYaz(d.sureSn * 1000, 0)} ms)`;
+    secim.appendChild(secenek);
+  });
+
+  // Bütün düşüşlerin ortalama geçiş süreleri (bulunabilenlerden)
+  const birakmalar = sonGecisler.map((g) => g.birakmaSn).filter(Number.isFinite);
+  const degmeler = sonGecisler.map((g) => g.degmeSn).filter(Number.isFinite);
+  el('yOrtalama').textContent =
+    `bırakma ${birakmalar.length ? msYaz(ortalama(birakmalar)) : '–'} · ` +
+    `değme ${degmeler.length ? msYaz(ortalama(degmeler)) : '–'}`;
+
+  el('yakinBolumu').hidden = false; // önce görünür olmalı, yoksa tuvallerin genişliği 0 olur
+  yakinBakisiGuncelle();
+}
+
+el('yakinDususSecimi').addEventListener('change', yakinBakisiGuncelle);
+
 // Telefon yan çevrilince grafik genişliği değişir; yeniden çiz
-window.addEventListener('resize', grafigiGuncelle);
+window.addEventListener('resize', () => {
+  grafigiGuncelle();
+  yakinBakisiGuncelle();
+});
 
 // ---- Ana akış: Başlat butonu -------------------------------------------------
 
@@ -262,7 +355,7 @@ kayitButonu.addEventListener('click', async () => {
   const hazirlikSn = Number(el('hazirlikSecimi').value);
   const sureSn = Number(el('sureSecimi').value);
   kayitButonu.disabled = true;
-  for (const id of ['gBolumu', 'dususBolumu', 'grafikBolumu', 'raporBolumu']) el(id).hidden = true;
+  for (const id of ['gBolumu', 'dususBolumu', 'grafikBolumu', 'yakinBolumu', 'raporBolumu']) el(id).hidden = true;
 
   // 1) Hazırlanma: öğrenci telefonu ölçtüğü yüksekliğe getirir
   await geriSay(hazirlikSn, (kalanSn) => {
@@ -286,6 +379,7 @@ kayitButonu.addEventListener('click', async () => {
     gHesabiniGuncelle();
     el('grafikBolumu').hidden = false; // önce görünür olmalı, yoksa tuvalin genişliği 0 olur
     grafigiGuncelle();
+    yakinBakisiHazirla();
   }
   kayitButonu.disabled = false;
 });
