@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Serbest Düşme Deneyi — Telefon Laboratuvarı</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#1565c0">
+  <link rel="icon" href="ikonlar/ikon-192.png">
+  <link rel="apple-touch-icon" href="ikonlar/ikon-180.png">
+  <link rel="stylesheet" href="css/stil.css">
+</head>
+<body class="uygulama-sayfasi">
+  <!-- Üst şerit: geri dönüş ve sayfa başlığı -->
+  <header class="ust-serit">
+    <div class="ust-serit-ic">
+      <a class="geri-dugmesi" href="./" aria-label="Ana menüye dön">‹ Menü</a>
+      <span class="kart-ikon ikon-beyaz" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" class="dolu" /><path d="M12 15v6" /><path d="M9 18l3 3 3-3" /></svg>
+      </span>
+      <div>
+        <h1>Serbest düşme</h1>
+        <p>Düşme süresinden yer çekimi ivmesini (g) ölç</p>
+        <p class="ust-kazanim">FİZ.11.1.1 · 11. sınıf · Kuvvet ve Hareket</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. Hazırlık ve kayıt -->
+    <section class="kart-bolum">
+      <h2>1. Hazırlık ve kayıt</h2>
+
+      <p class="uyari-kutusu">⚠ <strong>Telefonu yalnızca yastık ya da yatak üstüne, en çok 1 m yükseklikten bırakın.</strong>
+        Sert zemine, masa kenarına ya da fırlatarak bırakmayın.</p>
+
+      <div class="alan-satiri">
+        <label class="alan">
+          <span class="alan-etiketi">Düşme yüksekliği h (cm)</span>
+          <input id="yukseklikGirisi" type="text" inputmode="decimal" placeholder="ör. 50,0">
+        </label>
+        <label class="alan">
+          <span class="alan-etiketi">Belirsizliği Δh (cm)</span>
+          <input id="yukseklikBelirsizligiGirisi" type="text" inputmode="decimal" value="0,5">
+        </label>
+      </div>
+      <p class="kucuk">h: telefonun alt yüzünden yastığın üst yüzüne kadar, metreyle doğrudan ölçülen dikey uzaklık.
+        Her düşüşte aynı yükseklikten bırakın. <strong>Sonuca bakarak değiştirmeyin.</strong></p>
+
+      <div class="alan-satiri">
+        <label class="alan">
+          <span class="alan-etiketi">Hazırlanma süresi</span>
+          <select id="hazirlikSecimi">
+            <option value="3" selected>3 saniye</option>
+            <option value="5">5 saniye</option>
+          </select>
+        </label>
+        <label class="alan">
+          <span class="alan-etiketi">Kayıt süresi</span>
+          <select id="sureSecimi">
+            <option value="15">15 saniye</option>
+            <option value="20" selected>20 saniye</option>
+            <option value="30">30 saniye</option>
+          </select>
+        </label>
+      </div>
+
+      <button id="kayitButonu" class="ana-dugme" type="button">Başlat</button>
+      <p id="durumMesaji" class="durum durum-kutusu">Hazır.</p>
+
+      <details class="talimat">
+        <summary>🎓 Müfredat bağlantısı (MEB Maarif Modeli)</summary>
+        <!-- Kazanım metinleri tymm.meb.gov.tr ünite sayfalarından aynen alındı (bkz. docs/MUFREDAT_ARASTIRMASI.md) -->
+        <ul class="kucuk">
+          <li><strong>FİZ.11.1.1.</strong> Serbest düşme hareketi yapan cisimlerin ivmesine yönelik tümevarımsal
+            akıl yürütebilme (11. sınıf).</li>
+          <li><strong>FİZ.11.1.2.</strong> Serbest düşme hareketi ile ilgili kanıt kullanabilme (11. sınıf).</li>
+          <li>Her düşüş ayrı bir veri olarak tabloya yazılır; birkaç düşüşün ortalamasından g bulunur.</li>
+        </ul>
+      </details>
+
+      <details class="talimat">
+        <summary>📋 Düzenek ve ölçüm talimatları</summary>
+        <h3>Düzenek</h3>
+        <ul class="kucuk">
+          <li><strong>Yastığı yere ya da yatağın üstüne koyun.</strong> Telefon yastığın ortasına düşmeli.</li>
+          <li><strong>Yüksekliği seçin:</strong> 40–80 cm iyi bir aralıktır. Çok alçaktan (20 cm'den az) düşüş çok kısa sürer
+            ve belirsizlik büyür; 1 m'den yükseğe çıkmayın.</li>
+          <li><strong>h'yi doğrudan ölçün:</strong> metreyi yastığın üst yüzüne dik tutun; telefonun alt yüzü bu yükseklikte olsun.
+            Bir arkadaşınızın metreyi tutması, sizin de telefonu her seferinde aynı çizgide tutmanız en kolayıdır.</li>
+        </ul>
+        <h3>Ölçüm</h3>
+        <ol class="kucuk">
+          <li>"Başlat"a basın. Telefonu ekranı yukarı bakacak şekilde, düz (yatay) tutun.</li>
+          <li>Kayıt başlayınca telefonu ölçtüğünüz yükseklikte <strong>bir saniye kıpırdatmadan</strong> tutun,
+            sonra parmaklarınızı açıp bırakın. İtmeyin, döndürmeyin.</li>
+          <li>Telefonu yastıktan alın, aynı yüksekliğe getirin ve tekrar bırakın. 20 saniyede 3–5 düşüş yapılabilir.</li>
+          <li>Kayıt sırasında ekranı kilitlemeyin; telefon arka plandayken tarayıcı sensör verisi göndermez.</li>
+        </ol>
+      </details>
+    </section>
+
+    <!-- 2. Sonuç: kayıt bitince doldurulur -->
+    <section id="gBolumu" class="kart-bolum sonuc-karti" hidden>
+      <h2>2. Yer çekimi ivmesi</h2>
+      <p id="gDurum" class="rozet" hidden></p>
+      <p id="gSonuc" class="sonuc buyuk-sonuc"></p>
+      <table>
+        <tr><th>Düşme yüksekliği h</th><td id="gYukseklik"></td></tr>
+        <tr><th>Ortalama düşme süresi t</th><td id="gSure"></td></tr>
+        <tr><th>Belirsizliğin kaynağı</th><td id="gKaynak"></td></tr>
+        <tr><th>Kabul edilen değerle fark</th><td id="gFark"></td></tr>
+      </table>
+      <h3>Bu sonuç ne anlatıyor?</h3>
+      <ul id="gAciklama" class="aciklama-listesi"></ul>
+    </section>
+
+    <!-- 3. Düşüşler -->
+    <section id="dususBolumu" class="kart-bolum" hidden>
+      <h2>3. Düşüşler</h2>
+      <p id="dSonuc" class="sonuc"></p>
+      <table>
+        <thead><tr><th>#</th><th>Bırakma anı</th><th>Düşme süresi</th><th>En düşük ivme</th></tr></thead>
+        <tbody id="dTablo"></tbody>
+      </table>
+      <p class="kucuk">"En düşük ivme": düşerken ivmeölçerin gösterdiği en küçük değer. Serbest düşen telefon
+        "ağırlıksızdır": içindeki sensör hiçbir kuvvet hissetmez, ivmeölçer 0'a yakın gösterir.</p>
+      <h3>Uyarılar</h3>
+      <ul id="dUyarilar" class="aciklama-listesi"></ul>
+      <details class="talimat">
+        <summary>Düşme süresi nasıl hesaplandı?</summary>
+        <p class="kucuk">İvmeölçer yer çekimi dahil ivmeyi ölçer. Uygulama önce üç eksenden ivmenin büyüklüğünü bulur:
+          |a| = √(ax² + ay² + az²). Telefon elde dururken |a| ≈ 9,8 m/s², düşerken ≈ 0'dır. |a|'nın 4,9 m/s²'nin
+          (g'nin yarısının) altına indiği an bırakma, yeniden üstüne çıktığı an yastığa değme anı sayılır; bu anlar iki ölçüm
+          arasında ara değer bulunarak hesaplanır. Aradaki süre düşme süresidir. Neden g'nin yarısı? El açılırken telefonu tutan
+          kuvvet bir anda değil, birkaç on milisaniyede sıfıra iner; bu geçişin ortası en iyi "bırakma anı" tahminidir.</p>
+        <p class="kucuk">Telefon saniyede yaklaşık 60 ölçüm yapar (iki ölçüm arası ≈ 17 ms). Gerçek geçiş anı iki ölçüm
+          arasında herhangi bir yerde olabileceği için her uçta yarım aralık (≈ 8 ms) belirsizlik kabul edilir. Birkaç düşüşün
+          ortalaması alınınca bu belirsizlik küçülür (düşüş sayısının karekökü kadar).</p>
+      </details>
+    </section>
+
+    <!-- 4. Grafik -->
+    <section id="grafikBolumu" class="kart-bolum" hidden>
+      <h2>4. İvme grafiği</h2>
+      <label class="alan">
+        <span class="alan-etiketi">Gösterilen sinyal</span>
+        <select id="sinyalSecimi">
+          <option value="buyukluk" selected>İvmenin büyüklüğü |a|</option>
+          <option value="eksenler">Eksenler (x, y, z)</option>
+        </select>
+      </label>
+      <canvas id="grafik" class="grafik"></canvas>
+      <p id="grafikAciklamasi" class="aciklama"></p>
+      <p class="kucuk">Kesikli dikey çizgiler her düşüşün başını ve sonunu gösterir. Aradaki çukur, ivmenin ≈ 0 olduğu
+        serbest düşmedir; hemen ardından gelen tepe yastığa çarpmadır.</p>
+    </section>
+
+    <!-- 5. Örnekleme raporu (teknik ayrıntı; varsayılan olarak kapalı) -->
+    <section id="raporBolumu" class="kart-bolum" hidden>
+      <details>
+        <summary><h2 class="ozet-basligi">5. Örnekleme raporu</h2></summary>
+        <table>
+          <tr><th>Ölçüm sayısı</th><td id="rOrnekSayisi"></td></tr>
+          <tr><th>Kayıt süresi</th><td id="rSure"></td></tr>
+          <tr><th>Ortalama hız</th><td id="rHiz"></td></tr>
+          <tr><th>Ortanca aralık</th><td id="rOrtanca"></td></tr>
+          <tr><th>En kısa / en uzun aralık</th><td id="rEnKisaUzun"></td></tr>
+          <tr><th>Uzun boşluk sayısı</th><td id="rBoslukSayisi"></td></tr>
+        </table>
+        <h3>Uyarılar</h3>
+        <ul id="rUyarilar" class="aciklama-listesi"></ul>
+        <h3>Uzun boşluklar</h3>
+        <ul id="rBosluklar" class="aciklama-listesi"></ul>
+      </details>
+    </section>
+
+    <!-- Hangi sürümün çalıştığını gösterir; ikisi farklıysa sayfayı yenileyin (bkz. js/surum.js) -->
+    <p id="surum" class="kucuk surum">Sayfa: 2026-11-19.4</p>
+  </main>
+
+  <script type="module" src="js/sayfalar/serbest-dusme-sayfa.js"></script>
+</body>
+</html>

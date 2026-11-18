@@ -394,6 +394,16 @@ body.uygulama-sayfasi { background: var(--sayfa-zemini); }
 }
 .durum-kutusu.hata { background: var(--hata-zemin); }
 
+/* Güvenlik uyarısı kutusu (ör. serbest düşmede "yalnızca yastığa") */
+.uyari-kutusu {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--dikkat-zemin);
+  color: var(--dikkat);
+  font-size: 0.9rem;
+}
+
 /* Açılır talimat kutuları */
 details.talimat { margin-top: 14px; border-top: 1px solid var(--cizgi); padding-top: 10px; }
 details summary { cursor: pointer; font-weight: 600; color: var(--vurgu); }

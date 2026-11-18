@@ -14,7 +14,7 @@
 // ÖNEMLİ: Yeni bir dosya eklendiğinde DOSYALAR listesine de eklenmeli; sürüm her yayında değiştirilmeli
 // (CLAUDE.md kural 8). Sürüm değişince tarayıcı bu dosyanın değiştiğini anlar ve listeyi yeniden indirir.
 
-const SURUM = '2026-11-19.3';
+const SURUM = '2026-11-19.4';
 const ONBELLEK_ADI = 'telefon-lab-' + SURUM;
 
 // İlk açılışta hepsi indirilip saklanır; böylece hiç açılmamış bir sayfa da internetsiz çalışır.
@@ -22,6 +22,7 @@ const DOSYALAR = [
   './',
   'index.html',
   'sarkac.html',
+  'serbest-dusme.html',
   'sensor-testi.html',
   'manifest.webmanifest',
   'css/stil.css',
@@ -40,8 +41,10 @@ const DOSYALAR = [
   'js/arayuz/bicim.js',
   'js/arayuz/grafik.js',
   'js/arayuz/olcek.js',
+  'js/arayuz/sayfa-yardimcilari.js',
   'js/sayfalar/ana-sayfa.js',
   'js/sayfalar/sarkac-sayfa.js',
+  'js/sayfalar/serbest-dusme-sayfa.js',
   'js/sayfalar/sensor-testi-sayfa.js',
   'testler/index.html',
   'testler/testler.js',

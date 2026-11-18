@@ -17,6 +17,7 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 | `index.html` | ✅ Ana menü: deneyler **derslere göre** gruplu (Fizik mavi, Kimya mor, Biyoloji yeşil; rozetler: Hazır / Yakında / Fikir — K-011), mavi üst şerit, deney kartları (simge, durum rozeti, kullandığı sensör), araçlar, ana ekrana ekleme adımları, internetsiz kullanım durumu. Simgeler sayfanın içinde SVG olarak çizili (ek dosya, dış simge kütüphanesi ya da yazı tipi yok → internetsiz de aynı görünür). Açık/karanlık mod destekli. |
 | `sensor-testi.html` | ✅ Hareket sensörü test sayfası (canlı ham değerler) |
 | `sarkac.html` | ✅ Sarkaç deneyi sayfası: L girişi, geri sayım, kayıt, g ± Δg ve açıklama, periyot, grafik, örnekleme raporu. Ana menüyle aynı görsel dil: üst şerit, bölüm kartları, yan yana form alanları, büyük "Başlat" düğmesi, açılır talimatlar. Sonucun üstünde durum rozeti: yeşil "uyumlu", turuncu "sistematik hata olabilir", kırmızı "güvenilir değil". Örnekleme raporu kapalı durur, uyarı varsa kendiliğinden açılır. |
+| `serbest-dusme.html` | ✅ Serbest düşme deneyi sayfası: güvenlik uyarısı, h girişi, geri sayım, kayıt (bir kayıtta birkaç düşüş), g ± Δg ve açıklama, düşüş tablosu (süre, en düşük ivme), \|a\| grafiği (düşüşler kesikli çizgiyle işaretli), örnekleme raporu. Sarkaçla aynı görsel dil ve durum rozeti. |
 | `css/stil.css` | ✅ Ortak stil (karanlık mod destekli) |
 | `js/sensor/hareket.js` | ✅ Ön kontroller, izin, `devicemotion` dinleme, boş olay filtresi |
 | `js/sensor/kayit.js` | ✅ Belirli süre kayıt; kayıt sırasında sayfa arka plana geçti mi? |
@@ -30,6 +31,8 @@ Sensör  →  Kayıt (zaman damgalı örnekler)  →  Analiz (saf fonksiyonlar) 
 | `js/arayuz/olcek.js` | ✅ Eksenler için "güzel" çizgi değerleri (-20, 0, 20, 40 gibi) |
 | `js/sayfalar/sensor-testi-sayfa.js` | ✅ Sensör testi sayfasının akışı |
 | `js/sayfalar/sarkac-sayfa.js` | ✅ Sarkaç sayfasının akışı ve sonuç açıklamaları |
+| `js/sayfalar/serbest-dusme-sayfa.js` | ✅ Serbest düşme sayfasının akışı ve sonuç açıklamaları |
+| `js/arayuz/sayfa-yardimcilari.js` | ✅ Deney sayfalarının ortak yardımcıları: liste doldurma, geri sayım, göreli zaman, durum rozeti, örnekleme raporu bölümü |
 | `testler/index.html`, `testler/testler.js` | ✅ Analiz fonksiyonlarının testleri (tarayıcıda açılınca çalışır) |
 | `manifest.webmanifest` | ✅ Uygulama tanımı: ad, simgeler, renkler, "uygulama gibi aç" (standalone) |
 | `sw.js` | ✅ Servis çalışanı: dosyaları saklar, internetsiz açılmayı sağlar (önce ağ, olmazsa önbellek) |
@@ -180,6 +183,12 @@ telefon ve sensör birlikte düştüğü için |a| ≈ 0 ("ağırlıksızlık").
 **Sayılarla örnek:** h = 50 cm → t ≈ 0,32 s. 60 Hz'de tek düşüşte Δt ≈ 12 ms → 2Δt/t ≈ %7,4; h'yi ±0,5 cm ölçmek
 yalnızca %1 getirir. Yani **belirsizliğin çoğu süreden gelir**; 5 düşüşün ortalaması bunu √5 ≈ 2,2 kat küçültür
 (g ≈ 9,8 ± 0,3 m/s²).
+
+**Sayfa akışı** (`serbest-dusme.html`, `js/sayfalar/serbest-dusme-sayfa.js`): Başlat → hareket izni → 3 s hazırlanma
+(telefon ölçülen yükseklikte, düz tutulur) → 15/20/30 s kayıt (bu sürede telefon birkaç kez bırakılır) → örnekleme raporu →
+düşüşler → g. h değiştirilince g yeniden hesaplanır; h ve Δh yalnızca bu tarayıcıda hatırlanır.
+"Kaydın başında kesildi" gibi bulma uyarıları bilgi içindir; sonucu "güvenilir değil" yapan yalnızca sayılan düşüşlerle
+ilgili uyarılardır (3'ten az düşüş, %5'ten fazla dağınık süreler, 0,2 s'den kısa düşüş).
 
 ## 5. Belirsizlik hesabı genel yaklaşımı
 _(doldurulacak: ölçüm tekrarından gelen istatistiksel belirsizlik, alet çözünürlüğü, hata yayılımı.)_

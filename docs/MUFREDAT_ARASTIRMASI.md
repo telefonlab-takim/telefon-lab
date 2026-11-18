@@ -37,7 +37,7 @@ Kalın yazılanlar telefonla deney açısından en verimli üniteler.
 | | | **FİZ.10.4.2.** Dalgaların temel kavramlarına ilişkin operasyonel tanımlama yapabilme | Alt madde b) "niteliklerin ölçümünü yapar" (periyot, frekans). |
 | Ses frekansı | Yakında | **FİZ.10.4.2** (frekans, periyot ölçümü) | Mikrofonla frekans ölçümü. |
 | | | **FİZ.10.4.4.** Dalgaların yayılma süratini etkileyen etmenlere ilişkin bilimsel gözleme dayalı tahmin yapabilme | Programda "su ve ses dalgalarında yayılma sürati" geçiyor → **yankı ile ses hızı** ölçümü eklenebilir. |
-| Serbest düşme / eğik düzlem | Karar bekliyor | **FİZ.11.1.1.** Serbest düşme hareketi yapan cisimlerin ivmesine yönelik tümevarımsal akıl yürütebilme · **FİZ.11.1.2.** Serbest düşme hareketi ile ilgili kanıt kullanabilme | Program "verileri toplayarak kaydeder", "veri setleri oluşturur" diyor. **Serbest düşmeyi seçmek müfredata daha doğrudan uyar** (açık karar için öneri). |
+| Serbest düşme (g) | ✅ Hazır (K-012) | **FİZ.11.1.1.** Serbest düşme hareketi yapan cisimlerin ivmesine yönelik tümevarımsal akıl yürütebilme · **FİZ.11.1.2.** Serbest düşme hareketi ile ilgili kanıt kullanabilme | Program "verileri toplayarak kaydeder", "veri setleri oluşturur" diyor; sayfa her düşüşü tabloya yazıyor ve ortalamadan g'yi buluyor. (Eğik düzlem yerine serbest düşme seçildi.) |
 
 ## 4. Yeni deney önerileri
 
@@ -102,8 +102,8 @@ Hem müfredata doğrudan uyan, hem de telefonla yapılabilme ihtimali yüksek ol
 
 1. **Sarkaç → FİZ.10.4.1 eşleştirmesi** ✅ Yapıldı (sürüm 2026-11-19.2): sarkaç sayfasında kazanım etiketi ve
    "Müfredat bağlantısı" bölümü; ana menüdeki her kartta ilgili kazanım kodu.
-2. **Serbest düşme** (FİZ.11.1.1–11.1.2) — açık kalan "serbest düşme mi, eğik düzlem mi?" kararı için öneri.
-   Mevcut ivmeölçer altyapısı kullanılır.
+2. **Serbest düşme** (FİZ.11.1.1–11.1.2) ✅ Yapıldı (sürüm 2026-11-19.4, K-012): `serbest-dusme.html`. Telefonda
+   gerçek ölçümle sınanması bekleniyor (TEST_SONUCLARI bölüm 5).
 3. **Tepki süresi** (BİY.11.1.1, BİY.11.1.8) — sensör riski yok; biyolojiye hızlı ve güvenli giriş.
 4. **Nabız ve solunum** (BİY.11.2.6, BİY.11.2.7) — önce dokunarak nabız, sonra ivmeölçerle solunum.
 5. **Ses frekansı + yankı ile ses hızı** (FİZ.10.4.2, FİZ.10.4.4).

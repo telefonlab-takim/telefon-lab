@@ -4,7 +4,6 @@
 
 import { hareketSensorunuHazirla } from '../sensor/hareket.js';
 import { kayitYap } from '../sensor/kayit.js';
-import { orneklemeRaporu, BOSLUK_ESIGI_MS } from '../analiz/ornekleme.js';
 import { sarkacPeriyoduBul } from '../analiz/periyot.js';
 import {
   genlikAcisiTahmini,
@@ -16,6 +15,13 @@ import {
 } from '../analiz/sarkac-hesap.js';
 import { sayiYaz, sayiOku, belirsizlikleYaz } from '../arayuz/bicim.js';
 import { grafikCiz, aciklamaYaz } from '../arayuz/grafik.js';
+import {
+  listeyiDoldur,
+  goreliZamanlarSn,
+  geriSay,
+  durumRozetiniGoster,
+  orneklemeRaporunuGoster,
+} from '../arayuz/sayfa-yardimcilari.js';
 import { surumuGoster } from '../surum.js';
 import { servisCalisaniniKaydet } from '../pwa.js';
 
@@ -59,23 +65,6 @@ function durumYaz(metin, hataMi = false) {
   p.classList.toggle('hata', hataMi);
 }
 
-// Bir <ul> listesini verilen metinlerle doldurur. Liste boşsa bosMetin yazılır.
-function listeyiDoldur(liste, metinler, bosMetin) {
-  liste.replaceChildren();
-  const satirlar = metinler.length > 0 ? metinler : [bosMetin];
-  for (const metin of satirlar) {
-    const li = document.createElement('li');
-    li.textContent = metin;
-    liste.appendChild(li);
-  }
-}
-
-// Zamanları kaydın başından itibaren saniyeye çevirir (ilk ölçüm = 0 s)
-function goreliZamanlarSn(ornekler) {
-  const ilkZaman = ornekler[0].zaman;
-  return ornekler.map((o) => (o.zaman - ilkZaman) / 1000);
-}
-
 // Seçilen sinyalin 3 eksenini { ad, renkDegiskeni, degerler } listesine çevirir
 function serileriCikar(ornekler, sinyal) {
   return sinyal.seriler.map((s) => ({
@@ -83,23 +72,6 @@ function serileriCikar(ornekler, sinyal) {
     renkDegiskeni: s.renkDegiskeni,
     degerler: ornekler.map((o) => o[s.alan]),
   }));
-}
-
-// sureSn saniyeden geriye sayar; her saniye ilerleme(kalanSn) çağrılır.
-function geriSay(sureSn, ilerleme) {
-  return new Promise((bitti) => {
-    let kalan = sureSn;
-    ilerleme(kalan);
-    const zamanlayici = setInterval(() => {
-      kalan--;
-      if (kalan <= 0) {
-        clearInterval(zamanlayici);
-        bitti();
-      } else {
-        ilerleme(kalan);
-      }
-    }, 1000);
-  });
 }
 
 // ---- 3. Periyot ---------------------------------------------------------------
@@ -246,25 +218,6 @@ function gAciklamalari(sonuc, karsilastirma, girdi, periyotBilgisi) {
   return cumleler;
 }
 
-// Sonucun üstündeki renkli rozet. Rengi ve yazısı sonucun durumuna göre değişir.
-// (Açıklama cümleleri ayrıntıyı verir; rozet ilk bakışta durumu anlatır.)
-const DURUM_ROZETLERI = {
-  uyumlu: { metin: '✓ Kabul edilen değerle uyumlu', sinif: 'rozet-hazir' },
-  sistematik: { metin: '! Sistematik hata olabilir', sinif: 'rozet-dikkat' },
-  guvenilmez: { metin: '⚠ Ölçüm güvenilir değil', sinif: 'rozet-hata' },
-};
-function durumRozetiniGoster(durum) {
-  const rozet = el('gDurum');
-  rozet.classList.remove('rozet-hazir', 'rozet-dikkat', 'rozet-hata');
-  if (!durum) {
-    rozet.hidden = true;
-    return;
-  }
-  rozet.textContent = DURUM_ROZETLERI[durum].metin;
-  rozet.classList.add(DURUM_ROZETLERI[durum].sinif);
-  rozet.hidden = false;
-}
-
 // L değiştiğinde ya da yeni kayıt bittiğinde g bölümünü yeniden hesaplar.
 function gHesabiniGuncelle() {
   if (sonOrnekler.length === 0) return; // henüz kayıt yok
@@ -275,7 +228,7 @@ function gHesabiniGuncelle() {
   if (!sonPeriyot || girdi.hata) {
     el('gSonuc').textContent = 'g = ?';
     el('gSonuc').classList.remove('guvenilmez');
-    durumRozetiniGoster(null);
+    durumRozetiniGoster(el('gDurum'), null);
     for (const id of satirIdleri) el(id).textContent = '–';
     const mesaj = !sonPeriyot ? 'Periyot bulunamadığı için g hesaplanamadı.' : girdi.hata;
     listeyiDoldur(el('gAciklama'), [mesaj], '');
@@ -296,9 +249,9 @@ function gHesabiniGuncelle() {
   listeyiDoldur(el('gAciklama'), gAciklamalari(sonuc, karsilastirma, girdi, sonPeriyot), '');
   // Güvenilmez sonucu görsel olarak da soluk göster
   el('gSonuc').classList.toggle('guvenilmez', !sonPeriyot.guvenilirMi);
-  if (!sonPeriyot.guvenilirMi) durumRozetiniGoster('guvenilmez');
-  else if (karsilastirma.uyumluMu) durumRozetiniGoster('uyumlu');
-  else durumRozetiniGoster('sistematik');
+  if (!sonPeriyot.guvenilirMi) durumRozetiniGoster(el('gDurum'), 'guvenilmez');
+  else if (karsilastirma.uyumluMu) durumRozetiniGoster(el('gDurum'), 'uyumlu');
+  else durumRozetiniGoster(el('gDurum'), 'sistematik');
   el('gBolumu').hidden = false;
 }
 
@@ -342,42 +295,17 @@ function jiroskopluOrnekSayisi(ornekler) {
   return ornekler.filter((o) => o.donmeAlfa !== null).length;
 }
 
+// Ortak örnekleme raporuna sarkaca özel "Jiroskop verisi" satırını ekler.
 function raporuGoster(ornekler, kesildiMi) {
-  const rapor = orneklemeRaporu(ornekler.map((o) => o.zaman));
-  const uyarilar = [...rapor.uyarilar];
-  if (kesildiMi) {
-    uyarilar.unshift('Kayıt sırasında sayfa arka plana geçti (ekran kilidi veya uygulama değişimi). Kaydı tekrarlayın.');
-  }
-
-  el('rOrnekSayisi').textContent = rapor.ornekSayisi;
-
-  if (rapor.yeterliVeriVar) {
-    el('rSure').textContent = sayiYaz(rapor.sureSn, 1) + ' s';
-    el('rHiz').textContent = sayiYaz(rapor.ortalamaHz, 1) + ' Hz';
-    el('rOrtanca').textContent = sayiYaz(rapor.ortancaAralikMs, 1) + ' ms';
-    el('rEnKisaUzun').textContent =
-      sayiYaz(rapor.enKisaAralikMs, 1) + ' ms / ' + sayiYaz(rapor.enUzunAralikMs, 1) + ' ms';
-    el('rBoslukSayisi').textContent = `${rapor.bosluklar.length} (eşik: ${BOSLUK_ESIGI_MS} ms)`;
-
+  const ekUyarilar = [];
+  if (ornekler.length >= 2) {
     const jiroskoplu = jiroskopluOrnekSayisi(ornekler);
     el('rJiroskop').textContent = `${jiroskoplu} / ${ornekler.length} ölçümde var`;
-    if (jiroskoplu === 0) uyarilar.push('Jiroskop verisi gelmedi; sarkaç için ivmeölçer yöntemine geçmek gerekecek.');
+    if (jiroskoplu === 0) ekUyarilar.push('Jiroskop verisi gelmedi; sarkaç için ivmeölçer yöntemine geçmek gerekecek.');
   } else {
-    for (const id of ['rSure', 'rHiz', 'rOrtanca', 'rEnKisaUzun', 'rBoslukSayisi', 'rJiroskop']) {
-      el(id).textContent = '–';
-    }
+    el('rJiroskop').textContent = '–';
   }
-
-  // Boşlukları "3,2. saniyede 1.067,0 ms" biçiminde listele
-  const boslukMetinleri = (rapor.bosluklar || []).map(
-    (b) => `${sayiYaz(b.baslangicSn, 2)}. saniyede ${sayiYaz(b.sureMs, 1)} ms boşluk`
-  );
-
-  listeyiDoldur(el('rUyarilar'), uyarilar, 'Uyarı yok. Örnekleme düzenli görünüyor.');
-  // Rapor normalde kapalı durur; uyarı varsa kendiliğinden açılsın ki gözden kaçmasın.
-  el('raporBolumu').querySelector('details').open = uyarilar.length > 0;
-  listeyiDoldur(el('rBosluklar'), boslukMetinleri, 'Uzun boşluk yok.');
-  el('raporBolumu').hidden = false;
+  orneklemeRaporunuGoster(ornekler, kesildiMi, ekUyarilar);
 }
 
 // ---- Ana akış: Başlat butonu -------------------------------------------------

@@ -203,6 +203,8 @@ Her kayıt şu şablonu izler:
     0,2 s'den kısa düşüşlerde ayrıca uyarır.
   - Yastık telefonu yavaşça durdurduğu için değme anı biraz geç bulunabilir → g biraz küçük çıkabilir (sistematik hata;
     sonuç açıklamasında yazıyor).
+  - Hava direnci (yatay düşen telefonda) g'yi kabaca %1 küçük gösterir; belirsizlikten küçük ama sistematik
+    (hesap: JURI_SORULARI "Hava direnci ve yastık…").
   - Telefon düşerken dönerse sensör merkezcil ivme hisseder ve |a| 0'a inmeyebilir; talimatta "düz bırakın" deniyor.
   - Güvenlik: yalnızca yastık/yatak üstüne, en çok 1 m yükseklikten.
 

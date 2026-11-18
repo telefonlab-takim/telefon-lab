@@ -17,7 +17,7 @@ tarayıcıda çalışan bir web uygulamasıdır (PWA). Deneyler MEB öğretim pr
 **Fizik**
 1. **Sarkaç** — periyot ölçümü ve yerçekimi ivmesi (g) hesabı ✅
 2. **Ses frekansı** — mikrofonla frekans ölçümü
-3. **Serbest düşme veya eğik düzlem** — (hangisi olacağı henüz kararlaştırılmadı)
+3. **Serbest düşme** — düşme süresi ve yükseklikten g hesabı ✅ (eğik düzlem yerine seçildi, K-012)
 
 **Kimya ve biyoloji** — fikir aşamasında; hangilerinin telefonla gerçekten yapılabildiği önce
 çalışabilirlik çalışmasıyla ölçülecek (kamera ile renk ölçümü, nabız, tepki süresi gibi).
@@ -73,7 +73,8 @@ Ayrıntılı açıklama `docs/TEKNIK_OZET.md` içindedir.
 
 ```
 index.html                    ana menü
-sarkac.html, sensor-testi.html  sayfalar (her deney bir sayfa)
+sarkac.html, serbest-dusme.html,
+sensor-testi.html             sayfalar (her deney bir sayfa)
 manifest.webmanifest, sw.js   uygulama (PWA) tanımı ve internetsiz çalışma
 ikonlar/                      uygulama simgeleri (araclar/ikon_uret.py üretir)
 araclar/                      geliştirme yardımcıları (uygulamanın parçası değil)

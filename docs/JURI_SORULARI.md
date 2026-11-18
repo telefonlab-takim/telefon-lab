@@ -98,6 +98,40 @@ _(Cevap yazılacak)_
 ### Sarkacın boyunu (L) nereden nereye ölçüyorsunuz? Telefonun kendi boyu sorun olmuyor mu?
 _(Cevap yazılacak)_
 
+### Serbest düşmede düşme süresini nasıl ölçüyorsunuz?
+İvmeölçer yer çekimi dahil ivmeyi ölçer: telefon elde dururken büyüklüğü ≈ 9,8 m/s², serbest düşerken ≈ 0 olur
+(telefon ve sensör birlikte düştüğü için sensör hiçbir kuvvet hissetmez, "ağırlıksızlık"). İvmenin büyüklüğünün
+4,9 m/s²'nin (g'nin yarısının) altına indiği an bırakma, yeniden üstüne çıktığı an yastığa değme anıdır. Büyüklük
+kullandığımız için telefonun hangi yönde tutulduğu önemli değil. Ayrıntı: KARAR_GUNLUGU K-012.
+
+### Neden eşik g'nin yarısı? 1 m/s² gibi daha düşük bir eşik daha doğru olmaz mı?
+El açılırken telefonu tutan kuvvet bir anda değil, birkaç on milisaniyede sıfıra iner. Kuvvet düzgünce azalıyorsa
+telefonun hareketi, bu geçişin tam ortasında bırakılmış bir cisimle aynıdır; geçişin ortası da ivmenin yarıya indiği
+andır. Düşük bir eşik bu geçişi kesip süreyi kısa ölçerdi; g olduğundan büyük çıkardı.
+
+### Telefon saniyede 60 ölçüm yapıyorsa 0,3 saniyelik düşüşü nasıl hassas ölçüyorsunuz?
+İki ölçüm arası ≈ 17 ms. Eşiğin geçildiği anı iki ölçüm arasına doğru çizerek (ara değer bularak) hesaplıyoruz.
+Yine de dürüst olmak için, gerçek geçişin o aralığın herhangi bir yerinde olabileceğini kabul edip her uca yarım aralık
+(≈ 8 ms) belirsizlik veriyoruz; tek düşüşte Δt ≈ 12 ms. 50 cm'de t ≈ 0,32 s olduğundan bu, g'de ≈ %7'lik belirsizlik
+demek: **belirsizliğin çoğu süreden gelir**, uygulama bunu öğrenciye söyler. Çözüm: birkaç düşüşün ortalaması
+(belirsizlik √n kadar küçülür) ya da biraz daha yüksekten bırakmak.
+
+### Birkaç düşüşün belirsizliğini nasıl birleştiriyorsunuz?
+İki tahmin hesaplıyoruz: düşme sürelerinin dağılımından (s/√n) ve ölçüm aralığından (tek düşüşün Δt'si/√n).
+**Büyük olanı** kullanıyoruz; küçüğünü seçmek sonucu olduğundan iyi gösterirdi. Sonra Δg/g = √((Δh/h)² + (2Δt/t)²).
+
+### Hava direnci ve yastık sonucu etkilemiyor mu?
+Kaba bir hesap: 50 cm'de telefonun en büyük hızı ≈ 3 m/s. Yatay düşen telefonun yüzeyi ≈ 7 × 15 cm; hava direnci
+F ≈ ½·ρ·C·A·v² ≈ ½ × 1,2 × 1 × 0,0105 × 9 ≈ 0,06 N, telefonun ağırlığı ise ≈ 1,7 N (≈ 170 g). Yani düşüşün sonunda
+bile direnç ağırlığın ≈ %3'ü kadar; düşüş boyunca ortalama etkisi g'yi ≈ %1 küçük gösterir. Bu, bizim ≈ %4'lük
+belirsizliğimizden küçük ama sıfır değil; sistematik bir hata olarak açıklıyoruz. Yastık ise telefonu yavaşça durdurduğundan değme anı biraz geç bulunabilir ve g biraz
+küçük çıkabilir; bu sistematik bir hatadır ve sonuç açıklamasında yazıyor. Gerçek ölçümlerde farklı yüzeyleri
+karşılaştıracağız (TEST_SONUCLARI bölüm 5).
+
+### Telefonu düşürmek güvenli mi?
+Uygulama en üstte uyarıyor: yalnızca yastık ya da yatak üstüne, en çok 1 m'den. Önerdiğimiz 40–80 cm, telefonun
+cebinden düşmesinden çok daha yumuşak bir düşüş.
+
 ## 3. Teknik
 ### Neden uygulama mağazası yerine web uygulaması (PWA)?
 - Tek bir kodla hem iPhone hem Android'de çalışıyor; iki ayrı uygulama yazmadık.

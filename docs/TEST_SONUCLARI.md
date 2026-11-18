@@ -46,6 +46,9 @@ açıldı ✅ (2026-11-18). Önce internetle hiç açılmadan denenince açılma
 | 2026-11-18 | Sarkaç sayfası, gerçek kayda benzeyen veri (masaüstü) | L = 30 cm, ilk 3 s ≈5,5 Hz titreşim, T = 1,50 s | T ≈ 1,50 s, g ≈ 5,3 ve "sistematik hata" açıklaması | T = 1,5002 ± 0,0005 s, g = 5,26 ± 0,09, fark 51,7 kat, sistematik hata açıklaması | ✅ |
 | 2026-11-18 | Sarkaç sayfası, periyodu düzensiz salınım (masaüstü) | Periyodu ±%15 oynayan salınım, L = 48,7 cm | Periyot uyarıları, g üstü çizili, "güvenmeyin", karşılaştırma "anlamlı değil" | Beklendiği gibi (3 periyot uyarısı, g = 9,3 ± 1,5 üstü çizili) | ✅ |
 | 2026-11-19 | Serbest düşme hesap testleri (`serbest-dusme.js`) | 15 yeni test: 50 cm'lik ideal düşüş (60 Hz), gürültülü 5 düşüş (±0,5 m/s², ±5 ms zaman titremesi), durgun telefon, elin kısa hareketi, kaydın başında kesik düşüş, 1,2 s havaya atma, süre özeti (elle hesap), g ve belirsizliği (h = 0,500 ± 0,005 m, t = 0,320 ± 0,004 s → g = 9,766, Δg = 0,263) | Hepsi geçer | Toplam 77/77 geçti | ✅ |
+| 2026-11-19 | Serbest düşme sayfası uçtan uca (masaüstü, sürüm .4) | Sahte `devicemotion` (~62 Hz): h = 50 cm, 4 düşüş (t = 0,3193 s, el açılması 40 ms), ±0,2 m/s² gürültü | 4 düşüş, t ≈ 0,319 s, g ≈ 9,8, uyumlu | 4 düşüş (318–320 ± 11 ms), t = 0,319 ± 0,006 s, **g = 9,8 ± 0,4 m/s²**, belirsizliğin %93'ü t'den, yeşil rozet. h = 60 girilince g = 11,8 ± 0,4 ve turuncu rozet; h boşken "h'yi girin". 375 px'te taşma yok, konsolda hata yok | ✅ |
+| 2026-11-19 | Serbest düşme, kötü veri (masaüstü) | Kayıt başında süren düşük ivme + 40 cm'den tek düşüş, h = 50 cm girili | Kesik düşüş sayılmaz, "en az 3 düşüş" uyarısı, kırmızı rozet | "1 düşüş … kesildiği için sayılmadı", "Yalnızca 1 düşüş", g = 12,2 ± 1,0 soluk, "⚠ Ölçüm güvenilir değil" | ✅ |
+| 2026-11-19 | Sarkaç sayfası, ortak yardımcılar ayrıldıktan sonra (regresyon) | Sahte gama = 40·cos(2πt/1,40), L = 48,7 cm, 10 s | Önceki gibi çalışır | T = 1,40009 ± 0,00014 s, g = 9,81 ± 0,10, yeşil rozet, rapor ve jiroskop satırı doğru | ✅ |
 | 2026-11-17 | Durdur sonrası veri alınmıyor | Durdur'dan sonra olay gönderildi | Örnek sayısı artmaz | Artmadı | ✅ |
 
 > Not: Masaüstü testlerinde örnekleme hızı anlamlı değildir (sahte olaylar). Gerçek hız telefonda ölçülecek.
@@ -64,9 +67,14 @@ Referans değer: İstanbul civarı için g ≈ 9,80 m/s² (konuma göre küçük
 |---|---|---|---|---|---|---|
 | | | | | | | |
 
-## 5. Serbest düşme / eğik düzlem ölçümleri
+## 5. Serbest düşme ölçümleri
 
-_(Deney seçildikten sonra tablo eklenecek.)_
+Referans değer: g ≈ 9,80 m/s². Beklenen düşme süresi t = √(2h/g) (ör. 50 cm → 0,319 s).
+Not: h her zaman metreyle ölçüldüğü gibi yazılır, sonuca bakarak değiştirilmez.
+
+| Tarih | Cihaz | Yüzey (yastık, yatak…) | h (cm) | Δh (cm) | Düşüş sayısı | t (s) | Δt (s) | g (m/s²) | Δg (m/s²) | Rozet | Not |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | | |
 
 ## 5.1 Örnekleme kalitesi ölçümleri (sarkac.html raporu)
 
