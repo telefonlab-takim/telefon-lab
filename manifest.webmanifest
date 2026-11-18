@@ -1,7 +1,7 @@
 {
   "name": "Telefon Laboratuvarı",
   "short_name": "Telefon Lab",
-  "description": "Telefonun sensörleriyle lise fizik deneyleri: gerçek ölçüm, belirsizlik ve açıklama.",
+  "description": "Telefonun sensörleriyle lise fen deneyleri (fizik, kimya, biyoloji): gerçek ölçüm, belirsizlik ve açıklama.",
   "lang": "tr",
   "start_url": "./",
   "scope": "./",

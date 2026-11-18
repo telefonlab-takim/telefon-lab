@@ -157,6 +157,24 @@ Her kayıt şu şablonu izler:
 - **Sonuçları / bedeli:** Zayıf internette sayfa en fazla 4 saniye bekleyip kayıtlı kopyayla açılır.
   Yeni dosya eklenince `DOSYALAR` listesine eklemek unutulmamalı (CLAUDE.md kural 9).
 
+## K-011: Kapsam fizikten fen bilimlerine genişliyor (fizik, kimya, biyoloji)
+- **Tarih:** 2026-11-19
+- **Durum:** Kabul edildi
+- **Karar:** Uygulama yalnızca fizik değil; kimya ve biyoloji deneylerini de kapsayacak. Deneyler MEB öğretim
+  programlarının kazanımlarıyla eşleştirilecek. Yeni deneylere başlamadan önce her fikrin **çalışabilirliği**
+  gerçek telefonlarda ölçülecek.
+- **Neden:**
+  - Telefonun kamerası, mikrofonu ve hareket sensörleri yalnızca fizik için değil, kimyada renk/bulanıklık ölçümü,
+    biyolojide nabız, tepki süresi, solunum gibi ölçümler için de kullanılabilir.
+  - Birden çok fen dersinde kullanılabilen bir araç, okullar için daha değerli ve yarışmada daha güçlü.
+  - Ortak altyapı (sensör okuma, belirsizlik hesabı, grafik, internetsiz çalışma) bütün deneylerde yeniden kullanılır.
+- **Değerlendirilen alternatifler:** Yalnızca fizikte kalıp daha çok fizik deneyi eklemek (daha dar ama daha kolay).
+- **Sonuçları / bedeli:**
+  - Bazı fikirler tarayıcı kısıtları yüzünden yapılamayabilir (ör. iPhone'da web'den kamera flaşı, ışık ve sıcaklık
+    sensörüne erişilemiyor). Bu yüzden önce çalışabilirlik.
+  - Kimya deneylerinde güvenlik önemli: yalnızca evde/okulda güvenle kullanılabilen malzemeler önerilecek.
+  - Ana menü derslere göre gruplandı; henüz yapılmayan deneyler "Fikir" rozetiyle gösteriliyor.
+
 ## Açık kararlar (henüz verilmedi)
 - Üçüncü deney: serbest düşme mi, eğik düzlem mi?
 - ~~Sarkaç: Telefon burulduğunda bileşik yön (temel bileşen analizi) kullanılmalı mı?~~ → K-009 ile kapandı:

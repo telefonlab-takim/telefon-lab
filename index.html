@@ -20,7 +20,7 @@
       <img class="kahraman-ikon" src="ikonlar/ikon-192.png" alt="" width="56" height="56">
       <div>
         <h1>Telefon Laboratuvarı</h1>
-        <p>Telefonunun sensörleriyle gerçek fizik deneyleri</p>
+        <p>Telefonunun sensörleriyle gerçek fen deneyleri</p>
       </div>
     </div>
     <ul class="ozellikler" aria-label="Uygulamanın özellikleri">
@@ -31,7 +31,9 @@
   </header>
 
   <main>
-    <h2 class="bolum-basligi">Deneyler</h2>
+    <!-- Deneyler derslere göre gruplu. Renk dersi gösterir: fizik mavi, kimya mor, biyoloji yeşil.
+         Rozetler: "Hazır" (kullanılabilir), "Yakında" (yapılacağı kesin), "Fikir" (önce çalışabilirliği sınanacak). -->
+    <h2 class="bolum-basligi">Fizik</h2>
     <div class="kartlar">
       <!-- Hazır deney: kartın tamamı bağlantı -->
       <a class="kart" href="sarkac.html">
@@ -49,7 +51,7 @@
 
       <!-- Henüz hazır olmayan deneyler: bağlantı değil -->
       <div class="kart kart-pasif" aria-disabled="true">
-        <span class="kart-ikon ikon-mor" aria-hidden="true">
+        <span class="kart-ikon ikon-mavi" aria-hidden="true">
           <!-- Ses dalgası simgesi -->
           <svg viewBox="0 0 24 24"><path d="M2 12c2-6 4-6 6 0s4 6 6 0 4-6 6 0" /><path d="M21 9v6" /></svg>
         </span>
@@ -61,7 +63,7 @@
       </div>
 
       <div class="kart kart-pasif" aria-disabled="true">
-        <span class="kart-ikon ikon-turuncu" aria-hidden="true">
+        <span class="kart-ikon ikon-mavi" aria-hidden="true">
           <!-- Düşen top simgesi -->
           <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" class="dolu" /><path d="M12 15v6" /><path d="M9 18l3 3 3-3" /></svg>
         </span>
@@ -69,6 +71,58 @@
           <span class="kart-baslik">Serbest düşme / eğik düzlem <span class="rozet">Yakında</span></span>
           <span class="kart-aciklama">Hareketi ölç, ivmeyi hesapla.</span>
           <span class="kart-sensor">İvmeölçer</span>
+        </span>
+      </div>
+    </div>
+
+    <h2 class="bolum-basligi">Kimya</h2>
+    <div class="kartlar">
+      <div class="kart kart-pasif" aria-disabled="true">
+        <span class="kart-ikon ikon-mor" aria-hidden="true">
+          <!-- Deney şişesi simgesi -->
+          <svg viewBox="0 0 24 24"><path d="M9 3h6" /><path d="M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3" /><path d="M7.5 15h9" /></svg>
+        </span>
+        <span class="kart-metin">
+          <span class="kart-baslik">Asitlik (pH) — renk ile <span class="rozet">Fikir</span></span>
+          <span class="kart-aciklama">Doğal göstergenin (ör. mor lahana suyu) rengini kamerayla ölç, pH'yi tahmin et.</span>
+          <span class="kart-sensor">Kamera</span>
+        </span>
+      </div>
+      <div class="kart kart-pasif" aria-disabled="true">
+        <span class="kart-ikon ikon-mor" aria-hidden="true">
+          <!-- Kronometre simgesi -->
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8" /><path d="M12 13V9" /><path d="M10 2h4" /></svg>
+        </span>
+        <span class="kart-metin">
+          <span class="kart-baslik">Tepkime hızı <span class="rozet">Fikir</span></span>
+          <span class="kart-aciklama">Çözeltinin bulanıklaşmasını ya da renk değiştirmesini zamana göre izle.</span>
+          <span class="kart-sensor">Kamera</span>
+        </span>
+      </div>
+    </div>
+
+    <h2 class="bolum-basligi">Biyoloji</h2>
+    <div class="kartlar">
+      <div class="kart kart-pasif" aria-disabled="true">
+        <span class="kart-ikon ikon-yesil" aria-hidden="true">
+          <!-- Kalp ritmi simgesi -->
+          <svg viewBox="0 0 24 24"><path d="M3 12h4l2-5 4 10 2-5h6" /></svg>
+        </span>
+        <span class="kart-metin">
+          <span class="kart-baslik">Nabız <span class="rozet">Fikir</span></span>
+          <span class="kart-aciklama">Parmağı kameraya koy; kan akışının yarattığı renk değişiminden nabzı ölç.</span>
+          <span class="kart-sensor">Kamera</span>
+        </span>
+      </div>
+      <div class="kart kart-pasif" aria-disabled="true">
+        <span class="kart-ikon ikon-yesil" aria-hidden="true">
+          <!-- Dokunma simgesi -->
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3" /><path d="M12 3v1" /><path d="M6.5 5.5l.7.7" /><path d="M17.5 5.5l-.7.7" /><path d="M12 12v9" /></svg>
+        </span>
+        <span class="kart-metin">
+          <span class="kart-baslik">Tepki süresi <span class="rozet">Fikir</span></span>
+          <span class="kart-aciklama">Ekrana dokunarak tepki süreni ölç; koşullara göre karşılaştır.</span>
+          <span class="kart-sensor">Dokunmatik ekran</span>
         </span>
       </div>
     </div>
@@ -109,7 +163,7 @@
       <p id="cevrimdisiDurum" class="durum-hapi"></p>
     </div>
 
-    <p id="surum" class="kucuk surum">Sayfa: 2026-11-18.9</p>
+    <p id="surum" class="kucuk surum">Sayfa: 2026-11-19.1</p>
   </main>
 
   <script type="module" src="js/sayfalar/ana-sayfa.js"></script>

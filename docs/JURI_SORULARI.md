@@ -9,6 +9,13 @@ kendi cümleleriyle anlatabilmeli.
 ### Bu proje hangi sorunu çözüyor?
 _(Cevap yazılacak)_
 
+### Neden sadece fizik değil?
+Telefonun kamerası, mikrofonu ve hareket sensörleri kimya ve biyolojide de ölçüm yapabiliyor: örneğin kamera ile
+bir göstergenin rengi (pH) ya da parmaktaki kan akışından nabız. Bütün deneyler aynı altyapıyı (sensör okuma,
+belirsizlik hesabı, grafik, internetsiz çalışma) kullanıyor. Her yeni deneyden önce telefonla gerçekten yapılıp
+yapılamadığını ölçüyoruz; deneyleri MEB öğretim programlarındaki kazanımlarla eşleştiriyoruz (K-011).
+_(Çalışabilirlik sonuçları ve müfredat eşleştirmesi eklenecek.)_
+
 ### Hedef kullanıcı kim?
 _(Cevap yazılacak)_
 

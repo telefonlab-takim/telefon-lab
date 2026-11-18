@@ -214,10 +214,12 @@ a.kart:active, a.liste-satiri:active { transform: scale(0.98); }
 .ikon-mavi { background: #e3eefc; color: #1565c0; }
 .ikon-mor { background: #efe7fb; color: #6a3fc0; }
 .ikon-turuncu { background: #fdeee2; color: #d35400; }
+.ikon-yesil { background: #e5f4e7; color: #2e7d32; }
 @media (prefers-color-scheme: dark) {
   .ikon-mavi { background: #16304f; color: #8cc0f5; }
   .ikon-mor { background: #2c2240; color: #c3a6f2; }
   .ikon-turuncu { background: #3b2618; color: #f5b07a; }
+  .ikon-yesil { background: #1d3322; color: #7fd38a; }
 }
 
 .kart-metin { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }

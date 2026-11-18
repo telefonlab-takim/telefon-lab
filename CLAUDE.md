@@ -3,7 +3,9 @@
 ## Proje özeti
 
 **Telefon Laboratuvarı**, telefonun sensörleriyle (ivmeölçer/jiroskop, mikrofon, kamera)
-lise fizik deneylerini **gerçek ölçümle** yaptıran, tarayıcıda çalışan bir web uygulamasıdır (PWA).
+lise **fen bilimleri — fizik, kimya ve biyoloji —** deneylerini **gerçek ölçümle** yaptıran,
+tarayıcıda çalışan bir web uygulamasıdır (PWA). Deneyler MEB öğretim programlarıyla eşleştirilecek
+(bkz. `docs/KARAR_GUNLUGU.md` K-011).
 
 - Gençbizz Tech yarışması için 4 kişilik lise takımı tarafından geliştiriliyor; kodu 1 kişi yazıyor.
 - iPhone (Safari) ve Android (Chrome) üzerinde çalışmalı.
@@ -11,10 +13,21 @@ lise fizik deneylerini **gerçek ölçümle** yaptıran, tarayıcıda çalışan
 - **Ölçüm verisi cihazdan çıkmaz.** Sunucuya veri gönderilmez, analiz servisi, reklam ya da dış kütüphane çağrısı yapılmaz.
 - Uygulama sonuç vermekle kalmaz; **ölçüm hatasını ve belirsizliği hesaplar ve öğrenciye açıklar.**
 
-### İlk üç deney
-1. **Sarkaç** — periyot ölçümü ve yerçekimi ivmesi (g) hesabı
+### Deneyler
+**Fizik**
+1. **Sarkaç** — periyot ölçümü ve yerçekimi ivmesi (g) hesabı ✅
 2. **Ses frekansı** — mikrofonla frekans ölçümü
-3. **Serbest düşme veya eğik düzlem** — (hangisi olacağı henüz kararlaştırılmadı, bkz. `docs/KARAR_GUNLUGU.md`)
+3. **Serbest düşme veya eğik düzlem** — (hangisi olacağı henüz kararlaştırılmadı)
+
+**Kimya ve biyoloji** — fikir aşamasında; hangilerinin telefonla gerçekten yapılabildiği önce
+çalışabilirlik çalışmasıyla ölçülecek (kamera ile renk ölçümü, nabız, tepki süresi gibi).
+
+### Yol haritası
+1. **Çalışabilirlik:** her deney fikrinin telefon + tarayıcıyla yapılıp yapılamadığını ve ne doğrulukla
+   ölçtüğünü gerçek telefonlarda sınamak.
+2. **MEB müfredatı:** deneyleri resmî öğretim programlarındaki kazanımlarla eşleştirmek.
+   Kazanım kodları ezberden yazılmaz; resmî programdan (mufredat.meb.gov.tr) alınır.
+3. Seçilen deneyleri sarkaçtaki gibi adım adım yapmak.
 
 ## Çalışma kuralları
 
