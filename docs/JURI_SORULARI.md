@@ -9,6 +9,12 @@ kendi cümleleriyle anlatabilmeli.
 ### Bu proje hangi sorunu çözüyor?
 _(Cevap yazılacak)_
 
+### Müfredatla nasıl ilişkili?
+Deneyleri MEB Türkiye Yüzyılı Maarif Modeli programlarındaki öğrenme çıktılarıyla eşleştirdik; kodları MEB'in
+resmî program sayfalarından aldık. Örneğin sarkaç deneyi **FİZ.10.4.1** (10. sınıf, Dalgalar) ile eşleşiyor;
+programın kendisi bu kazanım için basit sarkaç ve periyot etkinliği öneriyor. Uygulamada her deney kartında ve
+deney sayfasında ilgili kazanım kodu yazıyor. Ayrıntı: docs/MUFREDAT_ARASTIRMASI.md.
+
 ### Neden sadece fizik değil?
 Telefonun kamerası, mikrofonu ve hareket sensörleri kimya ve biyolojide de ölçüm yapabiliyor: örneğin kamera ile
 bir göstergenin rengi (pH) ya da parmaktaki kan akışından nabız. Bütün deneyler aynı altyapıyı (sensör okuma,

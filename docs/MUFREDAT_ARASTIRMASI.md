@@ -100,7 +100,8 @@ Bu deneyler saniyeler değil **günler** sürer. Telefonu günlerce ekranı aç�
 
 Hem müfredata doğrudan uyan, hem de telefonla yapılabilme ihtimali yüksek olanlar:
 
-1. **Sarkaç → FİZ.10.4.1 eşleştirmesi** (hazır; yalnızca uygulamaya ve belgelere kazanım kodu eklenecek).
+1. **Sarkaç → FİZ.10.4.1 eşleştirmesi** ✅ Yapıldı (sürüm 2026-11-19.2): sarkaç sayfasında kazanım etiketi ve
+   "Müfredat bağlantısı" bölümü; ana menüdeki her kartta ilgili kazanım kodu.
 2. **Serbest düşme** (FİZ.11.1.1–11.1.2) — açık kalan "serbest düşme mi, eğik düzlem mi?" kararı için öneri.
    Mevcut ivmeölçer altyapısı kullanılır.
 3. **Tepki süresi** (BİY.11.1.1, BİY.11.1.8) — sensör riski yok; biyolojiye hızlı ve güvenli giriş.
