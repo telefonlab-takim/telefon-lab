@@ -176,6 +176,7 @@ Her kayıt şu şablonu izler:
   - Ana menü derslere göre gruplandı; henüz yapılmayan deneyler "Fikir" rozetiyle gösteriliyor.
 
 ## Açık kararlar (henüz verilmedi)
-- Üçüncü deney: serbest düşme mi, eğik düzlem mi?
+- Üçüncü deney: serbest düşme mi, eğik düzlem mi? → **Öneri: serbest düşme** (FİZ.11.1.1–11.1.2 ile doğrudan
+  eşleşiyor; bkz. `docs/MUFREDAT_ARASTIRMASI.md`). Takımın onayı bekleniyor.
 - ~~Sarkaç: Telefon burulduğunda bileşik yön (temel bileşen analizi) kullanılmalı mı?~~ → K-009 ile kapandı:
   iki farklı periyotlu salınımı bileşik yön ayıramaz; bunun yerine en düzenli eksen seçiliyor ve iki salınım uyarısı var.
