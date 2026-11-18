@@ -74,6 +74,28 @@ Sütunlar: **Sensör** = kullanılacak telefon özelliği · **Risk** = çalış
 | **BİY.10.1.3.** Fotosentezde kullanılan ve üretilen maddelerle ilgili deney (10. sınıf) | Su bitkisinden çıkan oksijen kabarcıklarının ışık uzaklığına göre sayılması (video). | Kamera | Orta–yüksek (kabarcık sayma görüntü işleme gerektirir). | |
 | **BİY.11.1.4.** Bitkilerde yönelme hareketlerini gözlemleyebileceği deney (11. sınıf) | Işığa yönelen fidenin zaman atlamalı fotoğrafları, açı ölçümü. | Kamera | Orta; birkaç gün sürer. | |
 
+### Bitki ve gözlem deneyleri (çeşitlilik için)
+
+Bu deneyler saniyeler değil **günler** sürer. Telefonu günlerce ekranı açık bırakmak yerine
+**"Fotoğraf günlüğü"** adlı ortak bir araç öneriyoruz:
+
+- Öğrenci her gün (ya da belli aralıklarla) deneyin fotoğrafını uygulamanın içinden çeker. Fotoğrafta bir **cetvel** de görünür.
+- Uygulama, önceki fotoğrafı yarı saydam olarak gösterir; telefon her seferinde aynı açıdan tutulur.
+- Öğrenci fotoğrafta iki noktaya dokunur (ör. fidenin dibi ve ucu). Uygulama, cetveldeki bilinen uzunluğu kullanarak
+  boyu (ya da açıyı) **belirsizliğiyle** hesaplar; zamana göre grafik çizer.
+- Fotoğraflar yalnızca telefonda saklanır (gizlilik kuralımız).
+- Tek araç birçok deneye yarar: bitki boyu, yönelme açısı, çimlenme oranı, patates çubuğunun boyu, balonun çapı, köpük yüksekliği.
+
+| Kazanım (koduyla) | Telefonla deney | Sensör / araç | Risk | |
+|---|---|---|---|---|
+| **BİY.11.1.4.** Bitkilerde yönelme hareketlerini gözlemleyebileceği deney yapabilme (11. sınıf) | Işık yalnızca bir yandan gelen kutuda fide yetiştir; her gün fotoğraf; **eğilme açısı** zamana göre. Kutu yan yatırılarak yer çekimine yönelme de denenebilir. | Fotoğraf günlüğü | Düşük–orta; 4–7 gün sürer. | ⭐ |
+| **BİY.11.1.2.** Bitkisel hormonların etkileri hakkında akıl yürütebilme — a) "Bitkisel hormonların etkilerini deney yaparak gözlemler" · **BİY.11.1.3** Bitkilerdeki tepki mekanizmalarını sınıflandırabilme (11. sınıf) | Ucu kesilmiş ve kesilmemiş fidelerin yönelmesini karşılaştır (uçtaki hormonun rolü). | Fotoğraf günlüğü | Orta. | |
+| **BİY.10.1.3.** Fotosentezde kullanılan ve üretilen maddelerle ilgili deney yapabilme (10. sınıf) | Su bitkisinden çıkan kabarcıklar: lambanın uzaklığına göre dakikadaki kabarcık sayısı. İlk sürüm: öğrenci her kabarcıkta ekrana dokunur (nabızdaki gibi). | Dokunma (sonra kamera) | Dokunma: düşük. Otomatik sayma: yüksek. | ⭐ |
+| **BİY.9.2.3.** Küçük moleküllerin hücre zarından pasif geçişi ile ilgili deney yapabilme (9. sınıf) | **Osmoz:** patates çubukları farklı tuzluluktaki sularda; boy değişimi fotoğraftan ölçülür; tuz derişimi–boy değişimi grafiği. | Fotoğraf günlüğü | Düşük; ucuz, güvenli, 1 gün. | ⭐ |
+| **BİY.9.1.7.** Besinlerin yapısında karbohidrat, lipit ve protein varlığının belirlenmesiyle ilgili deney yapabilme (9. sınıf) | İyot ile nişasta testi: renk değişimi kamerayla kayıt (var/yok kararı; renk ölçümü riskli). | Kamera | Orta. | |
+| **BİY.9.1.4.** Çevresindeki canlıların özelliklerini bilimsel olarak gözlemleyebilme (9. sınıf) | Telefon kamerasının önüne bir su damlası koyarak basit **mikroskop**: yaprak yüzeyi, soğan zarı hücreleri; ölçek için milimetrik kâğıt. | Kamera | Orta (damla merceği el becerisi ister). | |
+| **BİY.12.1.10.** Çimlenmeyi etkileyen faktörleri gözlemleyebileceği deney yapabilme (12. sınıf) | Farklı koşullarda (ışık, su, sıcaklık) tohumlar; günlük çimlenme oranı ve kök boyu. | Fotoğraf günlüğü | Düşük. **Not:** 12. sınıfta yeni program 2026-27'de uygulanmıyor; bu deney 9–11'deki gözlem/deney becerileri için de kullanılabilir. | |
+
 ## 5. Öncelik önerisi
 
 Hem müfredata doğrudan uyan, hem de telefonla yapılabilme ihtimali yüksek olanlar:
@@ -87,6 +109,10 @@ Hem müfredata doğrudan uyan, hem de telefonla yapılabilme ihtimali yüksek ol
 6. **Tepkime hızı** (KİM.11.1.7) — köpüren tablet; kameranın renk/bulanıklık ölçümü önce çalışabilirlik testinden geçmeli.
 
 Böylece üç dersin her birinden en az bir deney, 9–11. sınıfların hepsinden kazanım kapsanır.
+
+**Çeşitlilik için ek öneri:** "Fotoğraf günlüğü" aracı yapılırsa **osmoz** (BİY.9.2.3) ve **bitkilerde yönelme**
+(BİY.11.1.4) hemen eklenebilir; ikisi de güvenli, ucuz ve sensör riski düşük. Aynı araç sonra fermantasyon,
+enzim köpüğü ve çimlenme deneylerine de yarar.
 
 ## 6. Dikkat edilecekler
 
