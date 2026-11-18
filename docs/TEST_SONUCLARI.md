@@ -49,6 +49,7 @@ açıldı ✅ (2026-11-18). Önce internetle hiç açılmadan denenince açılma
 | 2026-11-19 | Serbest düşme sayfası uçtan uca (masaüstü, sürüm .4) | Sahte `devicemotion` (~62 Hz): h = 50 cm, 4 düşüş (t = 0,3193 s, el açılması 40 ms), ±0,2 m/s² gürültü | 4 düşüş, t ≈ 0,319 s, g ≈ 9,8, uyumlu | 4 düşüş (318–320 ± 11 ms), t = 0,319 ± 0,006 s, **g = 9,8 ± 0,4 m/s²**, belirsizliğin %93'ü t'den, yeşil rozet. h = 60 girilince g = 11,8 ± 0,4 ve turuncu rozet; h boşken "h'yi girin". 375 px'te taşma yok, konsolda hata yok | ✅ |
 | 2026-11-19 | Serbest düşme, kötü veri (masaüstü) | Kayıt başında süren düşük ivme + 40 cm'den tek düşüş, h = 50 cm girili | Kesik düşüş sayılmaz, "en az 3 düşüş" uyarısı, kırmızı rozet | "1 düşüş … kesildiği için sayılmadı", "Yalnızca 1 düşüş", g = 12,2 ± 1,0 soluk, "⚠ Ölçüm güvenilir değil" | ✅ |
 | 2026-11-19 | Sarkaç sayfası, ortak yardımcılar ayrıldıktan sonra (regresyon) | Sahte gama = 40·cos(2πt/1,40), L = 48,7 cm, 10 s | Önceki gibi çalışır | T = 1,40009 ± 0,00014 s, g = 9,81 ± 0,10, yeşil rozet, rapor ve jiroskop satırı doğru | ✅ |
+| 2026-11-19 | Yastıktan sekmeleri ayıklama (sürüm .5) | 2 yeni test (sekmeli kayıt, `durgunMu`); sayfada sahte veri: 4 düşüş (0,294 s) + her birinden 0,09 s sonra 0,11 s'lik sekme, h = 50 cm | 4 düşüş sayılır, sekme uyarısı | Toplam 79/79 geçti. Sayfa: 4 düşüş (294–295 ms), "4 kez … durgun değildi; sayılmadı … yastıktan sekme", g = 11,5 ± 0,5, turuncu rozet | ✅ |
 | 2026-11-17 | Durdur sonrası veri alınmıyor | Durdur'dan sonra olay gönderildi | Örnek sayısı artmaz | Artmadı | ✅ |
 
 > Not: Masaüstü testlerinde örnekleme hızı anlamlı değildir (sahte olaylar). Gerçek hız telefonda ölçülecek.
@@ -74,7 +75,7 @@ Not: h her zaman metreyle ölçüldüğü gibi yazılır, sonuca bakarak değiş
 
 | Tarih | Cihaz | Yüzey (yastık, yatak…) | h (cm) | Δh (cm) | Düşüş sayısı | t (s) | Δt (s) | g (m/s²) | Δg (m/s²) | Rozet | Not |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | | | |
+| 2026-11-19 | iPhone 14 | yastık | 50,0 | 0,5 | 10 (4'ü sekme) | 0,22 | 0,03 | 20 | 5 | ⚠ güvenilir değil | Sürüm .4; sekmeler de sayıldı. Yeni kuralla elle: 6 düşüş, t = 0,290 s, g ≈ 11,9 ± 0,4 (sistematik). Bkz. 5.10 |
 
 ## 5.1 Örnekleme kalitesi ölçümleri (sarkac.html raporu)
 
@@ -246,6 +247,45 @@ L metreyle dönme noktasından telefonun ortasına doğrudan ölçülür.
   - Muhtemel açıklama: iki seferde de **aynı şarj kablosu**, telefon şarj girişinden asılı. L = 88 cm doğruysa
     (T beklenen 1,883 s), periyodun beklenenden kısa olması kablonun **sertliğinin** geri getirici etki eklemesiyle
     açıklanabilir; ya da telefon yerden 6 cm'den daha yüksekte asılıydı. Doğrudan ölçüm ve ip ile deneme istendi.
+
+## 5.10 İlk gerçek serbest düşme kaydı — yastıktan sekmeler (2026-11-19, iPhone 14, sürüm 2026-11-19.4)
+
+**Koşullar:** h = 50,0 ± 0,5 cm girildi, 20 s kayıt, yastığa birkaç düşüş. Örnekleme 59,4 Hz, ortanca aralık 17,0 ms,
+3 uzun boşluk (1,07 s'de 79 ms, 1,97 s'de 54 ms, 15,20 s'de 71 ms; hiçbiri bir düşüşün içinde değil).
+
+**Ekranda çıkan:** "⚠ Ölçüm güvenilir değil", g = 20 ± 5 m/s² (üstü çizili), 10 düşüş, t = 0,22 ± 0,03 s,
+"süreler %39,2 farklı" uyarısı. Uygulama kötü sonucu doğru biçimde güvenilmez olarak işaretledi.
+
+| # | Bırakma anı (s) | Süre (ms) | Ne? |
+|---|---|---|---|
+| 1 | 0,47 | 294 | düşüş |
+| 2 | 5,28 | 294 | düşüş |
+| 3 | 5,66 | 108 | **sekme** (2'nin bitişinden ≈ 0,09 s sonra) |
+| 4 | 8,51 | 290 | düşüş |
+| 5 | 8,88 | 116 | **sekme** |
+| 6 | 11,64 | 273 | düşüş |
+| 7 | 14,57 | 296 | düşüş |
+| 8 | 14,95 | 119 | **sekme** |
+| 9 | 17,96 | 295 | düşüş |
+| 10 | 18,33 | 147 | **sekme** |
+
+**Bulunan hata:** Telefon yastıktan sekince bir an yine havada kalıyor ve ivmeölçer yine ≈ 0 gösteriyor (en düşük ivme
+0,0–0,1 m/s²). Kod bunları da düşüş saydı. Sekme gerçekten bir serbest düşmedir ama telefon durgun hâlden ve h
+yüksekliğinden bırakılmamıştır; h = ½·g·t² ona uygulanamaz.
+
+**Düzeltme (sürüm .5, K-012 eki):** Her düşüşten önce telefonun durgun olduğu kontrol ediliyor (bırakmadan önceki
+0,4–0,1 s arasında |a| = g ± 3 m/s²). Sekmelerden önce telefon havadadır (|a| ≈ 0) ya da çarpmaktadır (|a| ≈ 100),
+bu yüzden ayıklanır ve "yastıktan sekme" uyarısı verilir. Test eklendi (4 düşüş + 4 sekme → 4 düşüş).
+
+**Aynı veri yeni kuralla (elle hesap; ham veri saklanmadığı için uygulamada yeniden çalıştırılamadı):**
+6 düşüş: 294, 294, 290, 273, 296, 295 ms → t̄ = 0,2903 s, s = 8,7 ms (%3,0), Δt = 0,0118/√6 ≈ 0,0049 s
+→ g = 2 × 0,500 / 0,2903² ≈ **11,9 ± 0,4 m/s²**. Kabul edilen değerden ≈ 5 belirsizlik uzak → **sistematik hata**.
+
+**Sistematik hata nereden olabilir?** Düşüşler birbirine çok yakın (%3), yani süre ölçümü tekrarlanabilir; ama 50 cm için
+beklenen süre 0,319 s, ölçülen 0,290 s (≈ 29 ms kısa). Bu süre ≈ 41 cm'lik düşüşe karşılık gelir. En olası neden,
+h'nin yastığın üst yüzüne değil yere (ya da başka bir noktaya) kadar ölçülmüş olması (yastık ≈ 9 cm kalınsa tam açıklar).
+Diğer adaylar: telefonun dik tutulması, elin açılırken telefonu aşağı itmesi. **h sonuca göre değiştirilmeyecek;**
+düzenek kontrol edilip h yeniden ölçülerek yeni kayıt alınacak.
 
 ## 6. Sorunlar ve çözümler
 

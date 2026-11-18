@@ -36,6 +36,16 @@ export const EN_UZUN_DUSUS_SN = 0.8;
 // ölçüm aralığından (≈17 ms) gelen belirsizlik sonucu çok büyütür.
 export const KISA_DUSUS_UYARI_SN = 0.2;
 
+// h = ½·g·t² formülü, telefon DURGUN hâlden (ilk hız 0) bırakıldığında geçerlidir.
+// Bu yüzden her düşüşten önce telefonun gerçekten durduğu kontrol edilir: bırakmadan hemen önceki
+// DURGUNLUK_PENCERESI içinde ivme büyüklüğü g'den en fazla DURGUNLUK_PAYI kadar farklı olmalı.
+// Neden gerekli? Telefon yastıktan sekince bir an yine havada kalır ve ivmeölçer yine ≈ 0 gösterir.
+// Bu da bir serbest düşmedir ama ilk hızı 0 değildir ve yüksekliği h değildir (iPhone 14 ile ilk gerçek
+// ölçümde her düşüşten ≈ 0,08 s sonra 0,1–0,15 s'lik böyle "sekme" bölümleri görüldü; TEST_SONUCLARI 5.10).
+// Pencere bırakmadan 0,1 s önce biter, çünkü elin açılması birkaç on milisaniye sürer ve o sırada ivme zaten düşer.
+export const DURGUNLUK_PENCERESI_SN = { baslangic: 0.4, bitis: 0.1 }; // bırakmadan önceki [0,4 s … 0,1 s] arası
+export const DURGUNLUK_PAYI = 3; // m/s² (elin küçük titremesine izin verir; sekmedeki ≈ 0 ya da çarpmadaki 100 m/s² geçemez)
+
 // Güvenilir ortalama için önerilen en az düşüş sayısı
 export const EN_AZ_DUSUS = 3;
 
@@ -95,6 +105,7 @@ export function dususleriBul(zamanlarSn, buyuklukler) {
   const dususler = [];
   let kesikSayisi = 0;
   let uzunSayisi = 0;
+  let durgunDegilSayisi = 0;
   for (const { ilk: i, son: j } of bolumler) {
     // Kaydın en başında ya da en sonunda kesilen bölümün başı/sonu bilinmiyor
     if (i === 0 || j === a.length - 1) {
@@ -113,6 +124,18 @@ export function dususleriBul(zamanlarSn, buyuklukler) {
     const sureSn = bitisSn - baslangicSn;
 
     if (sureSn < EN_KISA_DUSUS_SN) continue; // elin titremesi
+
+    // Bırakmadan önce telefon durgun muydu? (ilk hız 0 mı?)
+    const durgunluk = durgunMu(t, a, baslangicSn);
+    if (durgunluk === 'veri-yok') {
+      kesikSayisi++; // bırakmadan önceki an kayıtta yok
+      continue;
+    }
+    if (durgunluk === 'hayir') {
+      durgunDegilSayisi++; // yastıktan sekme ya da elle hareket
+      continue;
+    }
+
     if (sureSn > EN_UZUN_DUSUS_SN) {
       uzunSayisi++;
       continue;
@@ -132,6 +155,13 @@ export function dususleriBul(zamanlarSn, buyuklukler) {
   if (kesikSayisi > 0) {
     uyarilar.push(`${kesikSayisi} düşüş kaydın başında ya da sonunda kesildiği için sayılmadı. Kayıt sürerken bırakın.`);
   }
+  if (durgunDegilSayisi > 0) {
+    uyarilar.push(
+      `${durgunDegilSayisi} kez ivme 0'a indi ama telefon öncesinde durgun değildi; sayılmadı. ` +
+        'Bunlar büyük olasılıkla yastıktan sekmedir (h = ½·g·t² yalnızca durgun bırakılan cisim için geçerli). ' +
+        'Bırakmadan önce telefonu bir saniye kıpırdatmadan tuttuğunuzdan emin olun.'
+    );
+  }
   if (uzunSayisi > 0) {
     uyarilar.push(
       `${uzunSayisi} kez ivme ${sayi1(EN_UZUN_DUSUS_SN)} saniyeden uzun süre düşük kaldı; serbest düşme sayılmadı ` +
@@ -143,6 +173,20 @@ export function dususleriBul(zamanlarSn, buyuklukler) {
   }
 
   return { dususler, uyarilar };
+}
+
+// Bırakma anından (baslangicSn) önceki durgunluk penceresine bakar.
+// Dönen değer: 'evet' | 'hayir' | 'veri-yok' (pencerede 3'ten az ölçüm var: kaydın başı ya da uzun boşluk)
+export function durgunMu(zamanlarSn, buyuklukler, baslangicSn) {
+  const pencereBasi = baslangicSn - DURGUNLUK_PENCERESI_SN.baslangic;
+  const pencereSonu = baslangicSn - DURGUNLUK_PENCERESI_SN.bitis;
+  let adet = 0;
+  for (let k = 0; k < zamanlarSn.length; k++) {
+    if (zamanlarSn[k] < pencereBasi || zamanlarSn[k] > pencereSonu) continue;
+    adet++;
+    if (Math.abs(buyuklukler[k] - KABUL_EDILEN_G) > DURGUNLUK_PAYI) return 'hayir';
+  }
+  return adet >= 3 ? 'evet' : 'veri-yok';
 }
 
 // Bütün düşüşlerden ortalama düşme süresini ve belirsizliğini hesaplar.

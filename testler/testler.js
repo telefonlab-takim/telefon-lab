@@ -21,6 +21,7 @@ import {
   ivmeBuyuklukleri,
   esikGecisZamani,
   dususleriBul,
+  durgunMu,
   dususSuresiOzeti,
   serbestDusmeG,
   beklenenSure,
@@ -573,6 +574,40 @@ test('dususleriBul: 1,2 s süren düşük ivme (havaya atma) sayılmaz, uyarı v
   const r = dususleriBul(zamanlarSn, buyuklukler);
   esitMi(r.dususler.length, 0);
   if (!r.uyarilar.some((u) => u.includes('havaya'))) throw new Error(r.uyarilar.join(' | '));
+});
+
+// Gerçek kayda (TEST_SONUCLARI 5.10) benzeyen veri: her düşüşten ≈ 0,08 s sonra telefon yastıktan sekiyor ve
+// ≈ 0,11 s yine havada kalıyor. Sekme de ivmeyi ≈ 0 yapar ama ilk hızı 0 değildir → sayılmamalı.
+function sekmeliDusmeler() {
+  const dususler = [];
+  for (const b of [0.6, 3.6, 6.6, 9.6]) {
+    dususler.push({ baslangicSn: b, sureSn: 0.294 });
+    dususler.push({ baslangicSn: b + 0.294 + 0.09, sureSn: 0.11 }); // sekme
+  }
+  return dususler;
+}
+
+test('dususleriBul: yastıktan sekmeler sayılmaz (4 düşüş + 4 sekme → 4 düşüş, 1 uyarı)', () => {
+  const { zamanlarSn, buyuklukler } = dusmeGirdisi(sahteDusmeKaydi({ dususler: sekmeliDusmeler(), sureSn: 11, tohum: 8 }));
+  const r = dususleriBul(zamanlarSn, buyuklukler);
+  esitMi(r.dususler.length, 4);
+  r.dususler.forEach((d) => yakinMi(d.sureSn, 0.294, 0.001));
+  esitMi(r.uyarilar.length, 1);
+  if (!r.uyarilar[0].includes('sekme')) throw new Error(r.uyarilar[0]);
+});
+
+test('durgunMu: bırakmadan önce telefon durgun → evet; önce çarpma (25 m/s²) → hayır; önce veri yok → veri-yok', () => {
+  const t = [];
+  const durgun = [];
+  const carpmali = [];
+  for (let i = 0; i <= 60; i++) {
+    t.push(i / 60);
+    durgun.push(G_TEST + 0.5);
+    carpmali.push(i === 30 ? 25 : G_TEST);
+  }
+  esitMi(durgunMu(t, durgun, 0.8), 'evet');
+  esitMi(durgunMu(t, carpmali, 0.8), 'hayir'); // 0,5 s'deki çarpma [0,4 … 0,7] penceresinde
+  esitMi(durgunMu(t, durgun, 0.12), 'veri-yok'); // pencere kaydın başından önce
 });
 
 test('dususSuresiOzeti: süreler 0,30…0,33 s → ortalama 0,31, Δt = s/√5 (dağılım baskın), yayılım uyarısı', () => {

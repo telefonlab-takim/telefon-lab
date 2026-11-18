@@ -171,7 +171,10 @@ telefon ve sensör birlikte düştüğü için |a| ≈ 0 ("ağırlıksızlık").
 1. `ivmeBuyuklukleri`: her örnek için |a| = √(ax² + ay² + az²). Telefonun yönü önemli değil.
 2. `dususleriBul`: |a|'nın **g/2 ≈ 4,9 m/s²** eşiğinin altında kaldığı kesintisiz bölümler bulunur.
    - Eşiği geçme anı, iki ölçüm arasında doğrusal ara değerle (`esikGecisZamani`) hesaplanır.
-   - Sayılmayanlar: en düşük değeri 2 m/s²'nin altına inmeyen (elin hareketi), 0,1 s'den kısa, 0,8 s'den uzun
+   - **Durgunluk kontrolü** (`durgunMu`): bırakmadan önceki 0,4–0,1 s arasında |a| = g ± 3 m/s² olmalı (ilk hız 0).
+     Böylece yastıktan **sekmeler** (bunlarda da |a| ≈ 0) düşüş sayılmaz (TEST_SONUCLARI 5.10).
+   - Sayılmayanlar: en düşük değeri 2 m/s²'nin altına inmeyen (elin hareketi), 0,1 s'den kısa, öncesinde durgun olmayan
+     (sekme), 0,8 s'den uzun
      (havaya atma) ve kaydın başında/sonunda kesilen bölümler. Son ikisi için uyarı verilir.
    - Tek düşüşün süre belirsizliği: her uçta ölçüm aralığının yarısı → Δt = √(Δbaş² + Δson²) (60 Hz'de ≈ 12 ms).
 3. `dususSuresiOzeti`: düşme sürelerinin ortalaması t̄. Belirsizlik = büyük olanı { s/√n , ortalama Δt/√n }.

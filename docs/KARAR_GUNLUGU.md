@@ -207,6 +207,11 @@ Her kayıt şu şablonu izler:
     (hesap: JURI_SORULARI "Hava direnci ve yastık…").
   - Telefon düşerken dönerse sensör merkezcil ivme hisseder ve |a| 0'a inmeyebilir; talimatta "düz bırakın" deniyor.
   - Güvenlik: yalnızca yastık/yatak üstüne, en çok 1 m yükseklikten.
+- **Ek (2026-11-19, sürüm .5): durgunluk kontrolü.** İlk gerçek kayıtta telefon yastıktan sekti ve sekmeler de
+  (|a| ≈ 0, 0,1–0,15 s) düşüş sayıldı (TEST_SONUCLARI 5.10). h = ½·g·t² yalnızca durgun bırakılan cisim için geçerli
+  olduğundan, artık bırakmadan önceki 0,4–0,1 s içinde |a| = g ± 3 m/s² şartı aranıyor. Alternatif: "önceki düşüşten
+  1 s içinde başlayan bölüm sekmedir" kuralı. Durgunluk kontrolü seçildi, çünkü doğrudan fiziğin şartını (ilk hız 0)
+  sınıyor ve elle aşağı savurma gibi başka hataları da yakalıyor.
 
 ## Açık kararlar (henüz verilmedi)
 - ~~Üçüncü deney: serbest düşme mi, eğik düzlem mi?~~ → K-012 ile kapandı: **serbest düşme** (FİZ.11.1.1–11.1.2).
